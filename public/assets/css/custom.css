@@ -1,0 +1,14 @@
+.property-image{
+    background-size:     cover;
+    background-repeat:   no-repeat;
+    background-position: center center;
+}
+
+.bootstrap-icon-text::before{
+    margin-right:1em !important;
+    display: inline !important;
+}
+
+.display-none{
+    display: none !important;
+}
