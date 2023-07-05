@@ -77,6 +77,101 @@ class Leases
     private $guid;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="payment_rules", type="string", length=200, nullable=false)
+     */
+    private $paymentRules;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="deposit_pop", type="string", length=50, nullable=true)
+     */
+    private $depositPop;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="id_document", type="string", length=50, nullable=true)
+     */
+    private $idDocument;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="lease_aggreement", type="string", length=50, nullable=true)
+     */
+    private $leaseAggreement;
+
+    /**
+     * @return string|null
+     */
+    public function getDepositPop(): ?string
+    {
+        return $this->depositPop;
+    }
+
+    /**
+     * @param string|null $depositPop
+     */
+    public function setDepositPop(?string $depositPop): void
+    {
+        $this->depositPop = $depositPop;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIdDocument(): ?string
+    {
+        return $this->idDocument;
+    }
+
+    /**
+     * @param string|null $idDocument
+     */
+    public function setIdDocument(?string $idDocument): void
+    {
+        $this->idDocument = $idDocument;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLeaseAggreement(): ?string
+    {
+        return $this->leaseAggreement;
+    }
+
+    /**
+     * @param string|null $leaseAggreement
+     */
+    public function setLeaseAggreement(?string $leaseAggreement): void
+    {
+        $this->leaseAggreement = $leaseAggreement;
+    }
+
+
+
+    /**
+     * @return string
+     */
+    public function getPaymentRules(): string
+    {
+        return $this->paymentRules;
+    }
+
+    /**
+     * @param string $paymentRules
+     */
+    public function setPaymentRules(string $paymentRules): void
+    {
+        $this->paymentRules = $paymentRules;
+    }
+
+
+    /**
      * @return int
      */
     public function getIdleases(): int

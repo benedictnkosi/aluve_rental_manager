@@ -16,6 +16,23 @@ class UnitController extends AbstractController
 {
 
     /**
+     * @Route("api/unit/get/{unitId}")
+     */
+    public function getUnit($unitId, UnitApi $unitApi, Request $request, LoggerInterface $logger): Response{
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('get')) {
+            return new JsonResponse("Method Not Allowed" , 405, array());
+        }
+
+        $response = $unitApi->getUnit($unitId);
+        $serializer = SerializerBuilder::create()->build();
+        $jsonContent = $serializer->serialize($response, 'json');
+        return new JsonResponse($jsonContent , 200, array(), true);
+    }
+
+
+
+    /**
      * @Route("api/units/get/{propertyId}")
      */
     public function getUnits($propertyId, UnitApi $unitApi, Request $request, LoggerInterface $logger): Response{
@@ -57,7 +74,7 @@ class UnitController extends AbstractController
             $propertyId = $request->get('id');
         }
 
-        $response = $unitApi->createUnit($request->get('name'), $propertyId);
+        $response = $unitApi->createUnit($request->get('name'), $propertyId, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'));
         return new JsonResponse($response , 200, array());
     }
 

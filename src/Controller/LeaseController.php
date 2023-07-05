@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Service\ApplicationsApi;
+use App\Service\FileUploaderApi;
 use App\Service\LeaseApi;
 use App\Service\PropertyApi;
 use App\Service\UnitApi;
@@ -45,6 +47,7 @@ class LeaseController extends AbstractController
         return new JsonResponse($response , 200, array());
     }
 
+
     /**
      * @Route("api/lease/update")
      */
@@ -81,9 +84,53 @@ class LeaseController extends AbstractController
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $leaseApi->createLease($request->get('tenantName'), $request->get('phone'), $request->get('email'), $request->get('unitId'), $request->get('start_date'), $request->get('end_date'), $request->get('deposit'), $request->get('lease_id'));
+        $response = $leaseApi->createLease($request->get('tenantName'), $request->get('phone'), $request->get('email'), $request->get('unitId'), $request->get('start_date'), $request->get('end_date'), $request->get('deposit'), $request->get('lease_id'), $request->get('payment_rules'),$request->get('adults'),$request->get('children'));
         return new JsonResponse($response , 200, array());
     }
 
+
+    /**
+     * @Route("public/lease/upload/")
+     * @throws \Exception
+     */
+    public function uploadLeaseDocument( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, LeaseApi $leaseApi): Response
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('post')) {
+            return new JsonResponse("Internal server errors" , 500, array());
+        }
+
+        $file = $request->files->get('file');
+        if (empty($file))
+        {
+            $logger->info("No file specified");
+            return new Response("No file specified",
+                Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
+        }
+
+        $uploadDir = __DIR__ . '/../../files/documents/';
+        $uploader->setDir($uploadDir);
+        $uploader->setExtensions(array('pdf'));  //allowed extensions list//
+
+        $uploader->setMaxSize(5);//set max file size to be allowed in MB//
+
+        $response = $uploader->uploadFile();
+        if($response["result_code"] == 1){
+            //upload failed
+            header("HTTP/1.1 500 Internal Server Error");
+            return new Response($response["result_message"],
+                Response::HTTP_NOT_ACCEPTABLE, ['content-type' => 'text/plain']);
+        }
+
+        //write to DB
+        $response = $leaseApi->addLeaseDoc($request->get("guid"), $request->get("document_type"), $response["file_name"]);
+        if($response["result_code"] == 1){
+            return new JsonResponse($response, 200, array());
+        }else{
+            return new JsonResponse($response, 201, array());
+
+        }
+
+    }
 
 }

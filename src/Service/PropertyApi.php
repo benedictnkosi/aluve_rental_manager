@@ -108,6 +108,15 @@ class PropertyApi extends AbstractController
                 case "status":
                     $property->setStatus($value);
                     break;
+                case "accountNumber":
+                    $property->setAccountNUmber($value);
+                    break;
+                case "applicaitonFee":
+                    $property->setApplicationFee($value);
+                    break;
+                case "depositPercent":
+                    $property->setDepositPecent($value);
+                    break;
                 default:
             }
 

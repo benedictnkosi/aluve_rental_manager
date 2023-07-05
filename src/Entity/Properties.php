@@ -78,6 +78,78 @@ class Properties
     private $status = 'active';
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(name="account_number", type="string", length=20, nullable=false, options={"default"="active"})
+     */
+    private $accountNumber;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="deposit_pecent", type="integer", nullable=false)
+     */
+    private $depositPecent = '0';
+
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="application_fee", type="integer", nullable=false)
+     */
+    private $applicationFee = '0';
+
+    /**
+     * @return int
+     */
+    public function getDepositPecent(): int|string
+    {
+        return $this->depositPecent;
+    }
+
+    /**
+     * @param int $depositPecent
+     */
+    public function setDepositPecent(int|string $depositPecent): void
+    {
+        $this->depositPecent = $depositPecent;
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getApplicationFee(): int|string
+    {
+        return $this->applicationFee;
+    }
+
+    /**
+     * @param int|string $applicationFee
+     */
+    public function setApplicationFee(int|string $applicationFee): void
+    {
+        $this->applicationFee = $applicationFee;
+    }
+
+
+    /**
+     * @return string|null
+     */
+    public function getAccountNumber(): ?string
+    {
+        return $this->accountNumber;
+    }
+
+    /**
+     * @param string|null $accountNumber
+     */
+    public function setAccountNumber(?string $accountNumber): void
+    {
+        $this->accountNumber = $accountNumber;
+    }
+
+
+    /**
      * @return int
      */
     public function getIdproperties(): int

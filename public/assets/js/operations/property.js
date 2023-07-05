@@ -111,7 +111,6 @@ let getAllProperties = () => {
             const newPropertyModal = document.getElementById('newPropertyModal')
             if (newPropertyModal) {
                 newPropertyModal.addEventListener('show.bs.modal', event => {
-                    hideMessage();
                     const button = event.relatedTarget
                     // Extract info from data-bs-* attributes
                     const action = button.getAttribute('data-bs-action')

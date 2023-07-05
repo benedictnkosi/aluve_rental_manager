@@ -176,7 +176,7 @@
 
     <!-- ✅ SECOND - load jquery validate ✅ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-
+    <script src="/assets/js/operations/dashboard.js"></script>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -375,76 +375,57 @@
                 <form id="form-create-unit">
                     <div class="mb-3">
                         <label for="unit-name" class="col-form-label">Unit Name:</label>
-                        <input type="text" class="form-control" id="unit-name" required>
+                        <input type="text" class="form-control" name="unit-name" id="unit-name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="unit-bedrooms" class="col-form-label">Number Of Bedrooms:</label>
+                        <input type="number" class="form-control" name="bedrooms" id="unit-bedrooms" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="unit-bathrooms" class="col-form-label">Number Of Bathrooms:</label>
+                        <input type="number" class="form-control" name="bathrooms" id="unit-bathrooms" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="unit-rent" class="col-form-label">Unit Rent:</label>
+                        <input type="number" class="form-control" name="unit-rent" id="unit-rent" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="unit-name" class="col-form-label">Min Gross Salary:</label>
+                        <input type="number" class="form-control" name="min-gross-salary" id="min-gross-salary" required>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="max-occupants" class="col-form-label">Max Occupants:</label>
+                        <input type="number" class="form-control" name="max-occupants" id="max-occupants" required>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="checkParking">
+                        <label class="form-check-label" for="checkParking">
+                            Parking Provided
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="checkChildrenAllowed">
+                        <label class="form-check-label" for="checkChildrenAllowed">
+                            Children Allowed
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="checkListed">
+                        <label class="form-check-label" for="checkListed">
+                            Listed
+                        </label>
                     </div>
 
                     <div class="mb-3">
                         <button type="button" class="btn btn-danger" id="btn-delete-unit">Delete Unit</button>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--modal for new\updating lease-->
-<div class="modal fade" id="leaseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="leaseModalLabel">Lease</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="form-create-lease">
-                    <div class="mb-3">
-                        <label for="lease-unit-name" class="col-form-label">Unit Name:</label>
-                        <div class="dropdown" id="lease-unit-name">
-                            <button class="btn btn-secondary dropdown-toggle" id="unit-dropdown-selected" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Select unit
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item lease-unit-dropdown" lease-unit-id="1" href="javascript:void(0)">Unit 1</a></li>
-                                <li><a class="dropdown-item lease-unit-dropdown" lease-unit-id="2"  href="javascript:void(0)">Unit 2</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="lease-tenant-name" class="col-form-label">Tenant Name:</label>
-                        <input type="text" class="form-control" id="lease-tenant-name" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="lease-tenant-phone" class="col-form-label">Phone Number:</label>
-                        <input type="text" class="form-control" id="lease-tenant-phone" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="lease-tenant-email" class="col-form-label">Email:</label>
-                        <input type="text" class="form-control" id="lease-tenant-email" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="lease-start-date">Start Date:</label>
-                                <input type="text" class="form-control datepicker" id="lease-start-date" placeholder="Select start date" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="lease-end-date">End Date:</label>
-                                <input type="text" class="form-control datepicker" id="lease-end-date" placeholder="Select end date" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="lease-deposit" class="col-form-label">Deposit Paid:</label>
-                        <input type="text" class="form-control" id="lease-deposit" required>
                     </div>
 
                     <div class="modal-footer">
@@ -476,7 +457,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="payment-date">Date:</label>
-                                <input type="text" class="form-control datepicker" id="payment-date" placeholder="Select start date" required>
+                                <input type="text" class="form-control datepicker" id="payment-date"
+                                       placeholder="Select start date" required>
                             </div>
                         </div>
                     </div>
@@ -491,8 +473,7 @@
     </div>
 </div>
 
-<!--confirm action-->
-
+<!--confirm action delete modal-->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -511,6 +492,71 @@
     </div>
 </div>
 
+<!--confirm action delete modal-->
+<div class="modal fade" id="confirmDeclineApplicationModal" tabindex="-1" aria-labelledby="confirmDeclineApplicationLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeclineApplicationModalLabel">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to decline this application?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btn-confirm-decline-application">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--modal for accepting an application-->
+<div class="modal fade" id="acceptApplicationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="acceptApplicationModalLabel">Accept Lease</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-accept-application">
+
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="accept-lease-start-date">Lease Start Date:</label>
+                                <input type="text" class="form-control datepicker" id="accept-lease-start-date"
+                                       placeholder="Select start date" name="accept-lease-start-date" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="accept-lease-end-date">Lease End Date:</label>
+                                <input type="text" class="form-control datepicker" id="accept-lease-end-date"
+                                       placeholder="Select end date" name="accept-lease-end-date" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="deposit-amount-payed" class="col-form-label">Deposit Amount Payed:</label>
+                        <input type="number" class="form-control" id="deposit-amount-payed" name="deposit-amount-payed" required>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="container-fluid">
     <div class="row">
         <!--left menu-->
@@ -521,7 +567,8 @@
                 <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2 active" main-content="dashboard-content-div" header="Dashboard" href="javascript:void(0)">
+                            <a class="nav-link d-flex align-items-center gap-2 active"
+                               main-content="dashboard-content-div" header="Dashboard" href="javascript:void(0)">
                                 <svg class="bi">
                                     <use xlink:href="#graph-up"/>
                                 </svg>
@@ -529,7 +576,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2" main-content="units-content-div" header="Rental units" href="javascript:void(0)">
+                            <a class="nav-link d-flex align-items-center gap-2" main-content="units-content-div"
+                               header="Rental units" href="javascript:void(0)">
                                 <svg class="bi">
                                     <use xlink:href="#cart"/>
                                 </svg>
@@ -537,7 +585,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2" main-content="leases-content-div" header="Leases" href="javascript:void(0)">
+                            <a class="nav-link d-flex align-items-center gap-2" main-content="leases-content-div"
+                               header="Leases" href="javascript:void(0)">
                                 <svg class="bi">
                                     <use xlink:href="#file-earmark"/>
                                 </svg>
@@ -545,7 +594,17 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2" main-content="" href="javascript:void(0)">
+                            <a class="nav-link d-flex align-items-center gap-2" main-content="applications-content-div"
+                               header="Applications" href="javascript:void(0)">
+                                <svg class="bi">
+                                    <use xlink:href="#file-earmark"/>
+                                </svg>
+                                Applications
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2" main-content=""
+                               href="javascript:void(0)">
                                 <svg class="bi">
                                     <use xlink:href="#gear-wide-connected"/>
                                 </svg>
@@ -554,7 +613,8 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2" main-content="" href="javascript:void(0)">
+                            <a class="nav-link d-flex align-items-center gap-2" main-content=""
+                               href="javascript:void(0)">
                                 <svg class="bi">
                                     <use xlink:href="#puzzle"/>
                                 </svg>
@@ -567,7 +627,8 @@
 
                     <ul class="nav flex-column mb-auto">
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2" main-content="settings-content-div" header="Settings" href="javascript:void(0)">
+                            <a class="nav-link d-flex align-items-center gap-2" main-content="settings-content-div"
+                               header="Settings" href="javascript:void(0)">
                                 <svg class="bi">
                                     <use xlink:href="#gear-wide-connected"/>
                                 </svg>
@@ -583,7 +644,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2" main-content="" href="javascript:void(0)">
+                            <a class="nav-link d-flex align-items-center gap-2" main-content=""
+                               href="javascript:void(0)">
                                 <svg class="bi">
                                     <use xlink:href="#door-closed"/>
                                 </svg>
@@ -592,6 +654,13 @@
                         </li>
                     </ul>
                 </div>
+            </div>
+        </div>
+
+        <div class="overlay"></div>
+        <div class="spanner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
 
@@ -667,89 +736,193 @@
                 <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5" id="div-units">
 
 
+                </div>
+                <div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
+                    <p>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                data-bs-target="#unitModal">Add New Unit
+                        </button>
+                    </p>
+                </div>
+            </div>
+
+            <!--            leases div-------------------------------------------------------------------->
+            <div id="leases-content-div" class="main-content display-none">
+
+                <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5" id="div-leases">
+
 
                 </div>
                 <div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
-                        <p><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#unitModal">Add New Unit</button></p>
+                    <p>
+                        <button type="button" class="btn btn-success" id="btn-new-lease">New Lease</button>
+                    </p>
                 </div>
             </div>
 
 
-            <!--            leases div-------------------------------------------------------------------->
-            <div id="leases-content-div" class="main-content display-none">
+            <!--            new lease div-------------------------------------------------------------------->
+            <div id="new-lease-content-div" class="main-content display-none">
+                <div class="w-75">
+                    <form id="form-create-lease">
+                        <div class="mb-3">
+                            <label for="lease-unit-name" class="col-form-label">Unit Name:</label>
+                            <div class="dropdown" id="lease-unit-name">
+                                <button class="btn btn-secondary dropdown-toggle" id="unit-dropdown-selected" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    Select unit
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item lease-unit-dropdown" lease-unit-id="1"
+                                           href="javascript:void(0)">Unit 1</a></li>
+                                    <li><a class="dropdown-item lease-unit-dropdown" lease-unit-id="2"
+                                           href="javascript:void(0)">Unit 2</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="lease-tenant-name" class="col-form-label">Tenant Name:</label>
+                            <input type="text" class="form-control" id="lease-tenant-name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="lease-tenant-phone" class="col-form-label">Phone Number:</label>
+                            <input type="text" class="form-control" id="lease-tenant-phone" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="lease-tenant-email" class="col-form-label">Email:</label>
+                            <input type="text" class="form-control" id="lease-tenant-email" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="lease-start-date">Start Date:</label>
+                                    <input type="text" class="form-control datepicker" id="lease-start-date"
+                                           placeholder="Select start date" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="lease-end-date">End Date:</label>
+                                    <input type="text" class="form-control datepicker" id="lease-end-date"
+                                           placeholder="Select end date" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lease-deposit" class="col-form-label">Deposit Paid:</label>
+                            <input type="text" class="form-control" id="lease-deposit" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="payment-rules" class="col-form-label">Payment Rules:</label>
+                            <input type="text" class="form-control" id="payment-rules" placeholder="nkosi,benzo,nhlaka" required>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary m-1" id="btn-close-new-lease">Close</button>
+                            <button type="submit" class="btn btn-primary m-1">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!--            applicaitons div-------------------------------------------------------------------->
+            <div id="applications-content-div" class="main-content display-none">
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>Tenant</th>
+                        <th>ID</th>
                         <th>Unit</th>
-                        <th>Start</th>
-                        <th>End</th>
-                        <th>Deposit</th>
-                        <th>Due</th>
-                        <th>Actions</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Adults</th>
+                        <th>Children</th>
+                        <th>Salary</th>
+                        <th>Occupation</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
-                    <tbody id="tbody-leases">
-
+                    <tbody id="tbody-applications">
 
                     <!-- Add more rows here if needed -->
                     </tbody>
                 </table>
 
-                <div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
-                    <p><button type="button" class="btn btn-success" id="btn-new-lease">New Lease</button></p>
-                </div>
             </div>
+
 
             <!--            settings DIV -------------------------------------------------------------------->
             <div id="settings-content-div" class="main-content display-none w-75">
                 <form>
                     <h3>Security</h3>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <label for="settings-email" class="form-label">Email address</label>
+                        <input type="email" class="form-control property-value" id="settings-email" field-name="email"
+                               aria-describedby="emailHelp">
                         <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
+                        <label for="settings-password" field-name="password" class="form-label">Password</label>
+                        <input type="password" class="form-control property-value" id="settings-password">
                     </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
                 </form>
 
                 <form class="mt-5 visually-hidden">
                     <h3>Integration</h3>
                     <div class="mb-3">
-                        <label for="quickbooks-username" class="form-label">Quickbooks Username</label>
-                        <input type="input" class="form-control" id="quickbooks-username">
+                        <label for="quickbooks-username" field-name="quikbooks-username" class="form-label">Quickbooks
+                            Username</label>
+                        <input type="input" class="form-control property-value" id="quickbooks-username">
                     </div>
                     <div class="mb-3">
-                        <label for="quickbooks-token" class="form-label">Quickbooks Token</label>
-                        <input type="password" class="form-control" id="quickbooks-token">
+                        <label for="quickbooks-token" field-name="quickbooks-token" class="form-label">Quickbooks
+                            Token</label>
+                        <input type="password" class="form-control property-value" id="quickbooks-token">
                     </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
                 </form>
 
                 <form class="mt-5">
-                    <h3>Late Fee</h3>
+                    <h3>Fees</h3>
                     <div class="mb-3">
                         <label for="late-fee" class="form-label">Late Fee Amount (zero for no late fee)</label>
-                        <input type="number" class="form-control" id="late-fee" placeholder="e.g. 500">
+                        <input type="number" class="form-control property-value" field-name="lateFee" id="late-fee"
+                               placeholder="e.g. 500">
                     </div>
                     <div class="mb-3">
                         <label for="rent-due-day" class="form-label">Rent Due (Day Of Month)</label>
-                        <input type="number" class="form-control" id="rent-due-day">
+                        <input type="number" class="form-control property-value" field-name="rent-due-day" id="rent-due-day">
                     </div>
                     <div class="mb-3">
                         <label for="late-fee-day" class="form-label">Auto-Late Fee (Day Of Month)</label>
-                        <input type="number" class="form-control" id="late-fee-day">
+                        <input type="number" class="form-control property-value" field-name="late-fee-day"
+                               id="late-fee-day">
                     </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <div class="mb-3">
+                        <label for="accountNumber" class="form-label">Account Number On Payment Notifications</label>
+                        <input type="number" class="form-control property-value" field-name="accountNumber"
+                               id="accountNumber">
+                    </div>
+                    <div class="mb-3">
+                        <label for="applicationFee" class="form-label">Application Fee</label>
+                        <input type="number" class="form-control property-value" field-name="applicaitonFee"
+                               id="applicationFee" value="0">
+                    </div>
+                    <div class="mb-3">
+                        <label for="depositPercent" class="form-label">Required Deposit Percentage</label>
+                        <input type="number" class="form-control property-value" field-name="depositPercent"
+                               id="depositPercent" value="0">
+                    </div>
+
                 </form>
 
             </div>
 
-<!--            toast for messages-------------------------------------------------------------------->
+            <!--            toast for messages-------------------------------------------------------------------->
             <div class="toast-container position-fixed top-0 end-0 p-3">
                 <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="toast-header">
@@ -893,9 +1066,12 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"
         integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG"
         crossorigin="anonymous"></script>
+
 <script src="/assets/js/dashboard.js"></script>
 <script src="/assets/js/operations/units.js"></script>
 <script src="/assets/js/operations/lease.js"></script>
+<script src="/assets/js/operations/settings.js"></script>
+<script src="/assets/js/operations/applications.js"></script>
 
 
 <script

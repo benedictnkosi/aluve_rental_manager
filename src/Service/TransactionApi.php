@@ -13,8 +13,13 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use JetBrains\PhpStorm\ArrayShape;
+use PhpImap\Exceptions\ConnectionException;
 use Psr\Log\LoggerInterface;
+use SecIT\ImapBundle\Service\Imap;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class TransactionApi extends AbstractController
 {
@@ -89,11 +94,11 @@ class TransactionApi extends AbstractController
             $balance = 0;
             foreach ($transactions as $transaction) {
                 $balance = $balance + intval($transaction->getAmount());
-                $responseArray[] =  array(
+                $responseArray[] = array(
                     'description' => $transaction->getDescription(),
                     'date' => $transaction->getDate()->format("Y-m-d"),
-                    'amount' => "R" . number_format( $transaction->getAmount(), 2, '. ', '' ),
-                    'balance' => "R" .  number_format( $balance, 2, '. ', '' )
+                    'amount' => "R" . number_format($transaction->getAmount(), 2, '.', ''),
+                    'balance' => "R" . number_format($balance, 2, '.', '')
                 );
             }
 
@@ -139,5 +144,91 @@ class TransactionApi extends AbstractController
             );
         }
     }
+
+
+    /**
+     * @throws ConnectionException
+     */
+    function importTransactions(Imap $imap): JsonResponse|array
+    {
+        $this->logger->info("Starting Method: " . __METHOD__);
+        $responseArray = array();
+
+        // testing with a boolean response
+        $isConnectable = $imap->testConnection('full_config_connection');
+
+        if(!$isConnectable) {
+            $this->logger->info("Connection to mail failed");
+            return array(
+                'result_message' => "Connection to mail failed",
+                'result_code' => 1
+            );
+        }
+
+        $this->logger->info("Connection to mail worked");
+
+        $exampleConnection = $imap->get('full_config_connection');
+
+        // testing with a full error message
+        try {
+            $search = 'ON ' . date('d-M-Y') . ' BODY "paid to"';
+            $emails = $exampleConnection->searchMailbox($search);
+            $now = new DateTime();
+            $leaseFound = "no";
+            if ($emails) {
+                $this->logger->info("Emails found");
+                foreach ($emails as $emailID) {
+                    $this->logger->info("Emails id $emailID");
+                    $email = $exampleConnection->getMail($emailID);
+                    $emailSubject = $email->subject;
+                    $startOfAmountIndex = strpos($emailSubject, ":-)") + 5;
+                    $endOfAmountIndex = strpos($emailSubject, " paid to ");
+                    $amount = substr($emailSubject, $startOfAmountIndex, $endOfAmountIndex - $startOfAmountIndex);
+
+                    $startOfRefIndex = strpos($emailSubject, "Ref.") + 4;
+                    $endOfRefIndex = strrpos($emailSubject, ". ");
+                    $ref = substr($emailSubject, $startOfRefIndex, $endOfRefIndex - $startOfRefIndex);
+
+                    $startOfAccountIndex = strpos($emailSubject, "c..") + 4;
+                    $endOfAccountIndex = strrpos($emailSubject, " @");
+                    $partialAccountNumber = substr($emailSubject, $startOfAccountIndex, $endOfAccountIndex - $startOfAccountIndex);
+
+                    $leases = $this->em->getRepository("App\Entity\Leases")->createQueryBuilder('l')
+                        ->where('l.paymentRules LIKE :rule')
+                        ->setParameter('rule', "%$ref%")
+                        ->getQuery()
+                        ->getResult();
+
+                    if(sizeof($leases) > 0){
+                        foreach ($leases as $lease){
+                            $this->logger->info("account number " . $lease->getUnit()->getProperty()->getAccountNumber());
+                            $this->logger->info("partial account number " . $partialAccountNumber);
+                            if(str_contains($lease->getUnit()->getProperty()->getAccountNumber(), $partialAccountNumber)){
+                                $this->logger->info("Leases found matching payment reference");
+                                $this->addTransaction($lease->getIdleases(), $amount, "Thank you for payment - $ref", $now->format("Y-m-d"));
+                                $leaseFound = "yes";
+                            }
+                        }
+                    }else{
+                        $this->logger->info("No leases found matching payment reference");
+                    }
+
+                    $responseArray[] =  array(
+                        'amount' => $amount,
+                        'ref' => $ref,
+                        'subject' =>$emailSubject,
+                        'lease_found' => $leaseFound
+                    );
+                }
+            }
+
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage());
+            return new JsonResponse($exception->getMessage(), 200, array());
+        }
+
+        return $responseArray;
+    }
+
 
 }

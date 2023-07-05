@@ -1,28 +1,28 @@
 $(document).ready(function () {
     getProperty();
+
+    $('.property-value').blur(function (event) {
+        if(sessionStorage.getItem("current_page").localeCompare("settings-content-div")===0){
+            updatePropertyField(event.target.getAttribute("field-name"), event.target.value)
+        }
+    })
 });
 
-let updateProperty = () =>{
-    let url = "/api/properties/update";
+let updatePropertyField = (field, value) =>{
+    let url = "/api/property/update";
     const data = {
-        field: "status",
-        value: "deleted",
+        field: field,
+        value: value,
         id: sessionStorage.getItem("property-id")
     };
 
     $.ajax({
         url : url,
-        type: "put",
+        type: "PUT",
         data : data,
         success: function(response)
         {
-
             showToast(response.result_message);
-            if (response.result_code === 0) {
-                $('#newPropertyModal').modal('toggle');
-                sessionStorage.setItem("property-id", "0");
-                getAllProperties();
-            }
         }
     });
 }
@@ -43,6 +43,9 @@ let getProperty = () => {
             $("#late-fee-day").val(data.rent_late_days);
             $("#late-fee").val(data.late_fee);
             $("#rent-due-day").val(data.rent_due);
+            $("#accountNumber").val(data.account_number);
+            $("#depositPercent").val(data.deposit_pecent);
+            $("#applicationFee").val(data.application_fee);
         },
         error: function (xhr) {
 
