@@ -1,7 +1,7 @@
 $(document).ready(function () {
     // Save checklist to JSON and write to console
     document.getElementById('saveButton').addEventListener('click', function () {
-        saveInspection();
+        saveInspection("active");
     });
 
     getInspectionDetails();
@@ -108,7 +108,7 @@ function uploadInspectionImage(file_data) {
     });
 }
 
-let saveInspection = () => {
+let saveInspection = (status) => {
     const checklistData = {
         bedroomChecklist: generateBedroomChecklistData(),
         kitchenChecklist: generateChecklistData('kitchen'),
@@ -120,7 +120,8 @@ let saveInspection = () => {
     const data = {
         inspection:JSON.stringify(checklistData),
         lease_id: sessionStorage.getItem("lease_id"),
-        inspection_id: sessionStorage.getItem("inspection_id")
+        inspection_id: sessionStorage.getItem("inspection_id"),
+        status: status
     };
 
     $.ajax({
@@ -156,7 +157,7 @@ let getInspectionDetails = () => {
             $("#property-name").html(data.property);
             $("#unit-name").html(data.unit_name);
             //save empty inspection so you have id for uploading images
-            saveInspection();
+            saveInspection("new");
         },
         error: function (xhr) {
 
@@ -171,6 +172,7 @@ function generateBathroomChecklist(numBedrooms) {
     for (let i = 1; i <= numBedrooms; i++) {
         const bathroomDiv = document.createElement('div');
         bathroomDiv.classList.add('form-check-columns');
+        bathroomDiv.classList.add('mt-3');
 
         const bathroomHeader = createRoomHeader(i, "Bathroom");
         const plumbingCheck = createCheckField(`plumbingCheck${i}b`, 'Plumbing');

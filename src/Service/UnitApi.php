@@ -153,7 +153,7 @@ class UnitApi extends AbstractController
             $unit->setBedrooms($bedrooms);
             $unit->setBathrooms($bathrooms);
 
-            if(strcmp($listed, "Yes") == 0){
+            if(strcmp($listed, "true") == 0){
                 $unit->setListed(true);
             }else{
                 $unit->setListed(false);
@@ -190,12 +190,17 @@ class UnitApi extends AbstractController
                 );
             }
 
+            $msg = "Successfully updated unit";
+
             switch ($field) {
                 case "name":
                     $unit->setName($value);
                     break;
                 case "status":
                     $unit->setStatus($value);
+                    if(strcmp($value, "deleted") == 0){
+                        $msg = "Successfully deleted unit";
+                    }
                     break;
                 case "listed":
                     $unit->setListed($value);
@@ -208,7 +213,7 @@ class UnitApi extends AbstractController
             $this->em->flush($unit);
 
             return array(
-                'result_message' => "Successfully updated unit",
+                'result_message' => $msg,
                 'result_code' => 0
             );
 

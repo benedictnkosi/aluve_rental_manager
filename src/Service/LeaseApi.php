@@ -60,7 +60,7 @@ class LeaseApi extends AbstractController
                 $tenant = $lease->getTenant();
                 $due = $this->transactionApi->getBalanceDue($lease->getIdleases());
 
-                $inspection = $this->em->getRepository(Inspection::class)->findBy(array('lease' => $lease));
+                $inspection = $this->em->getRepository(Inspection::class)->findBy(array('lease' => $lease, 'status' => "active"));
                 $inspectionExist = false;
                 if (sizeof($inspection) > 0) {
                     $inspectionExist = true;
@@ -225,7 +225,7 @@ class LeaseApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function createInspection($leaseId, $json): array
+    public function createInspection($leaseId, $json, $status): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -242,6 +242,7 @@ class LeaseApi extends AbstractController
             $inspection->setDate(new DateTime());
             $inspection->setLease($lease);
             $inspection->setJson($json);
+            $inspection->setStatus($status);
 
             $this->em->persist($inspection);
             $this->em->flush($inspection);
@@ -274,7 +275,7 @@ class LeaseApi extends AbstractController
                     'result_code' => 1
                 );
             }
-            $inspection = $this->em->getRepository(Inspection::class)->findBy(array('lease' => $lease), array('date' => 'DESC'));
+            $inspection = $this->em->getRepository(Inspection::class)->findBy(array('lease' => $lease, 'status' => "active"), array('date' => 'DESC'));
 
 
             if (sizeof($inspection) < 1) {

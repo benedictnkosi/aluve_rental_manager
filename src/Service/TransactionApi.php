@@ -92,17 +92,52 @@ class TransactionApi extends AbstractController
                 );
             }
             $balance = 0;
+            $isLoggedIn = $this->getUser() !== null;
             foreach ($transactions as $transaction) {
                 $balance = $balance + intval($transaction->getAmount());
                 $responseArray[] = array(
                     'description' => $transaction->getDescription(),
                     'date' => $transaction->getDate()->format("Y-m-d"),
                     'amount' => "R" . number_format($transaction->getAmount(), 2, '.', ''),
-                    'balance' => "R" . number_format($balance, 2, '.', '')
+                    'balance' => "R" . number_format($balance, 2, '.', ''),
+                    'logged_in' => $isLoggedIn,
+                    'id' => $transaction->getId()
                 );
             }
 
             return $responseArray;
+        } catch (Exception $ex) {
+            $this->logger->error("Error " . print_r($responseArray, true));
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
+
+
+    #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
+    public function deleteTransaction($id): array
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+            $transaction = $this->em->getRepository(Transaction::class)->findOneBy(array('id' => $id));
+
+            if ($transaction == null) {
+                return array(
+                    'result_message' => "Transaction not found",
+                    'result_code' => 1
+                );
+            }
+
+            $this->em->remove($transaction);
+            $this->em->flush($transaction);
+
+            return array(
+                'result_message' => "Successfully removed transaction",
+                'result_code' => 0
+            );
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
             return array(

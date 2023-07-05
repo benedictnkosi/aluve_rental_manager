@@ -33,13 +33,24 @@ class LoginController extends AbstractController
      */
     public function app_properties(LoggerInterface $logger): Response
     {
-        if($this->getUser() !== null){
+        if ($this->getUser() !== null) {
             $logger->info("Session: " . print_r($_SESSION, true));
             $logger->info("user roles: " . print_r($this->getUser()->getRoles(), true));
             return $this->render('properties.html');
-        }else{
+        } else {
             return $this->redirectToRoute("app_login");
         }
     }
 
+    /**
+     * @Route("/public/is_logged_in/", name="app_is_logged_in")
+     */
+    public function app_is_logged_in(LoggerInterface $logger): Response
+    {
+        if ($this->getUser() == null) {
+            return new JsonResponse("Not logged in", 200, array());
+        }else{
+            return new JsonResponse("logged in", 200, array());
+        }
+    }
 }

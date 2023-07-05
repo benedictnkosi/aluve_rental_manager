@@ -86,7 +86,7 @@ class InspectionController extends AbstractController
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $leaseApi->createInspection($request->get('lease_id'), $request->get('inspection'));
+        $response = $leaseApi->createInspection($request->get('lease_id'), $request->get('inspection'), $request->get('status'));
         return new JsonResponse($response , 200, array());
     }
 

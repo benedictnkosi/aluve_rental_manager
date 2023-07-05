@@ -1,6 +1,11 @@
 $(document).ready(function () {
     getTransactions();
     getStatementDetails();
+
+
+    $('#btn-confirm-delete-transaction').click(function () {
+        deleteTransaction();
+    });
 });
 
 
@@ -17,19 +22,41 @@ let getTransactions = () => {
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             let html = "";
+
             data.forEach(function (transaction) {
+                const delete_button = transaction.logged_in === true ? '<td><i class="bi bi-trash-fill" transaction-id="'+transaction.id+'"></i></td>' : "";
                 html += '<tr>\n' +
                     '                    <td>'+transaction.description+'</td>\n' +
                     '                    <td>'+transaction.date+'</td>\n' +
                     '                    <td>'+transaction.amount+'</td>\n' +
-                    '                    <td>'+transaction.balance+'</td>\n' +
+                    '                    <td>'+transaction.balance+'</td>'+ delete_button +
                     '                </tr>';
             });
 
             $("#tbody-transactions").html(html);
+            $('.bi-trash-fill').click(function (event) {
+                sessionStorage.setItem("transaction-id", event.target.getAttribute("transaction-id"));
+                $('#confirmModal').modal('toggle');
+            });
         },
         error: function (xhr) {
 
+        }
+    });
+}
+
+
+let deleteTransaction = () => {
+    let url = "/api/delete/transaction/?id=" + sessionStorage.getItem("transaction-id");
+    $.ajax({
+        url: url,
+        type: "delete",
+        success: function (response) {
+            showToast(response.result_message);
+            if (response.result_code === 0) {
+                getTransactions();
+            }
+            $('#confirmModal').modal('toggle');
         }
     });
 }

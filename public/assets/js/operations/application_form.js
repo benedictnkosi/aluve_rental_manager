@@ -79,6 +79,14 @@ let getUnit = () => {
         url: url,
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
+
+            if(data.listed === false){
+                $(".thanks-message").hide();
+                $("#text-message-no-listed").show();
+                $(".tab").hide();
+                $("#nextBtn").hide();
+                document.getElementsByClassName("step")[currentTab].className = "step finish";
+            }
             const parking = data.parking === true ? "Provided" : "Not Provided";
             const children = data.children_allowed === true ? "Allowed" : "Not Allowed";
 

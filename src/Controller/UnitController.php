@@ -69,12 +69,32 @@ class UnitController extends AbstractController
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $propertyId = 0;
-        if($request->get('id') !== null){
-            $propertyId = $request->get('id');
+        $unitId = 0;
+        if($request->get('id')){
+            $unitId = $request->get('id');
+        }
+        $response = array();
+        $errors = false;
+        //check if is bulk create
+        if(strcmp($request->get('bulkCreate'), "true")== 0 && !$request->get('id')){
+            $numberOfUnitsToCreate = intval($request->get('numberOfUnits'));
+            for ($x = 0; $x < $numberOfUnitsToCreate; $x++) {
+                $roomName = $request->get('name') . " " . $x + 1;
+                $response = $unitApi->createUnit($roomName, $unitId, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'));
+                if($response["result_code"] == 1){
+                    $errors = true;
+                }
+            }
+        }else{
+            $response = $unitApi->createUnit($request->get('name'), $unitId, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'));
         }
 
-        $response = $unitApi->createUnit($request->get('name'), $propertyId, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'));
+        if($errors){
+            $response = array(
+                'result_code' => 1,
+                'result_message' => "Failed to create some of the units"
+            );
+        }
         return new JsonResponse($response , 200, array());
     }
 

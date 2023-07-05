@@ -36,6 +36,14 @@ class Inspection
     private $date = 'CURRENT_TIMESTAMP';
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(name="status", type="string", length=11, nullable=true, options={"default"="new"})
+     */
+    private $status = 'new';
+
+
+    /**
      * @var Leases
      *
      * @ORM\ManyToOne(targetEntity="Leases")
@@ -44,6 +52,22 @@ class Inspection
      * })
      */
     private $lease;
+
+    /**
+     * @return string|null
+     */
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string|null $status
+     */
+    public function setStatus(?string $status): void
+    {
+        $this->status = $status;
+    }
 
     /**
      * @return int

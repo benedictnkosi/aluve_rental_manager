@@ -162,7 +162,6 @@ let getAllLeases = () => {
                         '                                            <medium>Status: ' + lease.status + '</medium>\n' +
                         '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                        <td>\n' +
                     '                            <div class="btn-group">\n' +
                     '                                <button class="btn btn-secondary add-payment-button" lease-id="'+lease.lease_id+'" type="button" data-bs-toggle="modal" data-bs-target="#leasePaymentModal">\n' +
                     '                                    Add Payment\n' +
@@ -182,7 +181,6 @@ let getAllLeases = () => {
                     '                                ' +
                     '</ul>\n' +
                     '                            </div>\n' +
-                    '                        </td>\n' +
                     '                                        </li>\n' +
                     '                                    </ul>\n' +
                     '                                </div>\n' +

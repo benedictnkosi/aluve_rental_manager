@@ -18,7 +18,7 @@ class NavigationController extends AbstractController
      */
     public function app_dashboard(LoggerInterface $logger): Response
     {
-        return $this->render('dashboard.html');
+        return $this->render('property.html');
     }
 
 

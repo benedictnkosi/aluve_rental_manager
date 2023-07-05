@@ -46,6 +46,8 @@ class TransactionController extends AbstractController
         return new JsonResponse($response, 200, array());
     }
 
+
+
     /**
      * @Route("public/lease/transactions/{guid}")
      */
@@ -57,6 +59,20 @@ class TransactionController extends AbstractController
         }
 
         $response = $transactionApi->getTransactions($guid);
+        return new JsonResponse($response, 200, array());
+    }
+
+    /**
+     * @Route("api/delete/transaction/")
+     */
+    public function deleteTransaction(Request $request, LoggerInterface $logger, TransactionApi $transactionApi): Response
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('delete')) {
+            return new JsonResponse("Method Not Allowed", 405, array());
+        }
+
+        $response = $transactionApi->deleteTransaction($request->get("id"));
         return new JsonResponse($response, 200, array());
     }
 

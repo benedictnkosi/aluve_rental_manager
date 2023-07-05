@@ -168,7 +168,7 @@ function convertJSONtoHTML(jsonData) {
         html += `<tr><td>Vanity </td><td>${item.vanity}</td><td>${item.vanityComments}</td></tr>`;
         html += `<tr><td>Plumbing </td><td>${item.plumbing}</td><td>${item.plumbingComments}</td></tr>`;
         html += `<tr><td>Toilet </td><td>${item.toilet}</td><td>${item.toiletComments}</td></tr>`;
-        html += `<tr><td>Shower </td><td>${item.shower}</td><td>${item.showerComments}</td></tr>`;
+        html += `<tr><td>Shower </td><td>${item.showerTub}</td><td>${item.showerComments}</td></tr>`;
         html += `<tr><td>Medicine Cabinet </td><td>${item.medicineCabinet}</td><td>${item.medicineCabinetComments}</td></tr>`;
         html += `<tr><td>Walls </td><td>${item.walls}</td><td>${item.wallsComments}</td></tr>`;
         html += `<tr><td>Doors </td><td>${item.doors}</td><td>${item.doorsComments}</td></tr>`;
