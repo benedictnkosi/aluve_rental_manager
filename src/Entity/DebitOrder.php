@@ -15,11 +15,11 @@ class DebitOrder
     /**
      * @var int
      *
-     * @ORM\Column(name="iddebit_order", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $iddebitOrder;
+    private $id;
 
     /**
      * @var string|null

@@ -74,10 +74,23 @@ class ApplicationsController extends AbstractController
     public function getDocument($name, LoggerInterface $logger): BinaryFileResponse
     {
         $logger->info("Starting Method: " . __METHOD__);
-        $documentDir = __DIR__ . '/../../files/documents/';
+        $documentDir = __DIR__ . '/../../files/application_documents/';
 
         return new BinaryFileResponse($documentDir . $name);
     }
+
+    /**
+     * @Route("api/lease_document/{name}")
+     */
+    public function getLease($name, LoggerInterface $logger): BinaryFileResponse
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        $documentDir = __DIR__ . '/../../files/property_leases/';
+
+        return new BinaryFileResponse($documentDir . $name);
+    }
+
+
     /**
      * @Route("api/application/decline")
      */
@@ -110,7 +123,7 @@ class ApplicationsController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
         }
 
-        $uploadDir = __DIR__ . '/../../files/documents/';
+        $uploadDir = __DIR__ . '/../../files/application_documents/';
         $uploader->setDir($uploadDir);
         $uploader->setExtensions(array('pdf'));  //allowed extensions list//
 

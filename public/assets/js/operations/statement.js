@@ -45,7 +45,6 @@ let getTransactions = () => {
     });
 }
 
-
 let deleteTransaction = () => {
     let url = "/api/delete/transaction/?id=" + sessionStorage.getItem("transaction-id");
     $.ajax({

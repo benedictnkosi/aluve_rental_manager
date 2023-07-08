@@ -38,14 +38,13 @@ class TransactionApi extends AbstractController
         }
     }
 
-
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
     public function addTransaction($leaseId, $amount, $description, $transactionDate): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('idleases' => $leaseId));
+            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('id' => $leaseId));
             if ($lease == null) {
                 return array(
                     'result_message' => "Lease not found",
@@ -75,7 +74,6 @@ class TransactionApi extends AbstractController
             );
         }
     }
-
 
     public function getTransactions($guid): array
     {
@@ -114,7 +112,6 @@ class TransactionApi extends AbstractController
             );
         }
     }
-
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
     public function deleteTransaction($id): array
@@ -180,6 +177,36 @@ class TransactionApi extends AbstractController
         }
     }
 
+    public function getBalanceDueForAllActiveLeases($propertyId): array|int
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' => $propertyId));
+            if ($property == null) {
+                return 0;
+            }
+
+            $leases = $this->em->getRepository(Leases::class)->findBy(array('status' => "active"));
+            $totalDue = 0;
+            foreach ($leases as $lease) {
+                $response = $this->getBalanceDue($lease->getId());
+                $totalDue += intval($response["result_message"]);
+            }
+
+            return array(
+                'total_due' => $totalDue,
+                'result_code' => 0
+            );
+        } catch (Exception $ex) {
+            $this->logger->error("Error " . print_r($responseArray, true));
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
 
     /**
      * @throws ConnectionException
@@ -240,7 +267,7 @@ class TransactionApi extends AbstractController
                             $this->logger->info("partial account number " . $partialAccountNumber);
                             if(str_contains($lease->getUnit()->getProperty()->getAccountNumber(), $partialAccountNumber)){
                                 $this->logger->info("Leases found matching payment reference");
-                                $this->addTransaction($lease->getIdleases(), $amount, "Thank you for payment - $ref", $now->format("Y-m-d"));
+                                $this->addTransaction($lease->getId(), $amount, "Thank you for payment - $ref", $now->format("Y-m-d"));
                                 $leaseFound = "yes";
                             }
                         }
@@ -264,6 +291,4 @@ class TransactionApi extends AbstractController
 
         return $responseArray;
     }
-
-
 }

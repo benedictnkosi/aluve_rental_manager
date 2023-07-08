@@ -44,11 +44,11 @@ class UnitApi extends AbstractController
             }
 
             foreach ($units as $unit) {
-                $lease = $this->em->getRepository(Leases::class)->findOneBy(array('unit' => $unit->getIdunits(), 'status' => "active"));
+                $lease = $this->em->getRepository(Leases::class)->findOneBy(array('unit' => $unit->getId(), 'status' => "active"));
                 if ($lease == null) {
                     $responseArray[] = array(
                         'unit_name' => $unit->getName(),
-                        'unit_id' => $unit->getIdunits(),
+                        'unit_id' => $unit->getId(),
                         'listed' => $unit->getListed(),
                         'min_gross_salary' => "R". number_format($unit->getMinGrossSalary(), 2, '.', ''),
                         'max_occupants' => $unit->getMaxOccupants(),
@@ -63,14 +63,14 @@ class UnitApi extends AbstractController
                     $tenant = $lease->getTenant();
                     $responseArray[] = array(
                         'unit_name' => $unit->getName(),
-                        'unit_id' => $unit->getIdunits(),
+                        'unit_id' => $unit->getId(),
                         'tenant_name' => $tenant->getName(),
                         'phone_number' => $tenant->getPhone(),
                         'email' => $tenant->getEmail(),
-                        'tenant_id' => $tenant->getIdtenant(),
+                        'tenant_id' => $tenant->getId(),
                         'lease_start' => $lease->getStart()->format("Y-m-d"),
                         'lease_end' => $lease->getEnd()->format("Y-m-d"),
-                        'lease_id' => $lease->getIdleases(),
+                        'lease_id' => $lease->getId(),
                         'deposit' => number_format($lease->getDeposit(), 2, '.', ''),
                         'listed' => $unit->getListed(),
                         'min_gross_salary' => "R". number_format($unit->getMinGrossSalary(), 2, '.', ''),
@@ -99,7 +99,7 @@ class UnitApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $unit = $this->em->getRepository(Units::class)->findOneBy(array('idunits' => $unitId));
+            $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $unitId));
             if ($unit == null) {
                 return array(
                     'result_message' => "Error: Unit not found",
@@ -118,7 +118,7 @@ class UnitApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function createUnit($name, $unitId, $listed, $parking, $childrenAllowed, $maxOccupants, $minGrossSalary, $rent, $bedrooms, $bathrooms): array
+    public function createUnit($name, $unitId, $listed, $parking, $childrenAllowed, $maxOccupants, $minGrossSalary, $rent, $bedrooms, $bathrooms, $propertId): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -127,7 +127,7 @@ class UnitApi extends AbstractController
             if ($unitId == 0) {
                 $unit = new Units();
             } else {
-                $unit = $this->em->getRepository(Units::class)->findOneBy(array('idunits' => $unitId));
+                $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $unitId));
                 if($unit == null){
                     return array(
                         'result_message' => "Error: Unit not found",
@@ -137,10 +137,13 @@ class UnitApi extends AbstractController
                 $successMessage = "Successfully updated rental unit";
             }
 
-            $user = $this->em->getRepository(User::class)->findOneBy(array('email' => $this->getUser()->getUserIdentifier()));
-            $propertyUser = $this->em->getRepository(Propertyusers::class)->findOneBy(array('user' => $user));
-
-            $property = $propertyUser->getProperty();
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' => $propertId));
+            if ($property == null) {
+                return array(
+                    'result_message' => "Property not found",
+                    'result_code' => 1
+                );
+            }
 
             $this->logger->info("min salary " .$minGrossSalary);
             $unit->setName($name);
@@ -182,7 +185,7 @@ class UnitApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $unit = $this->em->getRepository(Units::class)->findOneBy(array('idunits' =>  $id));
+            $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' =>  $id));
             if($unit == null){
                 return array(
                     'result_message' => "Error: Unit not found",

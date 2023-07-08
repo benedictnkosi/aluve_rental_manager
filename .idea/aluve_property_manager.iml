@@ -137,6 +137,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/jms/metadata" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/secit-pl/imap-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/php-imap/php-imap" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/twilio/sdk" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

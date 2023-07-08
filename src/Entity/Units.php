@@ -15,11 +15,11 @@ class Units
     /**
      * @var int
      *
-     * @ORM\Column(name="idunits", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idunits;
+    private $id;
 
     /**
      * @var string|null
@@ -27,6 +27,13 @@ class Units
      * @ORM\Column(name="name", type="string", length=45, nullable=true)
      */
     private $name;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="rent", type="integer", nullable=false)
+     */
+    private $rent = '0';
 
     /**
      * @var bool|null
@@ -43,16 +50,6 @@ class Units
     private $status = 'active';
 
     /**
-     * @var Properties
-     *
-     * @ORM\ManyToOne(targetEntity="Properties")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="property", referencedColumnName="idProperties")
-     * })
-     */
-    private $property;
-
-    /**
      * @var bool|null
      *
      * @ORM\Column(name="parking", type="boolean", nullable=true)
@@ -65,13 +62,6 @@ class Units
      * @ORM\Column(name="children_allowed", type="boolean", nullable=true)
      */
     private $childrenAllowed;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="rent", type="integer", nullable=false)
-     */
-    private $rent = '0';
 
     /**
      * @var int|null
@@ -102,35 +92,45 @@ class Units
     private $bathrooms = 1;
 
     /**
-     * @return int|null
+     * @var Properties
+     *
+     * @ORM\ManyToOne(targetEntity="Properties")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="property", referencedColumnName="id")
+     * })
      */
-    public function getBedrooms(): ?int
+    private $property;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
     {
-        return $this->bedrooms;
+        return $this->id;
     }
 
     /**
-     * @param int|null $bedrooms
+     * @param int $id
      */
-    public function setBedrooms(?int $bedrooms): void
+    public function setId(int $id): void
     {
-        $this->bedrooms = $bedrooms;
+        $this->id = $id;
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
-    public function getBathrooms(): ?int
+    public function getName(): ?string
     {
-        return $this->bathrooms;
+        return $this->name;
     }
 
     /**
-     * @param int|null $bathrooms
+     * @param string|null $name
      */
-    public function setBathrooms(?int $bathrooms): void
+    public function setName(?string $name): void
     {
-        $this->bathrooms = $bathrooms;
+        $this->name = $name;
     }
 
     /**
@@ -152,6 +152,38 @@ class Units
     /**
      * @return bool|null
      */
+    public function getListed(): bool|string|null
+    {
+        return $this->listed;
+    }
+
+    /**
+     * @param bool|null $listed
+     */
+    public function setListed(bool|string|null $listed): void
+    {
+        $this->listed = $listed;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return bool|null
+     */
     public function getParking(): ?bool
     {
         return $this->parking;
@@ -164,7 +196,6 @@ class Units
     {
         $this->parking = $parking;
     }
-
 
     /**
      * @return bool|null
@@ -215,67 +246,35 @@ class Units
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getIdunits(): int
+    public function getBedrooms(): ?int
     {
-        return $this->idunits;
+        return $this->bedrooms;
     }
 
     /**
-     * @param int $idunits
+     * @param int|null $bedrooms
      */
-    public function setIdunits(int $idunits): void
+    public function setBedrooms(?int $bedrooms): void
     {
-        $this->idunits = $idunits;
+        $this->bedrooms = $bedrooms;
     }
 
     /**
-     * @return string|null
+     * @return int|null
      */
-    public function getName(): ?string
+    public function getBathrooms(): ?int
     {
-        return $this->name;
+        return $this->bathrooms;
     }
 
     /**
-     * @param string|null $name
+     * @param int|null $bathrooms
      */
-    public function setName(?string $name): void
+    public function setBathrooms(?int $bathrooms): void
     {
-        $this->name = $name;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function getListed(): bool|string|null
-    {
-        return $this->listed;
-    }
-
-    /**
-     * @param bool|null $listed
-     */
-    public function setListed(bool|string|null $listed): void
-    {
-        $this->listed = $listed;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus(): string
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param string $status
-     */
-    public function setStatus(string $status): void
-    {
-        $this->status = $status;
+        $this->bathrooms = $bathrooms;
     }
 
     /**

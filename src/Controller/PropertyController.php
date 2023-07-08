@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Service\ApplicationsApi;
+use App\Service\FileUploaderApi;
 use App\Service\PropertyApi;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Log\LoggerInterface;
@@ -44,6 +46,49 @@ class PropertyController extends AbstractController
         return new JsonResponse($jsonContent , 200, array(), true);
     }
 
+    /**
+     * @Route("public/property/upload_lease")
+     * @throws \Exception
+     */
+    public function uploadPropertyLease( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, PropertyApi $propertyApi): Response
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('post')) {
+            return new JsonResponse("Internal server errors" , 500, array());
+        }
+
+        $file = $request->files->get('file');
+        if (empty($file))
+        {
+            $logger->info("No file specified");
+            return new Response("No file specified",
+                Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
+        }
+
+        $uploadDir = __DIR__ . '/../../files/property_leases/';
+        $uploader->setDir($uploadDir);
+        $uploader->setExtensions(array('pdf'));  //allowed extensions list//
+
+        $uploader->setMaxSize(5);//set max file size to be allowed in MB//
+
+        $response = $uploader->uploadFile();
+        if($response["result_code"] == 1){
+            //upload failed
+            header("HTTP/1.1 500 Internal Server Error");
+            return new Response($response["result_message"],
+                Response::HTTP_NOT_ACCEPTABLE, ['content-type' => 'text/plain']);
+        }
+
+        //write to DB
+        $response = $propertyApi->updateProperty("property_lease", $response["file_name"], $request->get("property_id"));
+        if($response["result_code"] == 1){
+            return new JsonResponse($response, 200, array());
+        }else{
+            return new JsonResponse($response, 201, array());
+
+        }
+
+    }
 
     /**
      * @Route("api/property/update")

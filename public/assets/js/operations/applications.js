@@ -47,41 +47,45 @@ let getApplications = () => {
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             let html = "";
-            data.forEach(function (application) {
+            data.forEach(function (response) {
                 html += '<tr>\n' +
-                    '                        <td>'+application.id+'</td>\n' +
+                    '                        <td>'+response.application.id+'</td>\n' +
                     '                        <td>\n' +
-                    '                            '+application.unit.name+'\n' +
+                    '                            '+response.application.unit.name+'\n' +
                     '                        </td>\n' +
-                    '                        <td>'+application.name+'</td>\n' +
-                    '                        <td>'+application.phone+'</td>\n' +
-                    '                        <td>'+application.email+'</td>\n' +
-                    '                        <td>'+application.adults+'</td>\n' +
-                    '                        <td>'+application.children+'</td>\n' +
+                    '                        <td>'+response.application.tenant.name+'</td>\n' +
+                    '                        <td>'+response.application.tenant.phone+'</td>\n' +
+                    '                        <td>'+response.application.tenant.email+'</td>\n' +
+                    '                        <td>'+response.application.tenant.id_number+'</td>\n' +
+                    '                        <td>'+response.application.tenant.adults+'</td>\n' +
+                    '                        <td>'+response.application.tenant.children+'</td>\n' +
 
-                    '                        <td>'+application.salary+'</td>\n' +
-                    '                        <td>'+application.occupation+'</td>\n' +
-                    '                        <td>'+application.status+'</td>\n' +
-                    '                        <td>'+application.date+'</td>\n' +
+                    '                        <td>'+response.application.tenant.salary+'</td>\n' +
+                    '                        <td>'+response.application.tenant.occupation+'</td>\n' +
+                    '                        <td>'+response.application.status+'</td>\n' +
+                    '                        <td>'+response.application.date+'</td>\n' +
                     '                        <td>\n' +
                     '                            <div class="btn-group">\n' +
-                    '                                <button class="btn btn-secondary view-notes-button" application-id="'+application.id+'" type="button" data-bs-toggle="modal" data-bs-target="#leasePaymentModal">\n' +
-                    '                                    View Notes\n' +
+                    '                                <button class="btn btn-secondary " type="button">\n' +
+                    '                                    Actions\n' +
                     '                                </button>\n' +
-                    '                                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
+                    '                                <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
                     '                                    <span class="visually-hidden">Toggle Dropdown</span>\n' +
-                    '                                </button>\n';
+                    '                                </button>\n'+
+                    '                                <ul class="dropdown-menu dropdown-menu-dark">\n';
 
-                    if(application.status.localeCompare("docs_uploaded") === 0){
-                        html += '                                <ul class="dropdown-menu dropdown-menu-dark">\n' +
-                            '                                    <li><a class="dropdown-item btn-decline-application" application-id="'+application.id+'" href="#">Decline Application</a></li>\n' +
-                            '                                    <li><a class="dropdown-item btn-accept-application" application-id="'+application.id+'" href="#">Accept Application</a></li>\n' +
-                            '                                    <li><a class="dropdown-item"  target="_blank" href="/api/document/'+application.bank_statement+'">Bank Statement</a></li>\n' +
-                            '                                    <li><a class="dropdown-item" target="_blank"  href="/api/document/'+application.payslip+'">Payslip</a></li>\n';
+                    if(response.application.status.localeCompare("accepted") !== 0){
+                        html += '        <li><a class="dropdown-item btn-decline-application" application-id="'+response.application.id+'" href="#">Decline Application</a></li>\n' ;
+                    }
 
-                        if (typeof application.co_applicant_bank_statement !== 'undefined' && typeof application.co_applicant_payslip !== 'undefined') {
-                            html += '                                      <li><a class="dropdown-item" target="_blank" href="/api/document/'+application.co_applicant_bank_statement+'">Co-Bank Statement</a></li>\n' +
-                            '                                    <li><a class="dropdown-item"  target="_blank" href="/api/document/'+application.co_applicant_payslip+'">Co-Bank Statement</a></li>\n';
+                if(response.application.status.localeCompare("docs_uploaded") === 0){
+                    html +=  '                                   <li><a class="dropdown-item btn-accept-application" application-id="'+response.application.id+'" href="#">Accept Application</a></li>\n' +
+                            '                                    <li><a class="dropdown-item"  target="_blank" href="/api/document/'+response.applicant_bank_statement+'">Bank Statement</a></li>\n' +
+                            '                                    <li><a class="dropdown-item" target="_blank"  href="/api/document/'+response.applicant_payslip+'">Payslip</a></li>\n';
+
+                        if (response.co_applicant_bank_statement.length !== 0 && typeof response.co_applicant_payslip.length !== 0) {
+                            html += '                                      <li><a class="dropdown-item" target="_blank" href="/api/document/'+response.co_applicant_bank_statement+'">Co-Bank Statement</a></li>\n' +
+                            '                                    <li><a class="dropdown-item"  target="_blank" href="/api/document/'+response.co_applicant_payslip+'">Co-Payslip</a></li>\n';
                         }
 
                         html += '</ul>\n';

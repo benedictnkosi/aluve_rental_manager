@@ -80,13 +80,13 @@ class UnitController extends AbstractController
             $numberOfUnitsToCreate = intval($request->get('numberOfUnits'));
             for ($x = 0; $x < $numberOfUnitsToCreate; $x++) {
                 $roomName = $request->get('name') . " " . $x + 1;
-                $response = $unitApi->createUnit($roomName, $unitId, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'));
+                $response = $unitApi->createUnit($roomName, $unitId, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'));
                 if($response["result_code"] == 1){
                     $errors = true;
                 }
             }
         }else{
-            $response = $unitApi->createUnit($request->get('name'), $unitId, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'));
+            $response = $unitApi->createUnit($request->get('name'), $unitId, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'));
         }
 
         if($errors){

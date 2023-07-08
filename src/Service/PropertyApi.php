@@ -56,7 +56,7 @@ class PropertyApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('idproperties' =>  $id));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' =>  $id));
             if ($property == null) {
                 return array(
                     'result_message' => "Property not found",
@@ -78,7 +78,7 @@ class PropertyApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('idproperties' =>  $id));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' =>  $id));
             if($property == null){
                 return array(
                     'result_message' => "Property not found",
@@ -96,9 +96,6 @@ class PropertyApi extends AbstractController
                 case "lateFee":
                     $property->setLateFee($value);
                     break;
-                case "quickbooksToken":
-                    $property->setQuickbooksToken($value);
-                    break;
                 case "rentDue":
                     $property->setRentDue($value);
                     break;
@@ -111,11 +108,14 @@ class PropertyApi extends AbstractController
                 case "accountNumber":
                     $property->setAccountNUmber($value);
                     break;
-                case "applicaitonFee":
+                case "applicationFee":
                     $property->setApplicationFee($value);
                     break;
                 case "depositPercent":
                     $property->setDepositPecent($value);
+                    break;
+                case "property_lease":
+                    $property->setLeaseFileName($value);
                     break;
                 default:
             }
@@ -145,7 +145,7 @@ class PropertyApi extends AbstractController
             if($propertyId == 0){
                 $property =  new Properties();
             }else{
-                $property = $this->em->getRepository(Properties::class)->findOneBy(array('idproperties' =>  $propertyId));
+                $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' =>  $propertyId));
             }
 
             $property->setName($name);

@@ -53,4 +53,12 @@ class LoginController extends AbstractController
             return new JsonResponse("logged in", 200, array());
         }
     }
+
+    /**
+     * @Route("/logout", name="app_logout", methods={"GET"})
+     */
+    public function logout(): void
+    {
+
+    }
 }

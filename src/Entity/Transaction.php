@@ -47,7 +47,7 @@ class Transaction
      *
      * @ORM\ManyToOne(targetEntity="Leases")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="lease", referencedColumnName="idleases")
+     *   @ORM\JoinColumn(name="lease", referencedColumnName="id")
      * })
      */
     private $lease;

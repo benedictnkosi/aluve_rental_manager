@@ -15,11 +15,11 @@ class Properties
     /**
      * @var int
      *
-     * @ORM\Column(name="idProperties", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idproperties;
+    private $id;
 
     /**
      * @var string|null
@@ -45,9 +45,9 @@ class Properties
     /**
      * @var string|null
      *
-     * @ORM\Column(name="quickbooks_token", type="string", length=100, nullable=true)
+     * @ORM\Column(name="lease_file_name", type="string", length=100, nullable=true)
      */
-    private $quickbooksToken;
+    private $leaseFileName;
 
     /**
      * @var int|null
@@ -80,7 +80,7 @@ class Properties
     /**
      * @var string|null
      *
-     * @ORM\Column(name="account_number", type="string", length=20, nullable=false, options={"default"="active"})
+     * @ORM\Column(name="account_number", type="string", length=20, nullable=true)
      */
     private $accountNumber;
 
@@ -90,7 +90,6 @@ class Properties
      * @ORM\Column(name="deposit_pecent", type="integer", nullable=false)
      */
     private $depositPecent = '0';
-
 
     /**
      * @var int
@@ -102,67 +101,17 @@ class Properties
     /**
      * @return int
      */
-    public function getDepositPecent(): int|string
+    public function getId(): int
     {
-        return $this->depositPecent;
+        return $this->id;
     }
 
     /**
-     * @param int $depositPecent
+     * @param int $id
      */
-    public function setDepositPecent(int|string $depositPecent): void
+    public function setId(int $id): void
     {
-        $this->depositPecent = $depositPecent;
-    }
-
-    /**
-     * @return int|string
-     */
-    public function getApplicationFee(): int|string
-    {
-        return $this->applicationFee;
-    }
-
-    /**
-     * @param int|string $applicationFee
-     */
-    public function setApplicationFee(int|string $applicationFee): void
-    {
-        $this->applicationFee = $applicationFee;
-    }
-
-
-    /**
-     * @return string|null
-     */
-    public function getAccountNumber(): ?string
-    {
-        return $this->accountNumber;
-    }
-
-    /**
-     * @param string|null $accountNumber
-     */
-    public function setAccountNumber(?string $accountNumber): void
-    {
-        $this->accountNumber = $accountNumber;
-    }
-
-
-    /**
-     * @return int
-     */
-    public function getIdproperties(): int
-    {
-        return $this->idproperties;
-    }
-
-    /**
-     * @param int $idproperties
-     */
-    public function setIdproperties(int $idproperties): void
-    {
-        $this->idproperties = $idproperties;
+        $this->id = $id;
     }
 
     /**
@@ -216,17 +165,17 @@ class Properties
     /**
      * @return string|null
      */
-    public function getQuickbooksToken(): ?string
+    public function getLeaseFileName(): ?string
     {
-        return $this->quickbooksToken;
+        return $this->leaseFileName;
     }
 
     /**
-     * @param string|null $quickbooksToken
+     * @param string|null $leaseFileName
      */
-    public function setQuickbooksToken(?string $quickbooksToken): void
+    public function setLeaseFileName(?string $leaseFileName): void
     {
-        $this->quickbooksToken = $quickbooksToken;
+        $this->leaseFileName = $leaseFileName;
     }
 
     /**
@@ -291,6 +240,54 @@ class Properties
     public function setStatus(string $status): void
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAccountNumber(): ?string
+    {
+        return $this->accountNumber;
+    }
+
+    /**
+     * @param string|null $accountNumber
+     */
+    public function setAccountNumber(?string $accountNumber): void
+    {
+        $this->accountNumber = $accountNumber;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDepositPecent(): int|string
+    {
+        return $this->depositPecent;
+    }
+
+    /**
+     * @param int $depositPecent
+     */
+    public function setDepositPecent(int|string $depositPecent): void
+    {
+        $this->depositPecent = $depositPecent;
+    }
+
+    /**
+     * @return int
+     */
+    public function getApplicationFee(): int|string
+    {
+        return $this->applicationFee;
+    }
+
+    /**
+     * @param int $applicationFee
+     */
+    public function setApplicationFee(int|string $applicationFee): void
+    {
+        $this->applicationFee = $applicationFee;
     }
 
 

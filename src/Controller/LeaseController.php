@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Document;
 use App\Service\ApplicationsApi;
+use App\Service\DocumentApi;
 use App\Service\FileUploaderApi;
 use App\Service\LeaseApi;
 use App\Service\PropertyApi;
+use App\Service\TenantApi;
 use App\Service\UnitApi;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Log\LoggerInterface;
@@ -78,13 +81,17 @@ class LeaseController extends AbstractController
     /**
      * @Route("api/lease/create")
      */
-    public function createLease(Request $request, LoggerInterface $logger, LeaseApi $leaseApi): Response{
+    public function createLease(Request $request, LoggerInterface $logger, LeaseApi $leaseApi, TenantApi $tenantApi): Response{
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('POST')) {
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $leaseApi->createLease($request->get('tenantName'), $request->get('phone'), $request->get('email'), $request->get('unitId'), $request->get('start_date'), $request->get('end_date'), $request->get('deposit'), $request->get('lease_id'), $request->get('payment_rules'),$request->get('adults'),$request->get('children'));
+        $response = $tenantApi->createTenant($request->get('tenantName'), $request->get('phone'), $request->get('email'),$request->get('id_document_type'),  $request->get('application_id_number'), $request->get('salary'), $request->get('occupation'),$request->get('adult_count'),$request->get('child_count'));
+        if($response["result_code"] == 1){
+            return new JsonResponse($response , 200, array());
+        }
+        $response = $leaseApi->createLease($response["tenant"], $request->get('unitId'), $request->get('start_date'), $request->get('end_date'), $request->get('deposit'), $request->get('lease_id'), $request->get('payment_rules'));
         return new JsonResponse($response , 200, array());
     }
 
@@ -108,7 +115,7 @@ class LeaseController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
         }
 
-        $uploadDir = __DIR__ . '/../../files/documents/';
+        $uploadDir = __DIR__ . '/../../files/application_documents/';
         $uploader->setDir($uploadDir);
         $uploader->setExtensions(array('pdf'));  //allowed extensions list//
 

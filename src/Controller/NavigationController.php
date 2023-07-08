@@ -14,6 +14,14 @@ class NavigationController extends AbstractController
 {
 
     /**
+     * @Route("/", name="home")
+     */
+    public function home(): Response
+    {
+        return $this->render("index.html");
+    }
+
+    /**
      * @Route("/dashboard/", name="app_dashboard")
      */
     public function app_dashboard(LoggerInterface $logger): Response

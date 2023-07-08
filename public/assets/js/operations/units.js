@@ -16,10 +16,10 @@ $(document).ready(function () {
 
     $('#checkBulkCreateUnits').change(function () {
         if (this.checked) {
-            $('#number-of-units-div').show();
+            $('#number-of-units-div').removeClass("display-none");
             $('#unit-name-label').text("Unit name prefix:");
         } else {
-            $('#number-of-units-div').hide();
+            $('#number-of-units-div').addClass("display-none");
             $('#unit-name-label').text("Unit Name:");
         }
     });
@@ -63,7 +63,8 @@ let createUnit = () => {
         bedrooms: bedrooms,
         bathrooms: bathrooms,
         bulkCreate: checkBulkCreateUnits,
-        numberOfUnits: numberOfUnits
+        numberOfUnits: numberOfUnits,
+        property_id: sessionStorage.getItem("property-id")
     };
 
     $.ajax({
@@ -115,6 +116,7 @@ let getAllUnits = () => {
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             let html = "";
+            let unitsDropDownHtml = "";
             data.forEach(function (unit) {
                 let listed = "NOT LISTED";
                 let eyeIcon = "bi-eye-slash";
@@ -132,6 +134,8 @@ let getAllUnits = () => {
                     parking = "Not Provided"
                 }
 
+                unitsDropDownHtml += '<li><a class="dropdown-item lease-unit-dropdown" lease-unit-id="'+unit.unit_id+'"\n' +
+                    '                                           href="javascript:void(0)">'+unit.unit_name+'</a></li>';
 
                 html += '<div class="col">\n' +
                     '                            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg property-image"\n' +
@@ -173,14 +177,13 @@ let getAllUnits = () => {
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                            <div class="btn-group">\n' +
-                    '                                <button class="btn btn-secondary"  unit-id="' + unit.unit_id + '" type="button">\n' +
-                    '                                    Actions\n' +
+                    '                                <button class="btn btn-secondary btn-update-unit"  unit-id="' + unit.unit_id + '" unit-bedrooms="' + unit.bedrooms + '" unit-bathrooms="' + unit.bathrooms + '"unit-rent="' + unit.rent + '" parking="' + unit.parking + '" children="' + unit.children + '" min-salary="' + unit.min_gross_salary + '" max-occupants="' + unit.max_occupants + '"listed="' + unit.listed + '" unit-name="' + unit.unit_name + '" type="button">\n' +
+                    '                                    Update unit\n' +
                     '                                </button>\n' +
-                    '                                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
+                    '                                <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
                     '                                    <span class="visually-hidden">Toggle Dropdown</span>\n' +
                     '                                </button>\n' +
                     '                                <ul class="dropdown-menu dropdown-menu-dark">\n' +
-                    '                                    <li><a class="dropdown-item btn-update-unit" href="javascript:void(0)" unit-id="' + unit.unit_id + '" unit-bedrooms="' + unit.bedrooms + '" unit-bathrooms="' + unit.bathrooms + '"unit-rent="' + unit.rent + '" parking="' + unit.parking + '" children="' + unit.children + '" min-salary="' + unit.min_gross_salary + '" max-occupants="' + unit.max_occupants + '"listed="' + unit.listed + '" unit-name="' + unit.unit_name + '">Update Unit</a></li>\n' +
                     '                                    <li><a class="dropdown-item btn-delete-unit" href="javascript:void(0)" unit-id="' + unit.unit_id + '" >Delete Unit</a></li>\n' +
                     '                                    <li><a class="dropdown-item btn-copy-listing-link" unit-id="' + unit.unit_id + '" href="javascript:void(0)">Copy Application Link</a></li>\n' +
                     '</ul>\n' +
@@ -195,6 +198,8 @@ let getAllUnits = () => {
             });
 
             $("#div-units").html(html);
+
+            $("#ul-units").html(unitsDropDownHtml);
 
             $(".btn-copy-listing-link").click(function (event) {
                 event.preventDefault();
@@ -256,6 +261,11 @@ let getAllUnits = () => {
             $("#btn-confirm-delete-unit").click(function (event) {
                 event.preventDefault();
                 deleteUnit(sessionStorage.getItem("unit-id"));
+            });
+
+            $(".lease-unit-dropdown").click(function (event) {
+                sessionStorage.setItem("lease-unit-id", event.target.getAttribute("lease-unit-id"));
+                $('#unit-dropdown-selected').html(event.target.innerText);
             });
         },
         error: function (xhr) {

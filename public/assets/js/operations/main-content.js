@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    $("div.spanner").addClass("show");
+    $("div.overlay").addClass("show");
+
     if (sessionStorage.getItem("current_page") === null) {
         updateView('dashboard-content-div');
     } else {
@@ -6,8 +9,17 @@ $(document).ready(function () {
     }
 
     $(".nav-link").click(function (event) {
-        updateView(event.target.getAttribute("main-content"), event.target.getAttribute("header"));
+        if(!$(event.target).hasClass(("settings-nav-link"))){
+            updateView(event.target.getAttribute("main-content"), event.target.getAttribute("header"));
+        }
     });
+
+    $(".settings-nav-link").click(function (event) {
+        $(".settings-nav-link").removeClass("active");
+        updateSettingsView(event.target.getAttribute("form-to-show"));
+        $(event.target).addClass("active");
+    });
+
 
     $(document).ajaxSend(function(){
         $("div.spanner").addClass("show");
@@ -19,6 +31,11 @@ $(document).ready(function () {
         $("div.overlay").removeClass("show");
     });
 });
+
+function updateSettingsView(selectedForm) {
+    $(".settings-form").addClass("display-none");
+    $("#" + selectedForm).removeClass("display-none");
+}
 
 function updateView(selectedDiv, header) {
     $(".main-content").addClass("display-none");

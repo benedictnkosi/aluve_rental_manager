@@ -15,11 +15,11 @@ class Tenant
     /**
      * @var int
      *
-     * @ORM\Column(name="idtenant", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idtenant;
+    private $id;
 
     /**
      * @var string|null
@@ -43,13 +43,6 @@ class Tenant
     private $email;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="quickbooks_ref", type="string", length=45, nullable=true)
-     */
-    private $quickbooksRef;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="status", type="string", length=20, nullable=false, options={"default"="active"})
@@ -57,39 +50,81 @@ class Tenant
     private $status = 'active';
 
     /**
-     * @var DebitOrder
+     * @var int|null
      *
-     * @ORM\ManyToOne(targetEntity="DebitOrder")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="debit_order", referencedColumnName="iddebit_order")
-     * })
+     * @ORM\Column(name="adults", type="integer", nullable=true)
      */
-    private $debitOrder;
+    private $adults;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="children", type="integer", nullable=true)
+     */
+    private $children;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="id_number", type="string", length=20, nullable=true)
+     */
+    private $idNumber;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="id_document_type", type="string", length=20, nullable=true)
+     */
+    private $idDocumentType;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="salary", type="integer", nullable=true)
+     */
+    private $salary;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="occupation", type="string", length=50, nullable=true)
+     */
+    private $occupation;
 
     /**
      * @var Units
      *
      * @ORM\ManyToOne(targetEntity="Units")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="unit", referencedColumnName="idunits")
+     *   @ORM\JoinColumn(name="unit", referencedColumnName="id")
      * })
      */
     private $unit;
 
     /**
+     * @var DebitOrder
+     *
+     * @ORM\ManyToOne(targetEntity="DebitOrder")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="debit_order", referencedColumnName="id")
+     * })
+     */
+    private $debitOrder;
+
+    /**
      * @return int
      */
-    public function getIdtenant(): int
+    public function getId(): int
     {
-        return $this->idtenant;
+        return $this->id;
     }
 
     /**
-     * @param int $idtenant
+     * @param int $id
      */
-    public function setIdtenant(int $idtenant): void
+    public function setId(int $id): void
     {
-        $this->idtenant = $idtenant;
+        $this->id = $id;
     }
 
     /**
@@ -141,22 +176,6 @@ class Tenant
     }
 
     /**
-     * @return string|null
-     */
-    public function getQuickbooksRef(): ?string
-    {
-        return $this->quickbooksRef;
-    }
-
-    /**
-     * @param string|null $quickbooksRef
-     */
-    public function setQuickbooksRef(?string $quickbooksRef): void
-    {
-        $this->quickbooksRef = $quickbooksRef;
-    }
-
-    /**
      * @return string
      */
     public function getStatus(): string
@@ -173,19 +192,99 @@ class Tenant
     }
 
     /**
-     * @return DebitOrder
+     * @return int|null
      */
-    public function getDebitOrder(): DebitOrder
+    public function getAdults(): ?int
     {
-        return $this->debitOrder;
+        return $this->adults;
     }
 
     /**
-     * @param DebitOrder $debitOrder
+     * @param int|null $adults
      */
-    public function setDebitOrder(DebitOrder $debitOrder): void
+    public function setAdults(?int $adults): void
     {
-        $this->debitOrder = $debitOrder;
+        $this->adults = $adults;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getChildren(): ?int
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param int|null $children
+     */
+    public function setChildren(?int $children): void
+    {
+        $this->children = $children;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIdNumber(): ?string
+    {
+        return $this->idNumber;
+    }
+
+    /**
+     * @param string|null $idNumber
+     */
+    public function setIdNumber(?string $idNumber): void
+    {
+        $this->idNumber = $idNumber;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIdDocumentType(): ?string
+    {
+        return $this->idDocumentType;
+    }
+
+    /**
+     * @param string|null $idDocumentType
+     */
+    public function setIdDocumentType(?string $idDocumentType): void
+    {
+        $this->idDocumentType = $idDocumentType;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getSalary(): ?int
+    {
+        return $this->salary;
+    }
+
+    /**
+     * @param int|null $salary
+     */
+    public function setSalary(?int $salary): void
+    {
+        $this->salary = $salary;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOccupation(): ?string
+    {
+        return $this->occupation;
+    }
+
+    /**
+     * @param string|null $occupation
+     */
+    public function setOccupation(?string $occupation): void
+    {
+        $this->occupation = $occupation;
     }
 
     /**
@@ -202,6 +301,22 @@ class Tenant
     public function setUnit(Units $unit): void
     {
         $this->unit = $unit;
+    }
+
+    /**
+     * @return DebitOrder
+     */
+    public function getDebitOrder(): DebitOrder
+    {
+        return $this->debitOrder;
+    }
+
+    /**
+     * @param DebitOrder $debitOrder
+     */
+    public function setDebitOrder(DebitOrder $debitOrder): void
+    {
+        $this->debitOrder = $debitOrder;
     }
 
 

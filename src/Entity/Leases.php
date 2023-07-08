@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Leases
  *
- * @ORM\Table(name="leases", indexes={@ORM\Index(name="tenant_id", columns={"tenant"}), @ORM\Index(name="unit_id", columns={"unit"})})
+ * @ORM\Table(name="leases", indexes={@ORM\Index(name="property_id", columns={"property"}), @ORM\Index(name="tenant_id", columns={"tenant"}), @ORM\Index(name="unit_id", columns={"unit"})})
  * @ORM\Entity
  */
 class Leases
@@ -15,11 +15,11 @@ class Leases
     /**
      * @var int
      *
-     * @ORM\Column(name="idleases", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idleases;
+    private $id;
 
     /**
      * @var \DateTime|null
@@ -50,24 +50,11 @@ class Leases
     private $status = 'active';
 
     /**
-     * @var Units
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Units")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="unit", referencedColumnName="idunits")
-     * })
+     * @ORM\Column(name="deposit", type="integer", nullable=false)
      */
-    private $unit;
-
-    /**
-     * @var Tenant
-     *
-     * @ORM\ManyToOne(targetEntity="Tenant")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tenant", referencedColumnName="idtenant")
-     * })
-     */
-    private $tenant;
+    private $deposit;
 
     /**
      * @var string
@@ -86,141 +73,55 @@ class Leases
     /**
      * @var string|null
      *
-     * @ORM\Column(name="deposit_pop", type="string", length=50, nullable=true)
-     */
-    private $depositPop;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="id_document", type="string", length=50, nullable=true)
-     */
-    private $idDocument;
-
-    /**
-     * @var string|null
-     *
      * @ORM\Column(name="lease_aggreement", type="string", length=50, nullable=true)
      */
     private $leaseAggreement;
-
-    /**
-     * @return string|null
-     */
-    public function getDepositPop(): ?string
-    {
-        return $this->depositPop;
-    }
-
-    /**
-     * @param string|null $depositPop
-     */
-    public function setDepositPop(?string $depositPop): void
-    {
-        $this->depositPop = $depositPop;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getIdDocument(): ?string
-    {
-        return $this->idDocument;
-    }
-
-    /**
-     * @param string|null $idDocument
-     */
-    public function setIdDocument(?string $idDocument): void
-    {
-        $this->idDocument = $idDocument;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getLeaseAggreement(): ?string
-    {
-        return $this->leaseAggreement;
-    }
-
-    /**
-     * @param string|null $leaseAggreement
-     */
-    public function setLeaseAggreement(?string $leaseAggreement): void
-    {
-        $this->leaseAggreement = $leaseAggreement;
-    }
-
-
-
-    /**
-     * @return string
-     */
-    public function getPaymentRules(): string
-    {
-        return $this->paymentRules;
-    }
-
-    /**
-     * @param string $paymentRules
-     */
-    public function setPaymentRules(string $paymentRules): void
-    {
-        $this->paymentRules = $paymentRules;
-    }
-
-
-    /**
-     * @return int
-     */
-    public function getIdleases(): int
-    {
-        return $this->idleases;
-    }
-
-    /**
-     * @param int $idleases
-     */
-    public function setIdleases(int $idleases): void
-    {
-        $this->idleases = $idleases;
-    }
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="deposit", type="integer", nullable=false)
-     */
-    private $deposit;
-
 
     /**
      * @var Properties
      *
      * @ORM\ManyToOne(targetEntity="Properties")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="property", referencedColumnName="idProperties")
+     *   @ORM\JoinColumn(name="property", referencedColumnName="id")
      * })
      */
     private $property;
 
     /**
-     * @return Properties
+     * @var Tenant
+     *
+     * @ORM\ManyToOne(targetEntity="Tenant")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="tenant", referencedColumnName="id")
+     * })
      */
-    public function getProperty(): Properties
+    private $tenant;
+
+    /**
+     * @var Units
+     *
+     * @ORM\ManyToOne(targetEntity="Units")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="unit", referencedColumnName="id")
+     * })
+     */
+    private $unit;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
     {
-        return $this->property;
+        return $this->id;
     }
 
     /**
-     * @param Properties $property
+     * @param int $id
      */
-    public function setProperty(Properties $property): void
+    public function setId(int $id): void
     {
-        $this->property = $property;
+        $this->id = $id;
     }
-
 
     /**
      * @return \DateTime|null
@@ -287,38 +188,6 @@ class Leases
     }
 
     /**
-     * @return Units
-     */
-    public function getUnit(): Units
-    {
-        return $this->unit;
-    }
-
-    /**
-     * @param Units $unit
-     */
-    public function setUnit(Units $unit): void
-    {
-        $this->unit = $unit;
-    }
-
-    /**
-     * @return Tenant
-     */
-    public function getTenant(): Tenant
-    {
-        return $this->tenant;
-    }
-
-    /**
-     * @param Tenant $tenant
-     */
-    public function setTenant(Tenant $tenant): void
-    {
-        $this->tenant = $tenant;
-    }
-
-    /**
      * @return int
      */
     public function getDeposit(): int
@@ -348,6 +217,86 @@ class Leases
     public function setGuid(string $guid): void
     {
         $this->guid = $guid;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentRules(): string
+    {
+        return $this->paymentRules;
+    }
+
+    /**
+     * @param string $paymentRules
+     */
+    public function setPaymentRules(string $paymentRules): void
+    {
+        $this->paymentRules = $paymentRules;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLeaseAggreement(): ?string
+    {
+        return $this->leaseAggreement;
+    }
+
+    /**
+     * @param string|null $leaseAggreement
+     */
+    public function setLeaseAggreement(?string $leaseAggreement): void
+    {
+        $this->leaseAggreement = $leaseAggreement;
+    }
+
+    /**
+     * @return Properties
+     */
+    public function getProperty(): Properties
+    {
+        return $this->property;
+    }
+
+    /**
+     * @param Properties $property
+     */
+    public function setProperty(Properties $property): void
+    {
+        $this->property = $property;
+    }
+
+    /**
+     * @return Tenant
+     */
+    public function getTenant(): Tenant
+    {
+        return $this->tenant;
+    }
+
+    /**
+     * @param Tenant $tenant
+     */
+    public function setTenant(Tenant $tenant): void
+    {
+        $this->tenant = $tenant;
+    }
+
+    /**
+     * @return Units
+     */
+    public function getUnit(): Units
+    {
+        return $this->unit;
+    }
+
+    /**
+     * @param Units $unit
+     */
+    public function setUnit(Units $unit): void
+    {
+        $this->unit = $unit;
     }
 
 

@@ -31,6 +31,7 @@ $(document).ready(function () {
             } else {
                 if($("#nextBtn").text().localeCompare("Finish")===0){
                     $(".thanks-message").show();
+                    $("#text-message-no-listed").hide();
                     $(".tab").hide();
                     $("#nextBtn").hide();
                     document.getElementsByClassName("step")[currentTab].className = "step finish";
@@ -62,6 +63,11 @@ $(document).ready(function () {
 
     $('#onboarding-pop').change(function () {
         uploadSupportingDocuments("proof_of_payment", $("#onboarding-pop").prop("files")[0]);
+    });
+
+    $(".id-doc-type").click(function (event) {
+        sessionStorage.setItem("document-type", event.target.getAttribute("document-type"));
+        $('#drop-id-doc-type-selected').html(event.target.innerText);
     });
 
     getUnit();
@@ -126,7 +132,8 @@ let submitApplication = () => {
         application_salary: salary,
         application_occupation: occupancy,
         adult_count: adultCount,
-        child_count: childCount
+        child_count: childCount,
+        id_document_type: sessionStorage.getItem("document-type")
     };
 
     $.ajax({

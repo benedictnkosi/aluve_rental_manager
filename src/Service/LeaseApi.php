@@ -43,6 +43,15 @@ class LeaseApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
+
+            //validate property id
+            if (strlen($propertyId) < 1 || !is_numeric($propertyId) || intval($propertyId) < 1) {
+                return array(
+                    'result_message' => "Property ID is not valid",
+                    'result_code' => 1
+                );
+            }
+
             $leases = $this->em->getRepository("App\Entity\Leases")->createQueryBuilder('l')
                 ->where('l.property = :property')
                 ->andWhere("l.status = 'active' or l.status = 'pending_docs'")
@@ -58,7 +67,7 @@ class LeaseApi extends AbstractController
 
             foreach ($leases as $lease) {
                 $tenant = $lease->getTenant();
-                $due = $this->transactionApi->getBalanceDue($lease->getIdleases());
+                $due = $this->transactionApi->getBalanceDue($lease->getId());
 
                 $inspection = $this->em->getRepository(Inspection::class)->findBy(array('lease' => $lease, 'status' => "active"));
                 $inspectionExist = false;
@@ -68,14 +77,17 @@ class LeaseApi extends AbstractController
 
                 $responseArray[] = array(
                     'unit_name' => $lease->getUnit()->getName(),
-                    'unit_id' => $lease->getUnit()->getIdunits(),
+                    'unit_id' => $lease->getUnit()->getId(),
                     'tenant_name' => $tenant->getName(),
                     'phone_number' => $tenant->getPhone(),
                     'email' => $tenant->getEmail(),
-                    'tenant_id' => $tenant->getIdtenant(),
+                    'adults' => $tenant->getAdults(),
+                    'children' => $tenant->getChildren(),
+                    'id_number' => $tenant->getIdNumber(),
+                    'tenant_id' => $tenant->getId(),
                     'lease_start' => $lease->getStart()->format("Y-M-d"),
                     'lease_end' => $lease->getEnd()->format("Y-M-d"),
-                    'lease_id' => $lease->getIdleases(),
+                    'lease_id' => $lease->getId(),
                     'deposit' => "R" . number_format($lease->getDeposit(), 2, '.', ''),
                     'due' => "R" . number_format(intval($due["result_message"]), 2, '.', ''),
                     'guid' => $lease->getGuid(),
@@ -108,6 +120,14 @@ class LeaseApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
+            //validate property id
+            if (strlen($guid) < 1 || strlen($guid) > 36 ) {
+                return array(
+                    'result_message' => "Property ID is not valid",
+                    'result_code' => 1
+                );
+            }
+
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $guid));
             if ($lease == null) {
                 return array(
@@ -120,17 +140,20 @@ class LeaseApi extends AbstractController
 
             $now = new DateTime();
             $tenant = $lease->getTenant();
-            $due = $this->transactionApi->getBalanceDue($lease->getIdleases());
+            $due = $this->transactionApi->getBalanceDue($lease->getId());
             return array(
                 'unit_name' => $lease->getUnit()->getName(),
-                'unit_id' => $lease->getUnit()->getIdunits(),
+                'unit_id' => $lease->getUnit()->getId(),
                 'tenant_name' => $tenant->getName(),
                 'phone_number' => $tenant->getPhone(),
                 'email' => $tenant->getEmail(),
-                'tenant_id' => $tenant->getIdtenant(),
+                'adults' => $tenant->getAdults(),
+                'children' => $tenant->getChildren(),
+                'id_number' => $tenant->getIdNumber(),
+                'tenant_id' => $tenant->getId(),
                 'lease_start' => $lease->getStart()->format("Y-M-d"),
                 'lease_end' => $lease->getEnd()->format("Y-M-d"),
-                'lease_id' => $lease->getIdleases(),
+                'lease_id' => $lease->getId(),
                 'deposit' => number_format($lease->getDeposit(), 2, '.', ''),
                 'due' => number_format(intval($due["result_message"]), 2, '.', ''),
                 'statement_date' => $now->format("Y-M-d"),
@@ -150,17 +173,29 @@ class LeaseApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function createLease($tenantName, $phone, $email, $unitId, $startDate, $endDate, $deposit, $leaseId, $paymentRules, $adults, $children, $status = "active"): array
+    public function createLease($tenant, $unitId, $startDate, $endDate, $deposit, $leaseId, $paymentRules, $status = "active"): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
             $successMessage = "Successfully created lease";
 
+            $startDateDateObject = new DateTime($startDate);
+            $endDateDateObject = new DateTime($endDate);
+
+            //validate lease number of months
+            $totalNights = intval($startDateDateObject->diff($endDateDateObject)->format('%a'));
+            if ($totalNights < 30) {
+                return array(
+                    'result_message' => "Error. The lease period is invalid",
+                    'result_code' => 1
+                );
+            }
+
+
             if ($leaseId == 0) {
                 $lease = new Leases();
-                $tenant = new Tenant();
-                $unit = $this->em->getRepository(Units::class)->findOneBy(array('idunits' => $unitId));
+                $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $unitId));
                 if ($unit == null) {
                     return array(
                         'result_message' => "Error: Unit not found",
@@ -168,7 +203,7 @@ class LeaseApi extends AbstractController
                     );
                 }
             } else {
-                $lease = $this->em->getRepository(Leases::class)->findOneBy(array('idleases' => $leaseId));
+                $lease = $this->em->getRepository(Leases::class)->findOneBy(array('id' => $leaseId));
                 if ($lease == null) {
                     return array(
                         'result_message' => "Lease not found",
@@ -176,14 +211,10 @@ class LeaseApi extends AbstractController
                     );
                 }
 
-                $tenant = $lease->getTenant();
                 $unit = $lease->getUnit();
                 $successMessage = "Successfully updated lease";
             }
 
-            $tenant->setName($tenantName);
-            $tenant->setEmail($email);
-            $tenant->setPhone($phone);
             $this->em->persist($tenant);
             $this->em->flush($tenant);
 
@@ -203,13 +234,6 @@ class LeaseApi extends AbstractController
             $this->em->persist($lease);
             $this->em->flush($lease);
 
-            //add application fee to the lease if enabled
-            if (intval($lease->getProperty()->getApplicationFee()) > 0) {
-                $transactionApi = new TransactionApi($this->em, $this->logger);
-                $now = new DateTime();
-                $transactionApi->addTransaction($lease->getIdleases(), $lease->getProperty()->getApplicationFee(), "Application Fee", $now->format("Y-m-d"));
-            }
-
             return array(
                 'result_message' => $successMessage,
                 'result_code' => 0
@@ -224,13 +248,67 @@ class LeaseApi extends AbstractController
         }
     }
 
+    function validateSouthAfricanID($idNumber): bool
+    {
+        // Remove spaces and dashes from the ID number
+        $idNumber = str_replace([' ', '-'], '', $idNumber);
+
+        // Check if the ID number is 13 digits long
+        if (strlen($idNumber) !== 13) {
+            return false;
+        }
+
+        // Check if the ID number contains only numeric characters
+        if (!ctype_digit($idNumber)) {
+            return false;
+        }
+
+        // Calculate the date of birth from the first 6 digits
+        $year = substr($idNumber, 0, 2);
+        $month = substr($idNumber, 2, 2);
+        $day = substr($idNumber, 4, 2);
+
+        $dateOfBirth = DateTime::createFromFormat('ymd', $year . $month . $day);
+
+        // Validate the date of birth
+        if (!$dateOfBirth || $dateOfBirth->format('ymd') !== $year . $month . $day) {
+            return false;
+        }
+
+        // Check the citizenship status (7th digit)
+        $citizenship = substr($idNumber, 10, 1);
+        if ($citizenship !== '0' && $citizenship !== '1') {
+            return false;
+        }
+
+        // Calculate the Luhn check digit
+        $checkDigit = (int)substr($idNumber, -1);
+        $partialSum = 0;
+
+        for ($i = 0; $i < 12; $i++) {
+            $digit = (int)$idNumber[$i];
+            $partialSum += ($i % 2 === 0) ? $digit : array_sum(str_split($digit * 2));
+        }
+
+        $calculatedCheckDigit = (10 - ($partialSum % 10)) % 10;
+
+        // Compare the calculated check digit with the provided check digit
+        if ($checkDigit !== $calculatedCheckDigit) {
+            return false;
+        }
+
+        // If all checks pass, the ID number is valid
+        return true;
+    }
+
+
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
     public function createInspection($leaseId, $json, $status): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('idleases' => $leaseId));
+            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('id' => $leaseId));
             if ($lease == null) {
                 return array(
                     'result_message' => "Lease not found",
@@ -307,7 +385,7 @@ class LeaseApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('idleases' => $id));
+            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('id' => $id));
             if ($lease == null) {
                 return array(
                     'result_message' => "Lease not found",
@@ -357,14 +435,14 @@ class LeaseApi extends AbstractController
             $now = new DateTime();
             foreach ($leases as $lease) {
                 $lateFee = $lease->getUnit()->getProperty()->getLateFee();
-                $due = intval($this->transactionApi->getBalanceDue($lease->getIdleases())["result_message"]);
+                $due = intval($this->transactionApi->getBalanceDue($lease->getId())["result_message"]);
                 $todayDay = $now->format("d");
                 $rentLateBy = $lease->getUnit()->getProperty()->getRentLateDays();
 
                 if (intval($lateFee) > 0
                     && $due > 0
                     && strcmp($todayDay, $rentLateBy) == 0) {
-                    $this->transactionApi->addTransaction($lease->getIdleases(), $lateFee, "Late Rent Payment Fee", $now->format("Y-m-d"));
+                    $this->transactionApi->addTransaction($lease->getId(), $lateFee, "Late Rent Payment Fee", $now->format("Y-m-d"));
                 }
             }
 
@@ -387,19 +465,20 @@ class LeaseApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
+            $documentApi = new DocumentApi($this->em,$this->logger);
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseGuid));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Failed to upload documents. Lease not found",
+                    'result_message' => "Failed to upload application_documents. Lease not found",
                     'result_code' => 1
                 );
             }
             if (strcmp($documentType, "lease") == 0) {
                 $lease->setLeaseAggreement($fileName);
             } else if (strcmp($documentType, "id") == 0) {
-                $lease->setIdDocument($fileName);
+                $documentApi->addDocument($lease->getTenant()->getId(), "ID Document", $fileName);
             } else if (strcmp($documentType, "pop") == 0) {
-                $lease->setDepositPop($fileName);
+                $documentApi->addDocument($lease->getTenant()->getId(), "Proof OF Payment", $fileName);
             } else {
                 return array(
                     'result_message' => "Document type not suppoerted",
@@ -407,7 +486,9 @@ class LeaseApi extends AbstractController
                 );
             }
 
-            $allDocsUploaded = $lease->getLeaseAggreement() !== null && $lease->getIdDocument() !== null && $lease->getDepositPop() !== null;
+            $leaseDocument = $documentApi->getDocumentName($lease->getTenant()->getId(), "ID Document");
+            $popDocument = $documentApi->getDocumentName($lease->getTenant()->getId(), "Proof OF Payment");
+            $allDocsUploaded = $lease->getLeaseAggreement() !== null && $leaseDocument["result_code"] == 0 && $popDocument["result_code"] == 0;
 
             if ($allDocsUploaded) {
                 $lease->setStatus("docs_uploaded");
@@ -438,7 +519,7 @@ class LeaseApi extends AbstractController
             $inspection = $this->em->getRepository(Inspection::class)->findOneBy(array('id' => $inspectionId));
             if ($inspection == null) {
                 return array(
-                    'result_message' => "Failed to upload documents. Inspection not found",
+                    'result_message' => "Failed to upload application_documents. Inspection not found",
                     'result_code' => 1
                 );
             }

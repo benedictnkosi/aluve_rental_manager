@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\ExpenseApi;
 use App\Service\LeaseApi;
 use App\Service\PropertyApi;
 use App\Service\TransactionApi;
@@ -32,6 +33,21 @@ class TransactionController extends AbstractController
         return new JsonResponse($response, 200, array());
     }
 
+
+    /**
+     * @Route("api/transaction/bill_tenant")
+     */
+    public function billTenant(Request $request, LoggerInterface $logger, TransactionApi $transactionApi): Response
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('POST')) {
+            return new JsonResponse("Method Not Allowed", 405, array());
+        }
+
+        $response = $transactionApi->addTransaction($request->get("lease_id"), $request->get("amount"),$request->get("summary") , $request->get("bill_date"));
+        return new JsonResponse($response, 200, array());
+    }
+
     /**
      * @Route("api/lease/balance/{leaseId}")
      */
@@ -46,7 +62,19 @@ class TransactionController extends AbstractController
         return new JsonResponse($response, 200, array());
     }
 
+    /**
+     * @Route("api/property/balance/{propertyId}")
+     */
+    public function getPropertyBalanceDue($propertyId, Request $request, LoggerInterface $logger, TransactionApi $transactionApi): Response
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('get')) {
+            return new JsonResponse("Method Not Allowed", 405, array());
+        }
 
+        $response = $transactionApi->getBalanceDueForAllActiveLeases($propertyId);
+        return new JsonResponse($response, 200, array());
+    }
 
     /**
      * @Route("public/lease/transactions/{guid}")
@@ -61,6 +89,8 @@ class TransactionController extends AbstractController
         $response = $transactionApi->getTransactions($guid);
         return new JsonResponse($response, 200, array());
     }
+
+
 
     /**
      * @Route("api/delete/transaction/")
@@ -84,6 +114,21 @@ class TransactionController extends AbstractController
     {
         $logger->info("Starting Method: " . __METHOD__);
         $response  = $transactionApi->importTransactions($imap);
+        return new JsonResponse($response, 200, array());
+    }
+
+
+    /**
+     * @Route("api/income/total")
+     */
+    public function getIncomeTotalForPastDays(Request $request, LoggerInterface $logger,TransactionApi $transactionApi): Response
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('get')) {
+            return new JsonResponse("Method Not Allowed", 405, array());
+        }
+
+        $response = $transactionApi->getIncomeTotal($request->get("property_id"), $request->get("number_od_days"));
         return new JsonResponse($response, 200, array());
     }
 }

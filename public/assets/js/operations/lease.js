@@ -30,6 +30,19 @@ $(document).ready(function () {
         event.preventDefault();
     });
 
+
+    $("#form-lease-add-bill").validate({
+        // Specify validation rules
+        rules: {}, submitHandler: function () {
+            billTheTenant();
+        }
+    });
+
+    $("#form-lease-add-bill").submit(function (event) {
+        event.preventDefault();
+    });
+
+
     $("#btn-new-lease").click(function (event) {
         event.preventDefault();
         sessionStorage.setItem("lease-id", "0");
@@ -47,11 +60,6 @@ $(document).ready(function () {
         deleteLease();
     });
 
-    $(".lease-unit-dropdown").click(function (event) {
-        sessionStorage.setItem("lease-unit-id", event.target.getAttribute("lease-unit-id"));
-        $('#unit-dropdown-selected').html(event.target.innerText);
-    });
-
     $("#btn-confirm-delete-lease").click(function () {
         deleteLease(sessionStorage.getItem("lease-id"));
     });
@@ -64,6 +72,12 @@ $(document).ready(function () {
     });
 
     $('.datepicker').datepicker('update', new Date());
+
+    $(".id-doc-type").click(function (event) {
+        sessionStorage.setItem("document-type", event.target.getAttribute("document-type"));
+        $('#drop-id-doc-type-selected').html(event.target.innerText);
+    });
+
 });
 
 let createLease = () => {
@@ -74,6 +88,12 @@ let createLease = () => {
     const endDate = $("#lease-end-date").val().trim();
     const paymentRules =  $("#payment-rules").val().trim();
     const deposit = $("#lease-deposit").val().trim();
+    const idNumber = $("#application_id_number").val().trim();
+    const salary = $("#application_salary").val().trim();
+    const occupancy = $("#application_occupation").val().trim();
+    const adultCount = $("#adult_count").val().trim();
+    const childCount = $("#child_count").val().trim();
+
     let url = "/api/lease/create";
     const data = {
         unitId: sessionStorage.getItem("lease-unit-id"),
@@ -85,6 +105,12 @@ let createLease = () => {
         deposit: deposit,
         lease_id: sessionStorage.getItem("lease-id"),
         payment_rules: paymentRules,
+        id_document_type: sessionStorage.getItem("document-type"),
+        application_id_number: idNumber,
+        salary: salary,
+        occupation: occupancy,
+        adult_count: adultCount,
+        child_count: childCount,
     };
 
     $.ajax({
@@ -146,6 +172,27 @@ let getAllLeases = () => {
                     '                                            <medium>' +  lease.unit_name  + '</medium>\n' +
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
+                    '                                            <i class="bi-telephone bootstrap-icon-text"></i>\n' +
+                    '                                            <medium>' +  lease.phone_number  + '</medium>\n' +
+                    '                                        </li>\n' +
+
+                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
+                    '                                            <i class="bi-envelope bootstrap-icon-text"></i>\n' +
+                    '                                            <medium>' +  lease.email  + '</medium>\n' +
+                    '                                        </li>\n' +
+                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
+                    '                                            <i class="bi-person-hearts bootstrap-icon-text"></i>\n' +
+                    '                                            <medium>Adults: ' +  lease.adults  + '</medium>\n' +
+                    '                                        </li>\n' +
+                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
+                    '                                            <i class="bi-person-hearts bootstrap-icon-text"></i>\n' +
+                    '                                            <medium>Children: ' +  lease.children  + '</medium>\n' +
+                    '                                        </li>\n' +
+                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
+                    '                                            <i class="bi-person-badge bootstrap-icon-text"></i>\n' +
+                    '                                            <medium>' +  lease.id_number  + '</medium>\n' +
+                    '                                        </li>\n' +
+                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                                            <i class="bi-calendar-check-fill bootstrap-icon-text"></i>\n' +
                     '                                            <medium>' + lease.lease_start + ' - ' +lease.lease_end+ '</medium>\n' +
                     '                                        </li>\n' +
@@ -166,10 +213,11 @@ let getAllLeases = () => {
                     '                                <button class="btn btn-secondary add-payment-button" lease-id="'+lease.lease_id+'" type="button" data-bs-toggle="modal" data-bs-target="#leasePaymentModal">\n' +
                     '                                    Add Payment\n' +
                     '                                </button>\n' +
-                    '                                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
+                    '                                <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
                     '                                    <span class="visually-hidden">Toggle Dropdown</span>\n' +
                     '                                </button>\n' +
                     '                                <ul class="dropdown-menu dropdown-menu-dark">\n' +
+                    '                                    <li><a class="dropdown-item bill-tenant-button" lease-id="'+lease.lease_id+'" href="#"  data-bs-toggle="modal" data-bs-target="#addExpenseToLeaseModal">Bill The Tenant</a></li>\n' +
                     '                                    <li><a class="dropdown-item btn-cancel-lease" lease-id="'+lease.lease_id+'" href="#">Cancel Lease</a></li>\n' +
                     '                                    <li><a class="dropdown-item" target="_blank" href="/statement/?guid='+lease.guid+'">View Statement</a></li>\n' +
                     '                                    <li><a class="dropdown-item" target="_blank" href="/inspection/?guid='+lease.guid+'">New Inspection</a></li>\n';
@@ -210,6 +258,10 @@ let getAllLeases = () => {
                 sessionStorage.setItem("lease-id", event.target.getAttribute("lease-id"));
             });
 
+            $(".bill-tenant-button").click(function (event) {
+                sessionStorage.setItem("lease-id", event.target.getAttribute("lease-id"));
+            });
+
             $(".btn-cancel-lease").click(function (event) {
                 sessionStorage.setItem("lease-id", event.target.getAttribute("lease-id"));
                 $('#confirmModal').modal('toggle');
@@ -240,6 +292,34 @@ let addPayment = () => {
             showToast(response.result_message)
             if (response.result_code === 0) {
                 $('#leasePaymentModal').modal('toggle');
+                getAllLeases();
+            }
+        }
+    });
+}
+
+
+let billTheTenant = () => {
+    const amount = $("#bill-amount").val().trim();
+    const summary = $("#bill-summary").val().trim();
+    const billDate = $("#bill-date").val().trim();
+
+    let url = "/api/transaction/bill_tenant";
+    const data = {
+        lease_id: sessionStorage.getItem("lease-id"),
+        amount: amount,
+        summary: summary,
+        bill_date: billDate
+    };
+
+    $.ajax({
+        url: url,
+        type: "post",
+        data: data,
+        success: function (response) {
+            showToast(response.result_message)
+            if (response.result_code === 0) {
+                $('#addExpenseToLeaseModal').modal('toggle');
                 getAllLeases();
             }
         }

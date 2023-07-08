@@ -42,32 +42,15 @@ class Inspection
      */
     private $status = 'new';
 
-
     /**
      * @var Leases
      *
      * @ORM\ManyToOne(targetEntity="Leases")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="lease", referencedColumnName="idleases")
+     *   @ORM\JoinColumn(name="lease", referencedColumnName="id")
      * })
      */
     private $lease;
-
-    /**
-     * @return string|null
-     */
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param string|null $status
-     */
-    public function setStatus(?string $status): void
-    {
-        $this->status = $status;
-    }
 
     /**
      * @return int
@@ -115,6 +98,22 @@ class Inspection
     public function setDate(\DateTime|string $date): void
     {
         $this->date = $date;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string|null $status
+     */
+    public function setStatus(?string $status): void
+    {
+        $this->status = $status;
     }
 
     /**

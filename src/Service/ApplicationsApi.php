@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Application;
 use App\Entity\Leases;
+use App\Entity\Tenant;
 use App\Entity\Units;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,7 +30,6 @@ class ApplicationsApi extends AbstractController
         }
     }
 
-
     public function getApplications($propertyId): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
@@ -48,10 +48,46 @@ class ApplicationsApi extends AbstractController
                     'result_code' => 1
                 );
             }
+            //get documents
+            $documentApi = new DocumentApi($this->em,$this->logger);
+            foreach ($applications as $application){
+                $bankStatementDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Bank Statement");
+                $PayslipDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "payslip");
+                $coBankStatementDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Co-Bank Statement");
+                $coPayslipDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Co-payslip");
+                $bankStatementDocumentName = "";
+                $PayslipDocumentName = "";
+                $coBankStatementDocumentName = "";
+                $coPayslipDocumentName = "";
 
-            return $applications;
+                if($bankStatementDocument["result_code"] == 0){
+                    $bankStatementDocumentName = $bankStatementDocument["name"];
+                }
+
+                if($PayslipDocument["result_code"] == 0){
+                    $PayslipDocumentName = $PayslipDocument["name"];
+                }
+
+                if($coBankStatementDocument["result_code"] == 0){
+                    $coBankStatementDocumentName = $coBankStatementDocument["name"];
+                }
+
+
+                if($coPayslipDocument["result_code"] == 0){
+                    $coPayslipDocumentName = $coPayslipDocument["name"];
+                }
+                $responseArray[] = array(
+                    "application" => $application,
+                    "applicant_bank_statement"=>$bankStatementDocumentName,
+                    "applicant_payslip"=>$PayslipDocumentName,
+                    "co_applicant_bank_statement"=>$coBankStatementDocumentName,
+                    "co_applicant_payslip"=>$coPayslipDocumentName,
+                );
+            }
+
+            return $responseArray;
         } catch (Exception $ex) {
-            $this->logger->error("Error " . print_r($responseArray, true));
+            $this->logger->error("Error " . $ex->getMessage() . $ex->getTraceAsString());
             return array(
                 'result_message' => $ex->getMessage(),
                 'result_code' => 1
@@ -64,8 +100,8 @@ class ApplicationsApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $unit = $this->em->getRepository(Units::class)->findOneBy(array('idunits' => $request->get("unit_id")));
-            if($unit == null){
+            $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $request->get("unit_id")));
+            if ($unit == null) {
                 return array(
                     'result_message' => "Error: Unit not found",
                     'result_code' => 1
@@ -73,29 +109,26 @@ class ApplicationsApi extends AbstractController
             }
 
             //validate minimum salary
-            if(intval($request->get("application_salary")) < intval($unit->getMinGrossSalary())){
+            if (intval($request->get("application_salary")) < intval($unit->getMinGrossSalary())) {
                 return array(
                     'result_message' => "Error: Your combined salary is below the minimum required",
                     'result_code' => 1
                 );
             }
 
+            $tenantApi = new TenantApi($this->em, $this->logger);
+            $response = $tenantApi->createTenant($request->get("application_name"), $request->get("application_phone"), $request->get("application_email"), $request->get("id_document_type"), $request->get("application_id_number"), $request->get("application_salary"), $request->get("application_occupation"), $request->get("adult_count"), $request->get("child_count"));
+            if($response["result_code"] == 1){
+                return $response;
+            }
             $application = new Application();
+            $application->setTenant($response["tenant"]);
             $application->setUnit($unit);
-            $application->setName($request->get("application_name"));
-            $application->setPhone($request->get("application_phone"));
-            $application->setEmail($request->get("application_email"));
-            $application->setIdNumber($request->get("application_id_number"));
-            $application->setSalary($request->get("application_salary"));
-            $application->setOccupation($request->get("application_occupation"));
             $application->setDate(new DateTime());
             $application->setUpdatedDate(new DateTime());
             $application->setUid($this->generateGuid());
             $application->setStatus("new");
             $application->setProperty($unit->getProperty());
-            $application->setChildren(intval($request->get("child_count")));
-            $application->setAdults(intval($request->get("adult_count")));
-
             $this->em->persist($application);
             $this->em->flush($application);
 
@@ -114,37 +147,42 @@ class ApplicationsApi extends AbstractController
         }
     }
 
+
     public function addSupportingDoc($applicationId, $documentType, $fileName): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
             $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
-            if($application == null){
+            if ($application == null) {
                 return array(
-                    'result_message' => "Failed to upload documents. Application not found",
+                    'result_message' => "Failed to upload application_documents. Application not found",
                     'result_code' => 1
                 );
             }
+            $tenant = $application->getTenant();
+            $documentApi = new DocumentApi($this->em,$this->logger);
 
-            if(strcmp($documentType, "statement")==0){
-                $application->setBankStatement($fileName);
-            }else if(strcmp($documentType, "payslip")==0){
-                $application->setPayslip($fileName);
-            }else if(strcmp($documentType, "co_statement")==0){
-                $application->setCoApplicantBankStatement($fileName);
-            }else if(strcmp($documentType, "co_payslip")==0){
-                $application->setCoApplicantPayslip($fileName);
-            }else{
+            if (strcmp($documentType, "statement") == 0) {
+                $documentApi->addDocument($tenant->getId(), "Bank Statement", $fileName);
+            } else if (strcmp($documentType, "payslip") == 0) {
+                $documentApi->addDocument($tenant->getId(), "payslip", $fileName);
+            } else if (strcmp($documentType, "co_statement") == 0) {
+                $documentApi->addDocument($tenant->getId(), "Co-Bank Statement", $fileName);
+            } else if (strcmp($documentType, "co_payslip") == 0) {
+                $documentApi->addDocument($tenant->getId(), "Co-payslip", $fileName);
+            } else {
                 return array(
                     'result_message' => "Document type not suppoerted",
                     'result_code' => 1
                 );
             }
 
-            $allDocsUploaded = $application->getBankStatement() !== null && $application->getPayslip() !== null;
+            $bankStatementDocument = $documentApi->getDocumentName($tenant->getId(), "Bank Statement");
+            $PayslipDocument = $documentApi->getDocumentName($tenant->getId(), "payslip");
+            $allDocsUploaded = $bankStatementDocument["result_code"] == 0 && $PayslipDocument["result_code"] == 0;
 
-            if($allDocsUploaded){
+            if ($allDocsUploaded) {
                 $application->setStatus("docs_uploaded");
             }
 
@@ -167,8 +205,7 @@ class ApplicationsApi extends AbstractController
 
     function generateGuid(): string
     {
-        if (function_exists('com_create_guid') === true)
-        {
+        if (function_exists('com_create_guid') === true) {
             return trim(com_create_guid(), '{}');
         }
 
@@ -182,25 +219,76 @@ class ApplicationsApi extends AbstractController
         $responseArray = array();
         try {
             $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
-            if($application == null){
+            if ($application == null) {
                 return array(
-                    'result_message' => "Failed to upload documents. Application not found",
+                    'result_message' => "Failed to upload application_documents. Application not found",
                     'result_code' => 1
                 );
             }
 
+            //send whatsapp with acceptance
+            $leaseLink = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/api/document/" . $application->getUnit()->getProperty()->getLeaseFileName();
+            $message = "We are happy to let you know that your application for " . $application->getUnit()->getName() . " @ " . $application->getUnit()->getProperty()->getName() . " has been accepted. 
+            Please download and sign the lease. " . $leaseLink;
+
+            $communicationApi = new CommunicationApi($this->em, $this->logger);
+            //$response = $communicationApi->sendWhatsApp($application->getPhone(), $message);
+//            if ($response["result_code"] !== 0) {
+//                return array(
+//                    'result_message' => $response["result_message"],
+//                    'result_code' => 1
+//                );
+//            }
+
+            $tenant = new Tenant();
+            $tenant->setName($application->getName());
+            $tenant->setEmail($application->getEmail());
+            $tenant->setPhone($application->getPhone());
+            $tenant->setAdults($application->getAdults());
+            $tenant->setChildren( $application->getChildren());
+            $tenant->setIdNumber($application->getIdNumber());
+            $tenant->setIdDocumentType($application->getIdDocType());
+            $this->em->persist($tenant);
+            $this->em->flush($tenant);
+
+
             $leaseApi = new LeaseApi($this->em, $this->logger);
-            $response = $leaseApi->createLease($application->getName(), $application->getPhone(), $application->getEmail(), $application->getUnit()->getIdunits(), $startDate, $endDate, $deposit, "0", "",$application->getAdults(), $application->getChildren(),  "pending_docs", );
+            $response = $leaseApi->createLease($tenant, $application->getUnit()->getId(), $startDate, $endDate, $deposit, "0", "", "pending_docs");
             $application->setStatus("accepted");
             $this->em->persist($application);
             $this->em->flush($application);
 
-            if($response["result_code"] == 0){
+            //add application fee to the lease if enabled
+            if (intval($application->getUnit()->getProperty()->getApplicationFee()) > 0) {
+                $transactionApi = new TransactionApi($this->em, $this->logger);
+                $now = new DateTime();
+                $transactionApi->addTransaction($application->getUnit()->getId(), $application->getUnit()->getProperty()->getApplicationFee(), "Application Fee", $now->format("Y-m-d"));
+            }
+
+            //update unit listed status
+            $unitApi = new UnitApi($this->em, $this->logger);
+            $unitApi->updateUnit("listed", false, $application->getUnit());
+
+            //decline other applications for the unit
+            $applications = $this->em->getRepository("App\Entity\Application")->createQueryBuilder('a')
+                ->where('a.unit = :unitId')
+                ->andWhere("a.status = 'new' or a.status = 'docs_uploaded'")
+                ->setParameter('unitId', $application->getUnit())
+                ->getQuery()
+                ->getResult();
+
+            foreach ($applications as $application) {
+                $application->setStatus("rejected");
+                $this->em->persist($application);
+                $this->em->flush($application);
+            }
+
+            if ($response["result_code"] == 0) {
                 return array(
-                    'result_message' => "Successfully created lease from the application",
+                    'result_message' => "Successfully created lease from the application. Other applications have been declined for the unit",
                     'result_code' => 0
                 );
-            }else{
+            } else {
                 return array(
                     'result_message' => "Failed to convert application to lease. " . $response["result_message"],
                     'result_code' => 1
@@ -216,7 +304,6 @@ class ApplicationsApi extends AbstractController
         }
     }
 
-
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
     public function declineApplication($applicationId): array
     {
@@ -224,7 +311,7 @@ class ApplicationsApi extends AbstractController
         $responseArray = array();
         try {
             $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
-            if($application == null){
+            if ($application == null) {
                 return array(
                     'result_message' => "Failed to decline application. Application not found",
                     'result_code' => 1

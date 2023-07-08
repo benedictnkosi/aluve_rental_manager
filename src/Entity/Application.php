@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Application
  *
- * @ORM\Table(name="application", indexes={@ORM\Index(name="application_unit", columns={"unit"})})
+ * @ORM\Table(name="application", indexes={@ORM\Index(name="application_tenant", columns={"tenant"}), @ORM\Index(name="application_unit", columns={"unit"}), @ORM\Index(name="application_property", columns={"property"})})
  * @ORM\Entity
  */
 class Application
@@ -24,55 +24,6 @@ class Application
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=100, nullable=false)
-     */
-    private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="phone", type="string", length=10, nullable=false)
-     */
-    private $phone;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=100, nullable=false)
-     */
-    private $email;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="salary", type="integer", nullable=false)
-     */
-    private $salary;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="occupation", type="string", length=100, nullable=false)
-     */
-    private $occupation;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="bank_statement", type="string", length=100, nullable=true)
-     */
-    private $bankStatement;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="payslip", type="string", length=100, nullable=true)
-     */
-    private $payslip;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="status", type="string", length=20, nullable=false, options={"default"="new"})
      */
     private $status = 'new';
@@ -83,13 +34,6 @@ class Application
      * @ORM\Column(name="date", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
      */
     private $date = 'CURRENT_TIMESTAMP';
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="notes", type="text", length=65535, nullable=true)
-     */
-    private $notes;
 
     /**
      * @var \DateTime
@@ -106,151 +50,34 @@ class Application
     private $uid;
 
     /**
-     * @var string
+     * @var Properties
      *
-     * @ORM\Column(name="id_number", type="string", length=20, nullable=false)
+     * @ORM\ManyToOne(targetEntity="Properties")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="property", referencedColumnName="id")
+     * })
      */
-    private $idNumber;
+    private $property;
+
+    /**
+     * @var Tenant
+     *
+     * @ORM\ManyToOne(targetEntity="Tenant")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="tenant", referencedColumnName="id")
+     * })
+     */
+    private $tenant;
 
     /**
      * @var Units
      *
      * @ORM\ManyToOne(targetEntity="Units")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="unit", referencedColumnName="idunits")
+     *   @ORM\JoinColumn(name="unit", referencedColumnName="id")
      * })
      */
     private $unit;
-
-
-    /**
-     * @var Properties
-     *
-     * @ORM\ManyToOne(targetEntity="Properties")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="property", referencedColumnName="idProperties")
-     * })
-     */
-    private $property;
-
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="adults", type="integer", nullable=true)
-     */
-    private $adults;
-
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="children", type="integer", nullable=true)
-     */
-    private $children;
-
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="co_applicant_bank_statement", type="string", length=50, nullable=true)
-     */
-    private $coApplicantBankStatement;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="co_applicant_payslip", type="string", length=50, nullable=true)
-     */
-    private $coApplicantPayslip;
-
-    /**
-     * @return int|null
-     */
-    public function getAdults(): ?int
-    {
-        return $this->adults;
-    }
-
-    /**
-     * @param int|null $adults
-     */
-    public function setAdults(?int $adults): void
-    {
-        $this->adults = $adults;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getChildren(): ?int
-    {
-        return $this->children;
-    }
-
-    /**
-     * @param int|null $children
-     */
-    public function setChildren(?int $children): void
-    {
-        $this->children = $children;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCoApplicantBankStatement(): ?string
-    {
-        return $this->coApplicantBankStatement;
-    }
-
-    /**
-     * @param string|null $coApplicantBankStatement
-     */
-    public function setCoApplicantBankStatement(?string $coApplicantBankStatement): void
-    {
-        $this->coApplicantBankStatement = $coApplicantBankStatement;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCoApplicantPayslip(): ?string
-    {
-        return $this->coApplicantPayslip;
-    }
-
-    /**
-     * @param string|null $coApplicantPayslip
-     */
-    public function setCoApplicantPayslip(?string $coApplicantPayslip): void
-    {
-        $this->coApplicantPayslip = $coApplicantPayslip;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getProofOfPayment(): ?string
-    {
-        return $this->proofOfPayment;
-    }
-
-
-    /**
-     * @return Properties
-     */
-    public function getProperty(): Properties
-    {
-        return $this->property;
-    }
-
-    /**
-     * @param Properties $property
-     */
-    public function setProperty(Properties $property): void
-    {
-        $this->property = $property;
-    }
-
 
     /**
      * @return int
@@ -266,118 +93,6 @@ class Application
     public function setId(int $id): void
     {
         $this->id = $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPhone(): string
-    {
-        return $this->phone;
-    }
-
-    /**
-     * @param string $phone
-     */
-    public function setPhone(string $phone): void
-    {
-        $this->phone = $phone;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     */
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSalary(): int
-    {
-        return $this->salary;
-    }
-
-    /**
-     * @param int $salary
-     */
-    public function setSalary(int $salary): void
-    {
-        $this->salary = $salary;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOccupation(): string
-    {
-        return $this->occupation;
-    }
-
-    /**
-     * @param string $occupation
-     */
-    public function setOccupation(string $occupation): void
-    {
-        $this->occupation = $occupation;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBankStatement(): ?string
-    {
-        return $this->bankStatement;
-    }
-
-    /**
-     * @param string|null $bankStatement
-     */
-    public function setBankStatement(?string $bankStatement): void
-    {
-        $this->bankStatement = $bankStatement;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPayslip(): ?string
-    {
-        return $this->payslip;
-    }
-
-    /**
-     * @param string|null $payslip
-     */
-    public function setPayslip(?string $payslip): void
-    {
-        $this->payslip = $payslip;
     }
 
     /**
@@ -413,22 +128,6 @@ class Application
     }
 
     /**
-     * @return string|null
-     */
-    public function getNotes(): ?string
-    {
-        return $this->notes;
-    }
-
-    /**
-     * @param string|null $notes
-     */
-    public function setNotes(?string $notes): void
-    {
-        $this->notes = $notes;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getUpdatedDate(): \DateTime|string
@@ -461,19 +160,35 @@ class Application
     }
 
     /**
-     * @return string
+     * @return Properties
      */
-    public function getIdNumber(): string
+    public function getProperty(): Properties
     {
-        return $this->idNumber;
+        return $this->property;
     }
 
     /**
-     * @param string $idNumber
+     * @param Properties $property
      */
-    public function setIdNumber(string $idNumber): void
+    public function setProperty(Properties $property): void
     {
-        $this->idNumber = $idNumber;
+        $this->property = $property;
+    }
+
+    /**
+     * @return Tenant
+     */
+    public function getTenant(): Tenant
+    {
+        return $this->tenant;
+    }
+
+    /**
+     * @param Tenant $tenant
+     */
+    public function setTenant(Tenant $tenant): void
+    {
+        $this->tenant = $tenant;
     }
 
     /**

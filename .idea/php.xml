@@ -134,6 +134,7 @@
       <path value="$PROJECT_DIR$/vendor/jms/metadata" />
       <path value="$PROJECT_DIR$/vendor/secit-pl/imap-bundle" />
       <path value="$PROJECT_DIR$/vendor/php-imap/php-imap" />
+      <path value="$PROJECT_DIR$/vendor/twilio/sdk" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

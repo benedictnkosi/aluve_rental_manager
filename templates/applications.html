@@ -251,7 +251,7 @@
                 <h1 id="register">APPLICATION</h1>
                 <h4 class="m-auto row d-flex justify-content-center align-items-center" id="property_details"></h4>
                 <h5 class="mt-5">Rent: <span id="unit_rent"></span></h5>
-                <h5 >Max Occupation: <span id="unit_max_occupation"></span></h5>
+                <h5>Max Occupation: <span id="unit_max_occupation"></span></h5>
                 <h5>Children Policy: <span id="unit_children"></span></h5>
                 <h5>Parking: <span id="unit_parking"></span></h5>
                 <h5>Minimum Combined Gross Salary: <span id="unit_min_salary"></span></h5>
@@ -268,14 +268,28 @@
                                placeholder="e.g. 500" value="test value" required>
                     </div>
                     <div class="mb-3">
-                        <label for="application_id_number" class="form-label">ID\Passport Number</label>
-                        <input type="text" class="form-control" name="application_id_number"
-                               id="application_id_number" value="test value" required>
+                        <label for="application_id_doc_type" class="form-label">ID Document Type</label>
+                        <div class="dropdown" id="application_id_doc_type">
+                            <button class="btn btn-dark dropdown-toggle" id="drop-id-doc-type-selected"
+                                    type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                ID Doc Type
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item id-doc-type" document-type="South African ID" href="javascript:void(0)">South African ID</a></li>
+                                <li><a class="dropdown-item id-doc-type"  document-type="Passport" href="javascript:void(0)">Passport</a></li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <label for="application_phone" class="form-label">Phone Number</label>
+                        <label for="application_id_number" class="form-label">ID\Passport Number</label>
+                        <input type="text" class="form-control" name="application_id_number"
+                               id="application_id_number" value="8804235651087" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="application_phone" class="form-label">Whatsapp Phone Number</label>
                         <input type="number" class="form-control" name="application_phone"
-                               id="application_phone" value="12345" required>
+                               id="application_phone" value="0837917430" required>
                     </div>
                     <div class="mb-3">
                         <label for="application_email" class="form-label">Email</label>
@@ -295,19 +309,19 @@
                     <div class="mb-3">
                         <label for="application_salary" class="form-label">Combined Gross Salary</label>
                         <input type="number" class="form-control" name="application_salary"
-                               id="application_salary" value="123" required>
+                               id="application_salary" value="10000" required>
                     </div>
                     <div class="mb-3">
                         <label for="application_occupation" class="form-label">Occupation</label>
                         <input type="text" class="form-control" name="application_occupation"
-                               id="application_occupation" value="nkosi@gmail.com" required>
+                               id="application_occupation" value="Worker mina" required>
                     </div>
                 </div>
                 <div class="tab">
                     <h3 class="mt-2">Supporting Documents:</h3>
                     <div class="mb-3">
                         <label for="bank_statement" class="form-label">Bank Statement</label>
-                        <input type="file" class="form-control"id="bank_statement">
+                        <input type="file" class="form-control" id="bank_statement">
                     </div>
                     <div class="mb-3">
                         <label for="application_payslip" class="form-label">Payslip</label>
@@ -357,7 +371,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/operations/application_form.js"></script>
-<script src="/assets/js/main-content.js"></script>
+<script src="/assets/js/operations/main-content.js"></script>
 
 <script>
     var currentTab = 0;

@@ -15,18 +15,18 @@ class Propertyusers
     /**
      * @var int
      *
-     * @ORM\Column(name="idPropertyUsers", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idpropertyusers;
+    private $id;
 
     /**
      * @var Properties
      *
      * @ORM\ManyToOne(targetEntity="Properties")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="property", referencedColumnName="idProperties")
+     *   @ORM\JoinColumn(name="property", referencedColumnName="id")
      * })
      */
     private $property;
@@ -44,17 +44,17 @@ class Propertyusers
     /**
      * @return int
      */
-    public function getIdpropertyusers(): int
+    public function getId(): int
     {
-        return $this->idpropertyusers;
+        return $this->id;
     }
 
     /**
-     * @param int $idpropertyusers
+     * @param int $id
      */
-    public function setIdpropertyusers(int $idpropertyusers): void
+    public function setId(int $id): void
     {
-        $this->idpropertyusers = $idpropertyusers;
+        $this->id = $id;
     }
 
     /**
