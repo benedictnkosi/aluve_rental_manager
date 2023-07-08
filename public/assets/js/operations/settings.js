@@ -1,14 +1,11 @@
 $(document).ready(function () {
+    sessionStorage.setItem("update_property_settings", "false");
     getProperty();
 
-    $('.property-value').blur(function (event) {
-        if(sessionStorage.getItem("current_page").localeCompare("settings-content-div")===0){
-            updatePropertyField(event.target.getAttribute("field-name"), event.target.value)
-        }
-    })
 
-    $('#property_lease').change(function () {
-        uploadPropertyLease($("#property_lease").prop("files")[0]);
+
+    $('.property-value').focus(function () {
+        sessionStorage.setItem("update_property_settings", "true");
     });
 
 });
@@ -96,6 +93,15 @@ let getProperty = () => {
                 $("#view_uploaded_property_lease").attr("href", "/api/lease_document/" + data.lease_file_name);
             }
 
+            $('#property_lease').change(function () {
+                uploadPropertyLease($("#property_lease" ).prop("files")[0]);
+            });
+
+            $('.property-value').change(function (event) {
+                if(sessionStorage.getItem("current_page").localeCompare("settings-content-div")===0 && sessionStorage.getItem("update_property_settings").localeCompare("true")===0){
+                    updatePropertyField(event.target.getAttribute("field-name"), event.target.value)
+                }
+            })
         },
         error: function (xhr) {
 

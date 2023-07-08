@@ -45,8 +45,8 @@ class CommunicationApi extends AbstractController
 
        // $number = "+27" . substr($number, 1, strlen($number) -1 );
 
-        $sid = "AC89cbf448dd3dc6db54956f775388674b";
-        $token = "7e30338c0b2b0c5a9bb144f2856eea99";
+        $sid = "";
+        $token = "";
         try{
             $twilio = new Client($sid, $token);
 

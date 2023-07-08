@@ -36,7 +36,7 @@ class ExpenseApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function addExpense($expenseId, $propertyId, $amount, $description, $date): array
+    public function addExpense($expenseId, $propertyGuid, $amount, $description, $date): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -51,9 +51,9 @@ class ExpenseApi extends AbstractController
             }
 
             //validate property id
-            if (!is_numeric($propertyId)) {
+            if (!is_numeric($propertyGuid)) {
                 return array(
-                    'result_message' => "Property ID is invalid",
+                    'result_message' => "Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -91,7 +91,7 @@ class ExpenseApi extends AbstractController
                 );
             }
 
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' => $propertyId));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return array(
                     'result_message' => "Property not found",
@@ -105,6 +105,7 @@ class ExpenseApi extends AbstractController
             $expense->setAmount($amount);
             $expense->setDescription($description);
             $expense->setDate(new DateTime($date));
+            $expense->setGuid($this->generateGuid());
 
             $this->em->persist($expense);
             $this->em->flush($expense);
@@ -123,21 +124,21 @@ class ExpenseApi extends AbstractController
         }
     }
 
-    public function getExpenses($propertyId): array
+    public function getExpenses($propertyGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
 
             //validate property id
-            if (strlen($propertyId) < 1 || !is_numeric($propertyId) || intval($propertyId) < 1) {
+            if (strlen($propertyGuid) !== 36 ) {
                 return array(
-                    'result_message' => "Property ID is not valid",
+                    'result_message' => "Property GUID is invalid",
                     'result_code' => 1
                 );
             }
 
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' => $propertyId));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return array(
                     'result_message' => "Property not found",
@@ -155,16 +156,16 @@ class ExpenseApi extends AbstractController
         }
     }
 
-    public function getExpensesTotal($propertyId, $numberOfDays): array
+    public function getExpensesTotal($propertyGuid, $numberOfDays): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
 
             //validate property id
-            if (strlen($propertyId) < 1 || !is_numeric($propertyId) || intval($propertyId) < 1) {
+            if (strlen($propertyGuid) !== 36 ) {
                 return array(
-                    'result_message' => "Property ID is not valid",
+                    'result_message' => "Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -176,7 +177,7 @@ class ExpenseApi extends AbstractController
                     'result_code' => 1
                 );
             }
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' => $propertyId));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return array(
                     'result_message' => "Property not found",
@@ -215,8 +216,16 @@ class ExpenseApi extends AbstractController
         }
     }
 
+    function generateGuid(): string
+    {
+        if (function_exists('com_create_guid') === true) {
+            return trim(com_create_guid(), '{}');
+        }
 
-    public function getExpensesAndIncomeTotal($propertyId, $numberOfDays): array
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+    }
+
+    public function getExpensesAndIncomeTotal($propertyGuid, $numberOfDays): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -230,15 +239,15 @@ class ExpenseApi extends AbstractController
             }
 
             //validate property id
-            if (strlen($propertyId) < 1 || !is_numeric($propertyId) || intval($propertyId) < 1) {
+            if (strlen($propertyGuid) !== 36) {
                 return array(
-                    'result_message' => "Property ID is not valid",
+                    'result_message' => "Property GUID is invalid",
                     'result_code' => 1
                 );
             }
 
-            $expenseTotal = $this->getExpensesTotal($propertyId, $numberOfDays);
-            $incomeTotal = $this->getIncomeTotal($propertyId, $numberOfDays);
+            $expenseTotal = $this->getExpensesTotal($propertyGuid, $numberOfDays);
+            $incomeTotal = $this->getIncomeTotal($propertyGuid, $numberOfDays);
             return array(
                 'income' => $incomeTotal,
                 'expense' => $expenseTotal,
@@ -254,16 +263,16 @@ class ExpenseApi extends AbstractController
     }
 
 
-    public function getIncomeTotal($propertyId, $numberOfDays): array
+    public function getIncomeTotal($propertyGuid, $numberOfDays): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
 
             //validate property id
-            if (strlen($propertyId) < 1 || !is_numeric($propertyId) || intval($propertyId) < 1) {
+            if (strlen($propertyGuid) !== 36) {
                 return array(
-                    'result_message' => "Property ID is not valid",
+                    'result_message' => "Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -276,8 +285,16 @@ class ExpenseApi extends AbstractController
                 );
             }
 
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
+            if ($property == null) {
+                return array(
+                    'result_message' => "Property not found",
+                    'result_code' => 1
+                );
+            }
+
             $sql = "SELECT sum(amount) as total FROM `transaction`, leases WHERE lease = leases.id and
-leases.property = ".$propertyId." and `amount` > 0 and `date` > (DATE(NOW()) - INTERVAL ".$numberOfDays." DAY)";
+leases.property = ".$property->getId()." and `amount` > 0 and `date` > (DATE(NOW()) - INTERVAL ".$numberOfDays." DAY)";
             $databaseHelper = new DatabaseApi($this->logger);
             $result = $databaseHelper->queryDatabase($sql);
 
@@ -309,16 +326,16 @@ leases.property = ".$propertyId." and `amount` > 0 and `date` > (DATE(NOW()) - I
     }
 
 
-    public function getExpensesByMonth($propertyId, $numberOfDays): array
+    public function getExpensesByMonth($propertyGuid, $numberOfDays): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
             //validate property id
             //validate property id
-            if (strlen($propertyId) < 1 || !is_numeric($propertyId) || intval($propertyId) < 1) {
+            if (strlen($propertyGuid) !== 36 ) {
                 return array(
-                    'result_message' => "Property ID is not valid",
+                    'result_message' => "Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -331,7 +348,7 @@ leases.property = ".$propertyId." and `amount` > 0 and `date` > (DATE(NOW()) - I
                 );
             }
 
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' => $propertyId));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return array(
                     'result_message' => "Property not found",
@@ -346,7 +363,7 @@ leases.property = ".$propertyId." and `amount` > 0 and `date` > (DATE(NOW()) - I
     SUM(`amount`) AS `total`
 FROM
     `expense`
-WHERE property = ".$propertyId." and 
+WHERE property = ".$property->getId()." and 
     `date` >= CURDATE() - INTERVAL ".$numberOfDays." DAY
 GROUP BY
     `month_num`
@@ -380,16 +397,16 @@ ORDER BY
         }
     }
 
-    public function getIncomeByMonth($propertyId, $numberOfDays): array
+    public function getIncomeByMonth($propertyGuid, $numberOfDays): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
             //validate property id
             //validate property id
-            if (strlen($propertyId) < 1 || !is_numeric($propertyId) || intval($propertyId) < 1) {
+            if (strlen($propertyGuid) < 1 ) {
                 return array(
-                    'result_message' => "Property ID is not valid",
+                    'result_message' => "Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -402,7 +419,7 @@ ORDER BY
                 );
             }
 
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' => $propertyId));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return array(
                     'result_message' => "Property not found",
@@ -418,7 +435,7 @@ ORDER BY
 FROM
     `transaction`, leases
 WHERE lease = leases.id and
-leases.property = ".$propertyId." and 
+leases.property = ".$property->getId()." and 
     `date` >= CURDATE() - INTERVAL ".$numberOfDays." DAY
 GROUP BY
     `month_num`
@@ -453,15 +470,15 @@ ORDER BY
         }
     }
 
-    public function getExpensesIncomeByMonth($propertyId, $numberOfDays): array
+    public function getExpensesIncomeByMonth($propertyGuid, $numberOfDays): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
 
         //validate property id
-        if (strlen($propertyId) < 1 || !is_numeric($propertyId) || intval($propertyId) < 1) {
+        if (strlen($propertyGuid) !== 36 ) {
             return array(
-                'result_message' => "Property ID is not valid",
+                'result_message' => "Property GUID is invalid",
                 'result_code' => 1
             );
         }
@@ -474,9 +491,9 @@ ORDER BY
             );
         }
 
-        $incomeArray = $this->getIncomeByMonth($propertyId, $numberOfDays);
+        $incomeArray = $this->getIncomeByMonth($propertyGuid, $numberOfDays);
         $this->logger->debug("Size for income array " . sizeof($incomeArray));
-        $expensesArray = $this->getExpensesByMonth($propertyId, $numberOfDays);
+        $expensesArray = $this->getExpensesByMonth($propertyGuid, $numberOfDays);
 
         $months = [
             1 => 'Jan',
@@ -540,16 +557,16 @@ ORDER BY
         usort($responseArray, array($this, 'sortByDate'));
     }
 
-    public function getExpensesByAccount($propertyId, $numberOfDays): array
+    public function getExpensesByAccount($propertyGuid, $numberOfDays): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
             //validate property id
             //validate property id
-            if (strlen($propertyId) < 1 || !is_numeric($propertyId) || intval($propertyId) < 1) {
+            if (strlen($propertyGuid) < 1 ) {
                 return array(
-                    'result_message' => "Property ID is not valid",
+                    'result_message' => "Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -561,7 +578,7 @@ ORDER BY
                     'result_code' => 1
                 );
             }
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' => $propertyId));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return array(
                     'result_message' => "Property not found",
@@ -571,7 +588,7 @@ ORDER BY
 
             $sql = "SELECT name, sum(amount) as total
 FROM `expense`, expense_account
-where `expense`.`expense` = expense_account.id and  property = ".$propertyId." and `amount` > 0 and `date` > (DATE(NOW()) - INTERVAL ".$numberOfDays." DAY) group by `expense`";
+where `expense`.`expense` = expense_account.id and  property = ".$property->getId()." and `amount` > 0 and `date` > (DATE(NOW()) - INTERVAL ".$numberOfDays." DAY) group by `expense`";
             $databaseHelper = new DatabaseApi($this->logger);
             $result = $databaseHelper->queryDatabase($sql);
 
@@ -616,19 +633,19 @@ where `expense`.`expense` = expense_account.id and  property = ".$propertyId." a
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function deleteExpense($id): array
+    public function deleteExpense($guid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
             //validate number of days
-            if (strlen($id) < 1 || !is_numeric($id) || intval($id) < 1) {
+            if (strlen($guid) != 36) {
                 return array(
-                    'result_message' => "Number Of days is not valid",
+                    'result_message' => "Expense Guid invalid",
                     'result_code' => 1
                 );
             }
-            $expense = $this->em->getRepository(Expense::class)->findOneBy(array('id' => $id));
+            $expense = $this->em->getRepository(Expense::class)->findOneBy(array('guid' => $guid));
 
             if ($expense == null) {
                 return array(

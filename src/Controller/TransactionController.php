@@ -63,16 +63,16 @@ class TransactionController extends AbstractController
     }
 
     /**
-     * @Route("api/property/balance/{propertyId}")
+     * @Route("api/property/balance/{propertyGuid}")
      */
-    public function getPropertyBalanceDue($propertyId, Request $request, LoggerInterface $logger, TransactionApi $transactionApi): Response
+    public function getPropertyBalanceDue($propertyGuid, Request $request, LoggerInterface $logger, TransactionApi $transactionApi): Response
     {
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('get')) {
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $transactionApi->getBalanceDueForAllActiveLeases($propertyId);
+        $response = $transactionApi->getBalanceDueForAllActiveLeases($propertyGuid);
         return new JsonResponse($response, 200, array());
     }
 

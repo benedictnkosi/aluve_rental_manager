@@ -38,24 +38,33 @@ class LeaseApi extends AbstractController
         }
     }
 
-    public function getLeases($propertyId): array
+    public function getLeases($propertyGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
 
             //validate property id
-            if (strlen($propertyId) < 1 || !is_numeric($propertyId) || intval($propertyId) < 1) {
+            if (strlen($propertyGuid) !== 36 ) {
                 return array(
-                    'result_message' => "Property ID is not valid",
+                    'result_message' => "Property GUID is invalid",
                     'result_code' => 1
                 );
             }
 
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
+            if ($property == null) {
+                return array(
+                    'result_message' => "Property not found",
+                    'result_code' => 1
+                );
+            }
+
+
             $leases = $this->em->getRepository("App\Entity\Leases")->createQueryBuilder('l')
                 ->where('l.property = :property')
                 ->andWhere("l.status = 'active' or l.status = 'pending_docs'")
-                ->setParameter('property', $propertyId)
+                ->setParameter('property', $property->getId())
                 ->getQuery()
                 ->getResult();
             if (sizeof($leases) < 1) {
@@ -121,9 +130,9 @@ class LeaseApi extends AbstractController
         $responseArray = array();
         try {
             //validate property id
-            if (strlen($guid) < 1 || strlen($guid) > 36 ) {
+            if (strlen($guid) !== 36 ) {
                 return array(
-                    'result_message' => "Property ID is not valid",
+                    'result_message' => "Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -173,7 +182,7 @@ class LeaseApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function createLease($tenant, $unitId, $startDate, $endDate, $deposit, $leaseId, $paymentRules, $status = "active"): array
+    public function createLease($tenant, $unitGuid, $startDate, $endDate, $deposit, $leaseId, $paymentRules, $status = "active"): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -195,7 +204,7 @@ class LeaseApi extends AbstractController
 
             if ($leaseId == 0) {
                 $lease = new Leases();
-                $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $unitId));
+                $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $unitGuid));
                 if ($unit == null) {
                     return array(
                         'result_message' => "Error: Unit not found",

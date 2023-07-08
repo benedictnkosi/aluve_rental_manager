@@ -51,12 +51,12 @@ class PropertyApi extends AbstractController
     }
 
 
-    public function getProperty($id)
+    public function getProperty($propertyGuid)
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' =>  $id));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return array(
                     'result_message' => "Property not found",
@@ -73,12 +73,12 @@ class PropertyApi extends AbstractController
         }
     }
 
-    public function updateProperty($field, $value, $id): array
+    public function updateProperty($field, $value, $propertyGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' =>  $id));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if($property == null){
                 return array(
                     'result_message' => "Property not found",
@@ -96,10 +96,10 @@ class PropertyApi extends AbstractController
                 case "lateFee":
                     $property->setLateFee($value);
                     break;
-                case "rentDue":
+                case "rent-due-day":
                     $property->setRentDue($value);
                     break;
-                case "rentLateDays":
+                case "late-fee-day":
                     $property->setRentLateDays($value);
                     break;
                 case "status":
@@ -118,6 +118,10 @@ class PropertyApi extends AbstractController
                     $property->setLeaseFileName($value);
                     break;
                 default:
+                    return array(
+                        'result_message' => "Error. Field not found " . $field,
+                        'result_code' => 1
+                    );
             }
 
             $this->em->persist($property);
@@ -137,23 +141,25 @@ class PropertyApi extends AbstractController
         }
     }
 
-    public function createProperty($name, $address, $propertyId): array
+    public function createProperty($name, $address, $propertyGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            if($propertyId == 0){
+            if($propertyGuid == 0){
                 $property =  new Properties();
             }else{
-                $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' =>  $propertyId));
+                $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             }
 
             $property->setName($name);
             $property->setAddress($address);
+            $guid = $this->generateGuid();
+            $property->setGuid($guid);
             $this->em->persist($property);
             $this->em->flush($property);
 
-            if($propertyId == 0){
+            if($propertyGuid== 0){
                 $user = $this->em->getRepository(User::class)->findOneBy(array('email' =>  $this->getUser()->getUserIdentifier()));
 
                 //link property with current user
@@ -185,6 +191,15 @@ class PropertyApi extends AbstractController
                 'result_code' => 1
             );
         }
+    }
+
+    function generateGuid(): string
+    {
+        if (function_exists('com_create_guid') === true) {
+            return trim(com_create_guid(), '{}');
+        }
+
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
 
 

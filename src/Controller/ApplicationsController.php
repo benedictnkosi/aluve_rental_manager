@@ -24,16 +24,16 @@ class ApplicationsController extends AbstractController
 {
 
     /**
-     * @Route("api/applications/get/{propertyId}")
+     * @Route("api/applications/get/{propertyGuid}")
      */
-    public function getApplications($propertyId, Request $request, LoggerInterface $logger, ApplicationsApi $applicationsApi): Response
+    public function getApplications($propertyGuid, Request $request, LoggerInterface $logger, ApplicationsApi $applicationsApi): Response
     {
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('GET')) {
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $applicationsApi->getApplications($propertyId);
+        $response = $applicationsApi->getApplications($propertyGuid);
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);

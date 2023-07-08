@@ -80,12 +80,12 @@ let createUnit = () => {
     });
 }
 
-let deleteUnit = (unitId) => {
+let deleteUnit = (guid) => {
     let url = "/api/units/update";
     const data = {
         field: "status",
         value: "deleted",
-        id: unitId
+        guid: guid
     };
 
     $.ajax({
@@ -134,7 +134,7 @@ let getAllUnits = () => {
                     parking = "Not Provided"
                 }
 
-                unitsDropDownHtml += '<li><a class="dropdown-item lease-unit-dropdown" lease-unit-id="'+unit.unit_id+'"\n' +
+                unitsDropDownHtml += '<li><a class="dropdown-item lease-unit-dropdown" lease-unit-id="'+unit.guid+'"\n' +
                     '                                           href="javascript:void(0)">'+unit.unit_name+'</a></li>';
 
                 html += '<div class="col">\n' +
@@ -177,15 +177,15 @@ let getAllUnits = () => {
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                            <div class="btn-group">\n' +
-                    '                                <button class="btn btn-secondary btn-update-unit"  unit-id="' + unit.unit_id + '" unit-bedrooms="' + unit.bedrooms + '" unit-bathrooms="' + unit.bathrooms + '"unit-rent="' + unit.rent + '" parking="' + unit.parking + '" children="' + unit.children + '" min-salary="' + unit.min_gross_salary + '" max-occupants="' + unit.max_occupants + '"listed="' + unit.listed + '" unit-name="' + unit.unit_name + '" type="button">\n' +
+                    '                                <button class="btn btn-secondary btn-update-unit"  unit-id="' + unit.guid + '" unit-bedrooms="' + unit.bedrooms + '" unit-bathrooms="' + unit.bathrooms + '"unit-rent="' + unit.rent + '" parking="' + unit.parking + '" children="' + unit.children + '" min-salary="' + unit.min_gross_salary + '" max-occupants="' + unit.max_occupants + '"listed="' + unit.listed + '" unit-name="' + unit.unit_name + '" type="button">\n' +
                     '                                    Update unit\n' +
                     '                                </button>\n' +
                     '                                <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
                     '                                    <span class="visually-hidden">Toggle Dropdown</span>\n' +
                     '                                </button>\n' +
                     '                                <ul class="dropdown-menu dropdown-menu-dark">\n' +
-                    '                                    <li><a class="dropdown-item btn-delete-unit" href="javascript:void(0)" unit-id="' + unit.unit_id + '" >Delete Unit</a></li>\n' +
-                    '                                    <li><a class="dropdown-item btn-copy-listing-link" unit-id="' + unit.unit_id + '" href="javascript:void(0)">Copy Application Link</a></li>\n' +
+                    '                                    <li><a class="dropdown-item btn-delete-unit" href="javascript:void(0)" unit-id="' + unit.guid + '" >Delete Unit</a></li>\n' +
+                    '                                    <li><a class="dropdown-item btn-copy-listing-link" unit-id="' + unit.guid + '" href="javascript:void(0)">Copy Application Link</a></li>\n' +
                     '</ul>\n' +
                     '                            </div>\n' +
                     '                                        </li>\n' +

@@ -30,12 +30,21 @@ class UnitApi extends AbstractController
         }
     }
 
-    public function getUnits($propertyId): array
+    public function getUnits($propertyGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $units = $this->em->getRepository(Units::class)->findBy(array('property' => $propertyId, 'status' => 'active'));
+
+            $Property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid, 'status' => 'active'));
+            if ($Property == null) {
+                return array(
+                    'result_message' => "No units found",
+                    'result_code' => 1
+                );
+            }
+
+            $units = $this->em->getRepository(Units::class)->findBy(array('property' => $Property->getId(), 'status' => 'active'));
             if (sizeof($units) < 1) {
                 return array(
                     'result_message' => "No units found",
@@ -57,6 +66,7 @@ class UnitApi extends AbstractController
                         'rent' => "R". number_format($unit->getRent(), 2, '.', ''),
                         'bedrooms' => $unit->getBedrooms(),
                         'bathrooms' => $unit->getbathrooms(),
+                        'guid' => $unit->getGuid(),
 
                     );
                 } else {
@@ -80,6 +90,7 @@ class UnitApi extends AbstractController
                         'rent' => "R". number_format($unit->getRent(), 2, '.', ''),
                         'bedrooms' => $unit->getBedrooms(),
                         'bathrooms' => $unit->getBathrooms(),
+                        'guid' => $unit->getGuid(),
                     );
                 }
 
@@ -94,12 +105,12 @@ class UnitApi extends AbstractController
         }
     }
 
-    public function getUnit($unitId)
+    public function getUnit($guid)
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $unitId));
+            $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $guid));
             if ($unit == null) {
                 return array(
                     'result_message' => "Error: Unit not found",
@@ -118,16 +129,16 @@ class UnitApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function createUnit($name, $unitId, $listed, $parking, $childrenAllowed, $maxOccupants, $minGrossSalary, $rent, $bedrooms, $bathrooms, $propertId): array
+    public function createUnit($name, $guid, $listed, $parking, $childrenAllowed, $maxOccupants, $minGrossSalary, $rent, $bedrooms, $bathrooms, $propertyGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
             $successMessage = "Successfully created rental unit";
-            if ($unitId == 0) {
+            if ($guid == 0) {
                 $unit = new Units();
             } else {
-                $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $unitId));
+                $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $guid));
                 if($unit == null){
                     return array(
                         'result_message' => "Error: Unit not found",
@@ -137,7 +148,7 @@ class UnitApi extends AbstractController
                 $successMessage = "Successfully updated rental unit";
             }
 
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' => $propertId));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return array(
                     'result_message' => "Property not found",
@@ -155,6 +166,7 @@ class UnitApi extends AbstractController
             $unit->setRent($rent);
             $unit->setBedrooms($bedrooms);
             $unit->setBathrooms($bathrooms);
+            $unit->setGuid($this->generateGuid());
 
             if(strcmp($listed, "true") == 0){
                 $unit->setListed(true);
@@ -180,12 +192,21 @@ class UnitApi extends AbstractController
         }
     }
 
-    public function updateUnit($field, $value, $id): array
+    function generateGuid(): string
+    {
+        if (function_exists('com_create_guid') === true) {
+            return trim(com_create_guid(), '{}');
+        }
+
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+    }
+
+    public function updateUnit($field, $value, $guid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' =>  $id));
+            $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' =>  $guid));
             if($unit == null){
                 return array(
                     'result_message' => "Error: Unit not found",

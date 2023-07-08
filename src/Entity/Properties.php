@@ -99,6 +99,13 @@ class Properties
     private $applicationFee = '0';
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="guid", type="string", length=36, nullable=false)
+     */
+    private $guid;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -288,6 +295,22 @@ class Properties
     public function setApplicationFee(int|string $applicationFee): void
     {
         $this->applicationFee = $applicationFee;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGuid(): string
+    {
+        return $this->guid;
+    }
+
+    /**
+     * @param string $guid
+     */
+    public function setGuid(string $guid): void
+    {
+        $this->guid = $guid;
     }
 
 

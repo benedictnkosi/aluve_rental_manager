@@ -112,12 +112,12 @@ class PropertyController extends AbstractController
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $propertyId = 0;
-        if($request->get('id') !== null){
-            $propertyId = $request->get('id');
+        $propertyGuid = 0;
+        if($request->get('guid') !== null){
+            $propertyGuid = $request->get('guid');
         }
 
-        $response = $propertyApi->createProperty($request->get('name'), $request->get('address'), $propertyId);
+        $response = $propertyApi->createProperty($request->get('name'), $request->get('address'), $propertyGuid);
         return new JsonResponse($response , 200, array());
     }
 

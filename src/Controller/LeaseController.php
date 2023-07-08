@@ -22,15 +22,15 @@ class LeaseController extends AbstractController
 {
 
     /**
-     * @Route("api/leases/get/{propertyId}")
+     * @Route("api/leases/get/{propertyGuid}")
      */
-    public function getLeases($propertyId, LeaseApi $leaseApi, Request $request, LoggerInterface $logger): Response{
+    public function getLeases($propertyGuid, LeaseApi $leaseApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('get')) {
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $leaseApi->getLeases($propertyId);
+        $response = $leaseApi->getLeases($propertyGuid);
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);

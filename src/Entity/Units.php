@@ -92,6 +92,14 @@ class Units
     private $bathrooms = 1;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="guid", type="string", length=36, nullable=false)
+     */
+    private $guid;
+
+
+    /**
      * @var Properties
      *
      * @ORM\ManyToOne(targetEntity="Properties")
@@ -293,5 +301,20 @@ class Units
         $this->property = $property;
     }
 
+    /**
+     * @return string
+     */
+    public function getGuid(): string
+    {
+        return $this->guid;
+    }
+
+    /**
+     * @param string $guid
+     */
+    public function setGuid(string $guid): void
+    {
+        $this->guid = $guid;
+    }
 
 }

@@ -38,7 +38,7 @@ let getExpenses = () => {
                     '                        <td>'+expense.expense.name+'</td>\n' +
                     '                        <td>'+expenseDescription+'</td>\n' +
                     '                        <td>R'+expense.amount.toLocaleString()+'</td>\n' +
-                    '                       <td><i class="bi bi-trash-fill" expense-id="'+expense.id+'"></i></td>'
+                    '                       <td><i class="bi bi-trash-fill" expense-id="'+expense.guid+'"></i></td>'
                     '                    </tr>';
             });
 
@@ -112,7 +112,7 @@ let addExpense = () => {
 }
 
 let deleteExpense = () => {
-    let url = "/api/expenses/delete?id=" + sessionStorage.getItem("expense-id");
+    let url = "/api/expenses/delete?guid=" + sessionStorage.getItem("expense-id");
     $.ajax({
         url: url,
         type: "delete",

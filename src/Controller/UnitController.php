@@ -16,15 +16,15 @@ class UnitController extends AbstractController
 {
 
     /**
-     * @Route("api/unit/get/{unitId}")
+     * @Route("api/unit/get/{guid}")
      */
-    public function getUnit($unitId, UnitApi $unitApi, Request $request, LoggerInterface $logger): Response{
+    public function getUnit($guid, UnitApi $unitApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('get')) {
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $unitApi->getUnit($unitId);
+        $response = $unitApi->getUnit($guid);
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);
@@ -33,15 +33,15 @@ class UnitController extends AbstractController
 
 
     /**
-     * @Route("api/units/get/{propertyId}")
+     * @Route("api/units/get/{propertyGuid}")
      */
-    public function getUnits($propertyId, UnitApi $unitApi, Request $request, LoggerInterface $logger): Response{
+    public function getUnits($propertyGuid, UnitApi $unitApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('get')) {
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $unitApi->getUnits($propertyId);
+        $response = $unitApi->getUnits($propertyGuid);
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);
@@ -56,7 +56,7 @@ class UnitController extends AbstractController
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $unitApi->updateUnit($request->get('field'), $request->get('value'), $request->get('id'));
+        $response = $unitApi->updateUnit($request->get('field'), $request->get('value'), $request->get('guid'));
         return new JsonResponse($response , 200, array());
     }
 
@@ -69,9 +69,9 @@ class UnitController extends AbstractController
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $unitId = 0;
-        if($request->get('id')){
-            $unitId = $request->get('id');
+        $guid = 0;
+        if($request->get('guid')){
+            $guid = $request->get('guid');
         }
         $response = array();
         $errors = false;
@@ -80,13 +80,13 @@ class UnitController extends AbstractController
             $numberOfUnitsToCreate = intval($request->get('numberOfUnits'));
             for ($x = 0; $x < $numberOfUnitsToCreate; $x++) {
                 $roomName = $request->get('name') . " " . $x + 1;
-                $response = $unitApi->createUnit($roomName, $unitId, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'));
+                $response = $unitApi->createUnit($roomName, $guid, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'));
                 if($response["result_code"] == 1){
                     $errors = true;
                 }
             }
         }else{
-            $response = $unitApi->createUnit($request->get('name'), $unitId, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'));
+            $response = $unitApi->createUnit($request->get('name'), $guid, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'));
         }
 
         if($errors){

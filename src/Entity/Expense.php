@@ -53,6 +53,13 @@ class Expense
     private $property;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="guid", type="string", length=36, nullable=false)
+     */
+    private $guid;
+
+    /**
      * @var ExpenseAccount
      *
      * @ORM\ManyToOne(targetEntity="ExpenseAccount")
@@ -158,5 +165,19 @@ class Expense
         $this->expense = $expense;
     }
 
+    /**
+     * @return string
+     */
+    public function getGuid(): string
+    {
+        return $this->guid;
+    }
 
+    /**
+     * @param string $guid
+     */
+    public function setGuid(string $guid): void
+    {
+        $this->guid = $guid;
+    }
 }

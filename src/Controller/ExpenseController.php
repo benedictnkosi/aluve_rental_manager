@@ -37,16 +37,16 @@ class ExpenseController extends AbstractController
 
 
     /**
-     * @Route("api/expenses/get/{propertyId}")
+     * @Route("api/expenses/get/{propertyGuid}")
      */
-    public function getExpenses($propertyId, Request $request, LoggerInterface $logger, ExpenseApi $expenseApi): Response
+    public function getExpenses($propertyGuid, Request $request, LoggerInterface $logger, ExpenseApi $expenseApi): Response
     {
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('get')) {
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $expenseApi->getExpenses($propertyId);
+        $response = $expenseApi->getExpenses($propertyGuid);
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);
@@ -78,7 +78,7 @@ class ExpenseController extends AbstractController
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $expenseApi->deleteExpense($request->get("id"));
+        $response = $expenseApi->deleteExpense($request->get("guid"));
         return new JsonResponse($response , 200, array());
     }
 

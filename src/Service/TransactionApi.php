@@ -177,13 +177,13 @@ class TransactionApi extends AbstractController
         }
     }
 
-    public function getBalanceDueForAllActiveLeases($propertyId): array|int
+    public function getBalanceDueForAllActiveLeases($propertyGuid): array|int
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
 
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('id' => $propertyId));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return 0;
             }

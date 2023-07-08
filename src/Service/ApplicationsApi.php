@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Application;
 use App\Entity\Leases;
+use App\Entity\Properties;
 use App\Entity\Tenant;
 use App\Entity\Units;
 use DateTime;
@@ -30,15 +31,23 @@ class ApplicationsApi extends AbstractController
         }
     }
 
-    public function getApplications($propertyId): array
+    public function getApplications($propertyGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid ));
+            if ($property == null) {
+                return array(
+                    'result_message' => "Property not found",
+                    'result_code' => 1
+                );
+            }
+
             $applications = $this->em->getRepository("App\Entity\Application")->createQueryBuilder('a')
                 ->where('a.property = :property')
                 ->andWhere("a.status = 'new' or a.status = 'docs_uploaded' or a.status = 'accepted'")
-                ->setParameter('property', $propertyId)
+                ->setParameter('property', $property->getId())
                 ->getQuery()
                 ->getResult();
 
@@ -100,7 +109,7 @@ class ApplicationsApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $request->get("unit_id")));
+            $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $request->get("unit_id")));
             if ($unit == null) {
                 return array(
                     'result_message' => "Error: Unit not found",
@@ -240,20 +249,9 @@ class ApplicationsApi extends AbstractController
 //                );
 //            }
 
-            $tenant = new Tenant();
-            $tenant->setName($application->getName());
-            $tenant->setEmail($application->getEmail());
-            $tenant->setPhone($application->getPhone());
-            $tenant->setAdults($application->getAdults());
-            $tenant->setChildren( $application->getChildren());
-            $tenant->setIdNumber($application->getIdNumber());
-            $tenant->setIdDocumentType($application->getIdDocType());
-            $this->em->persist($tenant);
-            $this->em->flush($tenant);
-
 
             $leaseApi = new LeaseApi($this->em, $this->logger);
-            $response = $leaseApi->createLease($tenant, $application->getUnit()->getId(), $startDate, $endDate, $deposit, "0", "", "pending_docs");
+            $response = $leaseApi->createLease($application->getTenant(), $application->getUnit()->getGuid(), $startDate, $endDate, $deposit, "0", "", "pending_docs");
             $application->setStatus("accepted");
             $this->em->persist($application);
             $this->em->flush($application);
