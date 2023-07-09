@@ -46,7 +46,7 @@ class DocumentApi extends AbstractController
             $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('id' => $tenantId));
             if($tenant == null){
                 return array(
-                    'result_message' => "Tenant not found",
+                    'result_message' => "Error. Tenant not found",
                     'result_code' => 1
                 );
             }
@@ -54,7 +54,7 @@ class DocumentApi extends AbstractController
             $documentType = $this->em->getRepository(DocumentTypeLookup::class)->findOneBy(array('name' => $documentType));
             if($documentType == null){
                 return array(
-                    'result_message' => "Document type invalid",
+                    'result_message' => "Error. Document type invalid",
                     'result_code' => 1
                 );
             }
@@ -87,7 +87,7 @@ class DocumentApi extends AbstractController
             $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('id' => $tenantId));
             if($tenant == null){
                 return array(
-                    'result_message' => "Tenant not found",
+                    'result_message' => "Error. Tenant not found",
                     'result_code' => 1
                 );
             }
@@ -95,7 +95,7 @@ class DocumentApi extends AbstractController
             $documentType = $this->em->getRepository(DocumentTypeLookup::class)->findOneBy(array('name' => $documentType));
             if($documentType == null){
                 return array(
-                    'result_message' => "Document type invalid",
+                    'result_message' => "Error. Document type invalid",
                     'result_code' => 1
                 );
             }
@@ -104,7 +104,7 @@ class DocumentApi extends AbstractController
 
             if($document == null){
                 return array(
-                    'result_message' => "Document not found",
+                    'result_message' => "Error. Document not found",
                     'result_code' => 1
                 );
             }
@@ -131,7 +131,7 @@ class DocumentApi extends AbstractController
             $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('idNumber' => $idNumber));
             if($tenant == null){
                 return array(
-                    'result_message' => "Tenant not found",
+                    'result_message' => "Error. Tenant not found",
                     'result_code' => 1
                 );
             }

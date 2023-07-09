@@ -291,12 +291,12 @@
 
         <div class="mb-3">
             <label for="id-number" class="col-form-label">ID Number:</label>
-            <input type="text" class="form-control" id="id-number" required>
+            <input type="text" class="form-control" id="id-number" value="8804235651088" required>
         </div>
 
         <div class="mb-3">
             <label for="phone-number" class="col-form-label">Phone Number:</label>
-            <input type="number" class="form-control" id="phone-number" required>
+            <input type="number" class="form-control" id="phone-number" value="0837917430" required>
         </div>
 
         <div class="modal-footer ">
@@ -328,75 +328,14 @@
                         <h6 class="mb-3">Your Maintenance Calls</h6>
 
                         <div class="form-group">
-                            <label for="input-summary">New</label>
-                            <textarea class="form-control" id="input-summary" Placeholder="Summary of the issue"
+                            <label for="call-summary">New</label>
+                            <textarea class="form-control" id="call-summary" Placeholder="Summary of the issue"
                                       rows="3"></textarea>
-                            <button type="submit" class="btn btn-secondary btn-lg ms-2 mt-5">Log A Call</button>
+                            <button type="submit" id="btn-log-call" class="btn btn-secondary btn-lg ms-2 mt-5">Log A Call</button>
                         </div>
 
-                        <ul class="list-group mb-0">
-                            <li
-                                    class="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-2">
-                                <div class="d-flex align-items-center">
-                                    <input class="form-check-input me-2" type="checkbox" value="" aria-label="..."/>
-                                    Cras justo odio
-                                </div>
-                                <a href="#!" data-mdb-toggle="tooltip" title="Remove item">
-                                    <i class="fas fa-times text-primary"></i>
-                                </a>
-                            </li>
-                            <li
-                                    class="list-group-item d-flex d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-2">
-                                <div class="d-flex align-items-center">
-                                    <input class="form-check-input me-2" type="checkbox" value="" aria-label="..."
-                                           checked/>
-                                    <s>Dapibus ac facilisis in</s>
-                                </div>
-                                <a href="#!" data-mdb-toggle="tooltip" title="Remove item">
-                                    <i class="fas fa-times text-primary"></i>
-                                </a>
-                            </li>
-                            <li
-                                    class="list-group-item d-flex d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-2">
-                                <div class="d-flex align-items-center">
-                                    <input class="form-check-input me-2" type="checkbox" value="" aria-label="..."/>
-                                    Morbi leo risus
-                                </div>
-                                <a href="#!" data-mdb-toggle="tooltip" title="Remove item">
-                                    <i class="fas fa-times text-primary"></i>
-                                </a>
-                            </li>
-                            <li
-                                    class="list-group-item d-flex d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-2">
-                                <div class="d-flex align-items-center">
-                                    <input class="form-check-input me-2" type="checkbox" value="" aria-label="..."/>
-                                    Porta ac consectetur ac
-                                </div>
-                                <a href="#!" data-mdb-toggle="tooltip" title="Remove item">
-                                    <i class="fas fa-times text-primary"></i>
-                                </a>
-                            </li>
-                            <li
-                                    class="list-group-item d-flex d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-0">
-                                <div class="d-flex align-items-center">
-                                    <input class="form-check-input me-2" type="checkbox" value="" aria-label="..."
-                                           checked/>
-                                    Vestibulum at eros
-                                </div>
-                                <a href="#!" data-mdb-toggle="tooltip" title="Remove item">
-                                    <i class="fas fa-times text-primary"></i>
-                                </a>
-                            </li>
-                            <li
-                                    class="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-2">
-                                <div class="d-flex align-items-center">
-                                    <input class="form-check-input me-2" type="checkbox" value="" aria-label="..."/>
-                                    Morbi leo risus
-                                </div>
-                                <a href="#!" data-mdb-toggle="tooltip" title="Remove item">
-                                    <i class="fas fa-times text-primary"></i>
-                                </a>
-                            </li>
+                        <ul class="list-group mb-0" id="list-calls">
+
                         </ul>
 
                     </div>

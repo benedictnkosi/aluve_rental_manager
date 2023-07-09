@@ -47,7 +47,7 @@ class LeaseApi extends AbstractController
             //validate property id
             if (strlen($propertyGuid) !== 36 ) {
                 return array(
-                    'result_message' => "Property GUID is invalid",
+                    'result_message' => "Error. Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -55,7 +55,7 @@ class LeaseApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Property not found",
+                    'result_message' => "Error. Property not found",
                     'result_code' => 1
                 );
             }
@@ -69,7 +69,7 @@ class LeaseApi extends AbstractController
                 ->getResult();
             if (sizeof($leases) < 1) {
                 return array(
-                    'result_message' => "No leases found",
+                    'result_message' => "Error. No leases found",
                     'result_code' => 1
                 );
             }
@@ -133,7 +133,7 @@ class LeaseApi extends AbstractController
             //validate property id
             if (strlen($guid) !== 36 ) {
                 return array(
-                    'result_message' => "Property GUID is invalid",
+                    'result_message' => "Error. Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -141,7 +141,7 @@ class LeaseApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $guid));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Lease not found",
+                    'result_message' => "Error. Lease not found",
                     'result_code' => 1
                 );
             }
@@ -402,7 +402,7 @@ class LeaseApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseGuid));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Lease not found",
+                    'result_message' => "Error. Lease not found",
                     'result_code' => 1
                 );
             }
@@ -446,7 +446,7 @@ class LeaseApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseGuid));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Lease not found",
+                    'result_message' => "Error. Lease not found",
                     'result_code' => 1
                 );
             }
@@ -455,7 +455,7 @@ class LeaseApi extends AbstractController
 
             if (sizeof($inspection) < 1) {
                 return array(
-                    'result_message' => "Inspection not found",
+                    'result_message' => "Error. Inspection not found",
                     'result_code' => 1
                 );
             }
@@ -485,7 +485,7 @@ class LeaseApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('id' => $id));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Lease not found",
+                    'result_message' => "Error. Lease not found",
                     'result_code' => 1
                 );
             }

@@ -36,7 +36,7 @@ class PropertyApi extends AbstractController
             if (sizeof($properties) < 1) {
 
                 return array(
-                    'result_message' => "No Properties found",
+                    'result_message' => "Error. No Properties found",
                     'result_code' => 1
                 );
             }
@@ -59,7 +59,7 @@ class PropertyApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Property not found",
+                    'result_message' => "Error. Property not found",
                     'result_code' => 1
                 );
             }
@@ -81,7 +81,7 @@ class PropertyApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Property not found",
+                    'result_message' => "Error. Property not found",
                     'result_code' => 1
                 );
             }

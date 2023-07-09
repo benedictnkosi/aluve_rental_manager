@@ -144,7 +144,7 @@ class TransactionApi extends AbstractController
 
             if ($transaction == null) {
                 return array(
-                    'result_message' => "Transaction not found",
+                    'result_message' => "Error. Transaction not found",
                     'result_code' => 1
                 );
             }

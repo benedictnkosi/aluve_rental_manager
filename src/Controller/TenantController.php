@@ -19,7 +19,7 @@ class TenantController extends AbstractController
 {
 
     /**
-     * @Route("api/tenant/get/{guid}")
+     * @Route("public/tenant/get/{guid}")
      */
     public function getTenant($guid, TenantApi $tenantApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -34,7 +34,7 @@ class TenantController extends AbstractController
     }
 
     /**
-     * @Route("api/tenant/getlease/{idNumber}/{phoneNumber}")
+     * @Route("public/tenant/getlease/{idNumber}/{phoneNumber}")
      */
     public function getLeaseByTenantId($idNumber,$phoneNumber, LeaseApi $leaseApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -49,7 +49,7 @@ class TenantController extends AbstractController
     }
 
     /**
-     * @Route("api/tenant/getleaseDocumentName/{idNumber}/{phoneNumber}")
+     * @Route("public/tenant/getleaseDocumentName/{idNumber}/{phoneNumber}")
      */
     public function getLeaseDocumentNameByIdNumber($idNumber, $phoneNumber, DocumentApi $documentApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);

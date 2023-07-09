@@ -39,7 +39,7 @@ class ApplicationsApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid ));
             if ($property == null) {
                 return array(
-                    'result_message' => "Property not found",
+                    'result_message' => "Error. Property not found",
                     'result_code' => 1
                 );
             }
@@ -53,7 +53,7 @@ class ApplicationsApi extends AbstractController
 
             if (sizeof($applications) < 1) {
                 return array(
-                    'result_message' => "No applications found",
+                    'result_message' => "Error. No applications found",
                     'result_code' => 1
                 );
             }
@@ -182,7 +182,7 @@ class ApplicationsApi extends AbstractController
                 $documentApi->addDocument($tenant->getId(), "Co-payslip", $fileName);
             } else {
                 return array(
-                    'result_message' => "Document type not suppoerted",
+                    'result_message' => "Error. Document type not suppoerted",
                     'result_code' => 1
                 );
             }

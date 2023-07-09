@@ -45,7 +45,7 @@ class ExpenseApi extends AbstractController
             //validate expense id
             if (!is_numeric($expenseId)) {
                 return array(
-                    'result_message' => "Expense account is invalid",
+                    'result_message' => "Error. Expense account is invalid",
                     'result_code' => 1
                 );
             }
@@ -53,7 +53,7 @@ class ExpenseApi extends AbstractController
             //validate property id
             if (strlen($propertyGuid) !== 36) {
                 return array(
-                    'result_message' => "Property GUID is invalid",
+                    'result_message' => "Error. Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -62,7 +62,7 @@ class ExpenseApi extends AbstractController
             //validate amount
             if (strlen($amount) > 6 || !is_numeric($amount) || intval($amount) < 1) {
                 return array(
-                    'result_message' => "Amount is invalid",
+                    'result_message' => "Error. Amount is invalid",
                     'result_code' => 1
                 );
             }
@@ -70,7 +70,7 @@ class ExpenseApi extends AbstractController
             //validate description
             if (strlen($description) > 100 || strlen($description) < 3) {
                 return array(
-                    'result_message' => "Occupation name is invalid",
+                    'result_message' => "Error. Occupation name is invalid",
                     'result_code' => 1
                 );
             }
@@ -79,14 +79,14 @@ class ExpenseApi extends AbstractController
             if (!DateTime::createFromFormat('Y-m-d', $date)) {
                 return array(
                     'result_code' => 1,
-                    'result_message' => "Date is not valid",
+                    'result_message' => "Error. Date is not valid",
                 );
             }
 
             $expenseAccount = $this->em->getRepository(ExpenseAccount::class)->findOneBy(array('id' => $expenseId));
             if ($expenseAccount == null) {
                 return array(
-                    'result_message' => "Expense account not found",
+                    'result_message' => "Error. Expense account not found",
                     'result_code' => 1
                 );
             }
@@ -94,7 +94,7 @@ class ExpenseApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Property not found",
+                    'result_message' => "Error. Property not found",
                     'result_code' => 1
                 );
             }
@@ -133,7 +133,7 @@ class ExpenseApi extends AbstractController
             //validate property id
             if (strlen($propertyGuid) !== 36 ) {
                 return array(
-                    'result_message' => "Property GUID is invalid",
+                    'result_message' => "Error. Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -141,7 +141,7 @@ class ExpenseApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Property not found",
+                    'result_message' => "Error. Property not found",
                     'result_code' => 1
                 );
             }
@@ -165,7 +165,7 @@ class ExpenseApi extends AbstractController
             //validate property id
             if (strlen($propertyGuid) !== 36 ) {
                 return array(
-                    'result_message' => "Property GUID is invalid",
+                    'result_message' => "Error. Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -173,14 +173,14 @@ class ExpenseApi extends AbstractController
             //validate number of days
             if (strlen($numberOfDays) < 1 || !is_numeric($numberOfDays) || intval($numberOfDays) < 1) {
                 return array(
-                    'result_message' => "Number Of days is not valid",
+                    'result_message' => "Error. Number Of days is not valid",
                     'result_code' => 1
                 );
             }
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Property not found",
+                    'result_message' => "Error. Property not found",
                     'result_code' => 1
                 );
             }

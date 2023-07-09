@@ -43,9 +43,9 @@ class Maintenance
     private $summary;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="status", type="integer", nullable=false)
+     * @ORM\Column(name="status", type="string", nullable=false)
      */
     private $status;
 
@@ -69,6 +69,22 @@ class Maintenance
      * @ORM\Column(name="last_updated", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
      */
     private $lastUpdated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
+    }
 
     /**
      * @return int
@@ -134,21 +150,6 @@ class Maintenance
         $this->summary = $summary;
     }
 
-    /**
-     * @return int
-     */
-    public function getStatus(): int
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param int $status
-     */
-    public function setStatus(int $status): void
-    {
-        $this->status = $status;
-    }
 
     /**
      * @return int

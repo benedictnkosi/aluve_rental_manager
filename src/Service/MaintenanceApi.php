@@ -85,7 +85,7 @@ class MaintenanceApi extends AbstractController
             }
 
             $maintenance = new Maintenance();
-            $maintenance->setUnit($unitGuid);
+            $maintenance->setUnit($unit->getId());
             $maintenance->setProperty($property->getId());
             $maintenance->setSummary($summary);
             $maintenance->setStatus("new");
@@ -119,7 +119,7 @@ class MaintenanceApi extends AbstractController
         return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
 
-    public function getMaintenanceCallsByIDNumber($idNumber): array
+    public function getMaintenanceCallsByIDNumber($idNumber, $phoneNumber): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -128,6 +128,13 @@ class MaintenanceApi extends AbstractController
             if($tenant == null){
                 return array(
                     'result_message' => "Tenant not found for ID number",
+                    'result_code' => 1
+                );
+            }
+
+            if(strcmp($tenant->getPhone(), $phoneNumber) !== 0){
+                return array(
+                    'result_message' => "Error. Tenant authentication failed",
                     'result_code' => 1
                 );
             }
@@ -160,15 +167,29 @@ class MaintenanceApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])] public function
-    logMaintenanceCallByIDNumber($idNumber, $summary): array
+    logMaintenanceCallByIDNumber($idNumber, $phoneNumber, $summary): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
+
+            if(strlen($summary) < 1 || strlen($summary) > 100){
+                return array(
+                    'result_message' => "Error. Summary is not valid",
+                    'result_code' => 1
+                );
+            }
             $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('idNumber' => $idNumber));
             if($tenant == null){
                 return array(
-                    'result_message' => "Tenant not found for ID number",
+                    'result_message' => "Error. Tenant not found for ID number",
+                    'result_code' => 1
+                );
+            }
+
+            if(strcmp($tenant->getPhone(), $phoneNumber) !== 0){
+                return array(
+                    'result_message' => "Error. Tenant authentication failed",
                     'result_code' => 1
                 );
             }
@@ -176,7 +197,7 @@ class MaintenanceApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId()));
             if($lease == null){
                 return array(
-                    'result_message' => "Lease not found for ID number",
+                    'result_message' => "Error. Lease not found for ID number",
                     'result_code' => 1
                 );
             }

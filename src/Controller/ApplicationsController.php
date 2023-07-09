@@ -9,6 +9,7 @@ use App\Service\PropertyApi;
 use App\Service\TransactionApi;
 use App\Service\UnitApi;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use JMS\Serializer\SerializerBuilder;
 use PhpImap\Exceptions\ConnectionException;
 use Psr\Log\LoggerInterface;
@@ -86,8 +87,12 @@ class ApplicationsController extends AbstractController
     {
         $logger->info("Starting Method: " . __METHOD__);
         $documentDir = __DIR__ . '/../../files/property_leases/';
-
-        return new BinaryFileResponse($documentDir . $name);
+        try{
+            $file = new BinaryFileResponse($documentDir . $name);
+        }catch(Exception){
+            $file = new BinaryFileResponse($documentDir . "File Not Found.jpg");
+        }
+        return $file;
     }
 
 
