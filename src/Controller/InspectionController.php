@@ -68,12 +68,11 @@ class InspectionController extends AbstractController
         }
 
         //write to DB
-        $response = $leaseApi->addInspectionImage($request->get("inspection_id"), $response["file_name"]);
+        $response = $leaseApi->addInspectionImage($request->get("inspection_guid"), $response["file_name"]);
         if($response["result_code"] == 1){
             return new JsonResponse($response, 200, array());
         }else{
             return new JsonResponse($response, 201, array());
-
         }
     }
 
@@ -86,7 +85,7 @@ class InspectionController extends AbstractController
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $leaseApi->createInspection($request->get('lease_id'), $request->get('inspection'), $request->get('status'));
+        $response = $leaseApi->createInspection($request->get('lease_guid'), $request->get('inspection_guid'), $request->get('inspection'), $request->get('status'));
         return new JsonResponse($response , 200, array());
     }
 

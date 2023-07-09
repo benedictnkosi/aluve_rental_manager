@@ -1,12 +1,17 @@
 $(document).ready(function () {
     let propertyId = getURLParameter("id");
     sessionStorage.setItem("property-id",propertyId);
+    generateAllGraphs();
+});
+
+function generateAllGraphs(){
     generateIncomeVSExpenses();
     generateExpensesPie();
     generateProfitTable();
     generateExpensesByMonthGraph();
     generateInvoicesDue();
-});
+}
+
 
 function generateIncomeVSExpenses(){
     let url = "/api/expense_income/total?property_id="+sessionStorage.getItem("property-id")+"&number_od_days=30"
@@ -15,6 +20,12 @@ function generateIncomeVSExpenses(){
         url: url,
         contentType: "application/json; charset=UTF-8",
         success: function (response) {
+
+            let chartStatus = Chart.getChart("pieChartProfit"); // <canvas> id
+            if (chartStatus !== undefined) {
+                chartStatus.destroy();
+            }
+
             if(response.income.total > 1){
                 $('#pieChartProfit').removeClass("display-none");
             }
@@ -87,6 +98,10 @@ function generateExpensesPie(){
         url: url,
         contentType: "application/json; charset=UTF-8",
         success: function (expenses) {
+            let chartStatus = Chart.getChart("pieChartExpenses"); // <canvas> id
+            if (chartStatus !== undefined) {
+                chartStatus.destroy();
+            }
 
             if(expenses.result_code === undefined){
                 $('#pieChartExpenses').removeClass("display-none");
@@ -145,6 +160,12 @@ function generateExpensesByMonthGraph(){
         url: url,
         contentType: "application/json; charset=UTF-8",
         success: function (expenses) {
+
+            let chartStatus = Chart.getChart("lineChartExpensesByMonth"); // <canvas> id
+            if (chartStatus !== undefined) {
+                chartStatus.destroy();
+            }
+
             const months = [];
             const expensesArray = [];
             const incomeArray = [];

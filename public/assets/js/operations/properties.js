@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    sessionStorage.setItem("property-id","0");
     getAllProperties();
 
     $("#form-create-property").submit(function (event) {
@@ -96,7 +97,7 @@ let getAllProperties = () => {
                         '                                    <small>' + property.property.address + '</small>\n' +
                         '                                </li>' +
                         '<li class="d-flex align-items-center me-3">\n' +
-                        '                                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#newPropertyModal" data-bs-action="update" property-id="' + property.property.idproperties + '" property-name="' + property.property.name + '" property-address="' + property.property.address + '">Update\n' +
+                        '                                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#newPropertyModal" data-bs-action="update" property-id="' + property.property.guid + '" property-name="' + property.property.name + '" property-address="' + property.property.address + '">Update\n' +
                         '        </button>\n' +
                         '                                </li>\n' +
                         '                            </ul>\n' +
@@ -140,3 +141,15 @@ let getAllProperties = () => {
     });
 }
 
+let showToast = (message) =>{
+    const liveToast = document.getElementById('liveToast')
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(liveToast)
+    if(message.toLowerCase().includes("success")){
+        $('#toast-message').html('<div class="alert alert-success" role="alert">'+message+'</div>');
+    }else if(message.toLowerCase().includes("fail") || message.toLowerCase().includes("error")){
+        $('#toast-message').html('<div class="alert alert-danger" role="alert">'+message+'</div>');
+    }else{
+        $('#toast-message').html('<div class="alert alert-dark" role="alert">'+message+'</div>');
+    }
+    toastBootstrap.show();
+}

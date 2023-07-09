@@ -43,6 +43,13 @@ class Inspection
     private $status = 'new';
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="guid", type="string", length=36, nullable=false)
+     */
+    private $guid;
+
+    /**
      * @var Leases
      *
      * @ORM\ManyToOne(targetEntity="Leases")
@@ -51,6 +58,22 @@ class Inspection
      * })
      */
     private $lease;
+
+    /**
+     * @return string
+     */
+    public function getGuid(): string
+    {
+        return $this->guid;
+    }
+
+    /**
+     * @param string $guid
+     */
+    public function setGuid(string $guid): void
+    {
+        $this->guid = $guid;
+    }
 
     /**
      * @return int

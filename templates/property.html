@@ -619,10 +619,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="deposit-amount-payed" class="col-form-label">Deposit Amount Payed:</label>
-                        <input type="number" class="form-control" id="deposit-amount-payed" name="deposit-amount-payed" required>
-                    </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -645,7 +641,7 @@
                 <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2 active"
+                            <a class="nav-link d-flex align-items-center gap-2"
                                main-content="dashboard-content-div" header="Dashboard" href="javascript:void(0)">
                                 <svg class="bi">
                                     <use xlink:href="#graph-up"/>
@@ -761,9 +757,7 @@
                     </div>
 
                     <div class="row mt-5">
-                        <div class="col">
-                            <canvas id="lineChartExpensesByMonth" class="display-none"></canvas>
-                        </div>
+
                         <div class="col" >
                             <div class="card card-stats mb-4 mb-xl-0">
                                 <div class="card-body">
@@ -814,6 +808,9 @@
                                 <!-- Add more rows here if needed -->
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="col">
+                            <canvas id="lineChartExpensesByMonth" class="display-none"></canvas>
                         </div>
                     </div>
 
@@ -979,18 +976,18 @@
                         <div class="mb-3">
                             <label for="application_id_number" class="form-label">ID\Passport Number</label>
                             <input type="text" class="form-control" name="application_id_number"
-                                   id="application_id_number" value="8804235651087" required>
+                                   id="application_id_number" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="application_salary" class="form-label">Combined Gross Salary</label>
-                            <input type="number" class="form-control" name="application_salary"
-                                   id="application_salary" value="10000" required>
+                            <label for="lease-salary" class="form-label">Combined Gross Salary</label>
+                            <input type="number" class="form-control" name="lease-salary"
+                                   id="lease-salary" required>
                         </div>
                         <div class="mb-3">
-                            <label for="application_occupation" class="form-label">Occupation</label>
-                            <input type="text" class="form-control" name="application_occupation"
-                                   id="application_occupation" value="Worker mina" required>
+                            <label for="lease-occupation" class="form-label">Occupation</label>
+                            <input type="text" class="form-control" name="lease-occupation"
+                                   id="lease-occupation"required>
                         </div>
                         <div class="mb-3">
                             <label for="adult_count" class="form-label">Number Of Adults</label>
@@ -1015,10 +1012,6 @@
                                            placeholder="Select end date" required>
                                 </div>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="lease-deposit" class="col-form-label">Deposit Paid:</label>
-                            <input type="text" class="form-control" id="lease-deposit" required>
                         </div>
 
                         <div class="mb-3">

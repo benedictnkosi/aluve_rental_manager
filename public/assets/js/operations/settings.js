@@ -74,7 +74,7 @@ let getProperty = () => {
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get('id');
 
-    let url = "/api/properties/" + id.replace("#", "");
+    let url = "/api/properties/get/" + id.replace("#", "");
     $.ajax({
         type: "GET",
         url: url,

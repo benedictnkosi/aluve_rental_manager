@@ -50,7 +50,6 @@ $(document).ready(function () {
         $("#lease-tenant-name").val("");
         $("#lease-tenant-phone").val("");
         $("#lease-tenant-email").val("");
-        $("#lease-deposit").val("");
         $("#payment-rules").val("");
         updateView("new-lease-content-div", "Lease");
     });
@@ -87,10 +86,9 @@ let createLease = () => {
     const startDate = $("#lease-start-date").val().trim();
     const endDate = $("#lease-end-date").val().trim();
     const paymentRules =  $("#payment-rules").val().trim();
-    const deposit = $("#lease-deposit").val().trim();
     const idNumber = $("#application_id_number").val().trim();
-    const salary = $("#application_salary").val().trim();
-    const occupancy = $("#application_occupation").val().trim();
+    const salary = $("#lease-salary").val().trim();
+    const occupancy = $("#lease-occupation").val().trim();
     const adultCount = $("#adult_count").val().trim();
     const childCount = $("#child_count").val().trim();
 
@@ -102,7 +100,6 @@ let createLease = () => {
         email: email,
         start_date: startDate,
         end_date: endDate,
-        deposit: deposit,
         lease_id: sessionStorage.getItem("lease-id"),
         payment_rules: paymentRules,
         id_document_type: sessionStorage.getItem("document-type"),
@@ -193,13 +190,18 @@ let getAllLeases = () => {
                     '                                            <medium>' +  lease.id_number  + '</medium>\n' +
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
+                    '                                            <i class="bi-person-badge bootstrap-icon-text"></i>\n' +
+                    '                                            <medium>Salary: ' +  lease.occupation  + '</medium>\n' +
+                    '                                        </li>\n' +
+                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
+                    '                                            <i class="bi-person-badge bootstrap-icon-text"></i>\n' +
+                    '                                            <medium>Occupation: ' +  lease.salary  + '</medium>\n' +
+                    '                                        </li>\n' +
+                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                                            <i class="bi-calendar-check-fill bootstrap-icon-text"></i>\n' +
                     '                                            <medium>' + lease.lease_start + ' - ' +lease.lease_end+ '</medium>\n' +
                     '                                        </li>\n' +
-                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                                            <i class="bi-currency-dollar bootstrap-icon-text"></i>\n' +
-                    '                                            <medium>Deposit: ' + lease.deposit + '</medium>\n' +
-                    '                                        </li>\n' +
+
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                                            <i class="bi-currency-dollar bootstrap-icon-text"></i>\n' +
                     '                                            <medium>Due: ' + lease.due + '</medium>\n' +
@@ -222,10 +224,10 @@ let getAllLeases = () => {
                     '                                    <li><a class="dropdown-item" target="_blank" href="/statement/?guid='+lease.guid+'">View Statement</a></li>\n' +
                     '                                    <li><a class="dropdown-item" target="_blank" href="/inspection/?guid='+lease.guid+'">New Inspection</a></li>\n';
                                                 if(lease.inspection_exist === true){
-                                                    html += '                                    <li><a class="dropdown-item" target="_blank" href="/view/inspection/?guid='+lease.guid+'">View Inspection</a></li>\n';
+                                                    html += '                                    <li><a class="dropdown-item" target="_blank" href="/view/inspection/?guid='+lease.guid+'">View Latest Inspection</a></li>\n';
                                                 }
 
-                html +=  '                                    <li><a class="dropdown-item update-lease-dpr-button" lease-id="'+lease.lease_id+'" tenant_name="'+lease.tenant_name+'" phone="'+lease.phone_number+'" email="'+lease.email+'" unit_name="'+lease.unit_name+'" unit_id="'+lease.unit_id+'" lease_start="'+lease.lease_start+'" lease_end="'+lease.lease_end+'" deposit="'+lease.deposit+'" payment_rules="'+lease.payment_rules+'" href="#">Update Lease</a></li>\n' +
+                html +=  '                                    <li><a class="dropdown-item update-lease-dpr-button" lease-id="'+lease.lease_id+'" tenant_name="'+lease.tenant_name+'" phone="'+lease.phone_number+'" email="'+lease.email+'" salary="'+lease.salary+'" occupation="'+lease.occupation+'" unit_name="'+lease.unit_name+'" unit_id="'+lease.unit_id+'" lease_start="'+lease.lease_start+'" lease_end="'+lease.lease_end+'" payment_rules="'+lease.payment_rules+'" href="#">Update Lease</a></li>\n' +
                     '                                ' +
                     '</ul>\n' +
                     '                            </div>\n' +
@@ -248,9 +250,9 @@ let getAllLeases = () => {
                 $("#lease-tenant-email").val(event.target.getAttribute("email"));
                 $("#lease-start-date").val(event.target.getAttribute("lease_start"));
                 $("#lease-end-date").val(event.target.getAttribute("lease_end"));
-                $("#lease-deposit").val(event.target.getAttribute("deposit"));
                 $("#payment-rules").val(event.target.getAttribute("payment_rules"));
-
+                $("#lease-occupation").val(event.target.getAttribute("occupation"));
+                $("#lease-salary").val(event.target.getAttribute("salary"));
                 updateView("new-lease-content-div", "Lease");
             });
 

@@ -102,6 +102,13 @@ class Tenant
     private $unit;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="guid", type="string", length=36, nullable=false)
+     */
+    private $guid;
+
+    /**
      * @var DebitOrder
      *
      * @ORM\ManyToOne(targetEntity="DebitOrder")
@@ -317,6 +324,22 @@ class Tenant
     public function setDebitOrder(DebitOrder $debitOrder): void
     {
         $this->debitOrder = $debitOrder;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGuid(): string
+    {
+        return $this->guid;
+    }
+
+    /**
+     * @param string $guid
+     */
+    public function setGuid(string $guid): void
+    {
+        $this->guid = $guid;
     }
 
 

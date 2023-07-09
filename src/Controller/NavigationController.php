@@ -69,4 +69,12 @@ class NavigationController extends AbstractController
     {
         return $this->render('view_inspection.html');
     }
+
+    /**
+     * @Route("/tenant/", name="app_tenant")
+     */
+    public function app_tenant(LoggerInterface $logger): Response
+    {
+        return $this->render('tenant.html');
+    }
 }

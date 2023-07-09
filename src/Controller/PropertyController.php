@@ -32,7 +32,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("api/properties/{id}")
+     * @Route("api/properties/get/{id}")
      */
     public function getProperty($id, PropertyApi $propertyApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -113,8 +113,8 @@ class PropertyController extends AbstractController
         }
 
         $propertyGuid = 0;
-        if($request->get('guid') !== null){
-            $propertyGuid = $request->get('guid');
+        if($request->get('id') !== null){
+            $propertyGuid = $request->get('id');
         }
 
         $response = $propertyApi->createProperty($request->get('name'), $request->get('address'), $propertyGuid);

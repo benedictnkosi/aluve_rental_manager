@@ -91,7 +91,7 @@ class LeaseController extends AbstractController
         if($response["result_code"] == 1){
             return new JsonResponse($response , 200, array());
         }
-        $response = $leaseApi->createLease($response["tenant"], $request->get('unitId'), $request->get('start_date'), $request->get('end_date'), $request->get('deposit'), $request->get('lease_id'), $request->get('payment_rules'));
+        $response = $leaseApi->createLease($response["tenant"], $request->get('unitId'), $request->get('start_date'), $request->get('end_date'), $request->get('lease_id'), $request->get('payment_rules'));
         return new JsonResponse($response , 200, array());
     }
 

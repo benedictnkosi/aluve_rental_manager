@@ -51,7 +51,7 @@ class ExpenseApi extends AbstractController
             }
 
             //validate property id
-            if (!is_numeric($propertyGuid)) {
+            if (strlen($propertyGuid) !== 36) {
                 return array(
                     'result_message' => "Property GUID is invalid",
                     'result_code' => 1

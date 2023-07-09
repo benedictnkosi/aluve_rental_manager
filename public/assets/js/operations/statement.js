@@ -114,3 +114,16 @@ let addPayment = () => {
         }
     });
 }
+
+let showToast = (message) =>{
+    const liveToast = document.getElementById('liveToast')
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(liveToast)
+    if(message.toLowerCase().includes("success")){
+        $('#toast-message').html('<div class="alert alert-success" role="alert">'+message+'</div>');
+    }else if(message.toLowerCase().includes("fail") || message.toLowerCase().includes("error")){
+        $('#toast-message').html('<div class="alert alert-danger" role="alert">'+message+'</div>');
+    }else{
+        $('#toast-message').html('<div class="alert alert-dark" role="alert">'+message+'</div>');
+    }
+    toastBootstrap.show();
+}

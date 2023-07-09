@@ -3,7 +3,7 @@ $(document).ready(function () {
     $("div.overlay").addClass("show");
 
     if (sessionStorage.getItem("current_page") === null) {
-        updateView('dashboard-content-div');
+        updateView('dashboard-content-div', "Dashboard");
     } else {
         updateView(sessionStorage.getItem("current_page"), sessionStorage.getItem("current_page_header"));
     }
@@ -44,6 +44,23 @@ function updateView(selectedDiv, header) {
 
     sessionStorage.setItem("current_page", selectedDiv);
     sessionStorage.setItem("current_page_header", header);
+
+    switch (selectedDiv) {
+        case "dashboard-content-div":
+            generateAllGraphs();
+            break;
+        case "units-content-div":
+            getAllUnits();
+            break;
+        case "leases-content-div":
+            getAllLeases();
+            break;
+        case "applications-content-div":
+            getApplications();
+            break;
+        default:
+
+    }
 }
 
 let showToast = (message) =>{

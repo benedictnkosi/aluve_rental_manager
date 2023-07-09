@@ -47,8 +47,29 @@ class TransactionApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('id' => $leaseId));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Lease not found",
+                    'result_message' => "Error. Lease not found",
                     'result_code' => 1
+                );
+            }
+
+            if (strlen($amount) < 1 || !is_numeric($amount) || strlen($amount) > 6) {
+                return array(
+                    'result_message' => "Error. Amount is invalid",
+                    'result_code' => 1
+                );
+            }
+
+            if (strlen($description) < 1 || strlen($description) > 100) {
+                return array(
+                    'result_message' => "Error. Description length is invalid",
+                    'result_code' => 1
+                );
+            }
+
+            if (!DateTime::createFromFormat('Y-m-d', $transactionDate)) {
+                return array(
+                    'result_code' => 1,
+                    'result_message' => "Error. Transaction date is not valid",
                 );
             }
 

@@ -50,13 +50,6 @@ class Leases
     private $status = 'active';
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="deposit", type="integer", nullable=false)
-     */
-    private $deposit;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="guid", type="string", length=36, nullable=false)
@@ -185,22 +178,6 @@ class Leases
     public function setStatus(string $status): void
     {
         $this->status = $status;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDeposit(): int
-    {
-        return $this->deposit;
-    }
-
-    /**
-     * @param int $deposit
-     */
-    public function setDeposit(int $deposit): void
-    {
-        $this->deposit = $deposit;
     }
 
     /**

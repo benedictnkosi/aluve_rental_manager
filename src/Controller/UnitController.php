@@ -69,10 +69,6 @@ class UnitController extends AbstractController
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $guid = 0;
-        if($request->get('guid')){
-            $guid = $request->get('guid');
-        }
         $response = array();
         $errors = false;
         //check if is bulk create
@@ -80,13 +76,13 @@ class UnitController extends AbstractController
             $numberOfUnitsToCreate = intval($request->get('numberOfUnits'));
             for ($x = 0; $x < $numberOfUnitsToCreate; $x++) {
                 $roomName = $request->get('name') . " " . $x + 1;
-                $response = $unitApi->createUnit($roomName, $guid, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'));
+                $response = $unitApi->createUnit($roomName, $request->get('id'), $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'));
                 if($response["result_code"] == 1){
                     $errors = true;
                 }
             }
         }else{
-            $response = $unitApi->createUnit($request->get('name'), $guid, $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'));
+            $response = $unitApi->createUnit($request->get('name'), $request->get('id'), $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'));
         }
 
         if($errors){

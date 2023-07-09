@@ -86,7 +86,7 @@ class Units
 
     /**
      * @var int|null
-     *
+     *getRental
      * @ORM\Column(name="bathrooms", type="integer", nullable=true, options={"default"="1"})
      */
     private $bathrooms = 1;

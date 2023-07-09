@@ -81,7 +81,6 @@ class UnitApi extends AbstractController
                         'lease_start' => $lease->getStart()->format("Y-m-d"),
                         'lease_end' => $lease->getEnd()->format("Y-m-d"),
                         'lease_id' => $lease->getId(),
-                        'deposit' => number_format($lease->getDeposit(), 2, '.', ''),
                         'listed' => $unit->getListed(),
                         'min_gross_salary' => "R". number_format($unit->getMinGrossSalary(), 2, '.', ''),
                         'max_occupants' => $unit->getMaxOccupants(),
@@ -135,7 +134,7 @@ class UnitApi extends AbstractController
         $responseArray = array();
         try {
             $successMessage = "Successfully created rental unit";
-            if ($guid == 0) {
+            if(strcmp($guid, "0") == 0){
                 $unit = new Units();
             } else {
                 $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $guid));

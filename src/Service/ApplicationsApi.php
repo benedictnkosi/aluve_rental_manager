@@ -165,7 +165,7 @@ class ApplicationsApi extends AbstractController
             $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
             if ($application == null) {
                 return array(
-                    'result_message' => "Failed to upload application_documents. Application not found",
+                    'result_message' => "Failed to upload document. Application not found",
                     'result_code' => 1
                 );
             }
@@ -222,7 +222,7 @@ class ApplicationsApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function acceptApplication($applicationId, $startDate, $endDate, $deposit): array
+    public function acceptApplication($applicationId, $startDate, $endDate): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -230,7 +230,7 @@ class ApplicationsApi extends AbstractController
             $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
             if ($application == null) {
                 return array(
-                    'result_message' => "Failed to upload application_documents. Application not found",
+                    'result_message' => "Application not found",
                     'result_code' => 1
                 );
             }
@@ -251,7 +251,11 @@ class ApplicationsApi extends AbstractController
 
 
             $leaseApi = new LeaseApi($this->em, $this->logger);
-            $response = $leaseApi->createLease($application->getTenant(), $application->getUnit()->getGuid(), $startDate, $endDate, $deposit, "0", "", "pending_docs");
+            $response = $leaseApi->createLease($application->getTenant(), $application->getUnit()->getGuid(), $startDate, $endDate, "0", "", "pending_docs");
+            if($response["result_code"] !== 0){
+                return $response;
+            }
+
             $application->setStatus("accepted");
             $this->em->persist($application);
             $this->em->flush($application);
@@ -260,30 +264,25 @@ class ApplicationsApi extends AbstractController
             if (intval($application->getUnit()->getProperty()->getApplicationFee()) > 0) {
                 $transactionApi = new TransactionApi($this->em, $this->logger);
                 $now = new DateTime();
-                $transactionApi->addTransaction($application->getUnit()->getId(), $application->getUnit()->getProperty()->getApplicationFee(), "Application Fee", $now->format("Y-m-d"));
+                $transactionApi->addTransaction($response["id"], $application->getUnit()->getProperty()->getApplicationFee(), "Application Fee", $now->format("Y-m-d"));
+            }
+
+            //add deposit to the lease if enabled
+            if (intval($application->getUnit()->getProperty()->getDepositPecent()) > 0) {
+                $transactionApi = new TransactionApi($this->em, $this->logger);
+                $now = new DateTime();
+                $unitRentalAmount = $application->getUnit()->getRent();
+                $deposit = $unitRentalAmount * ($application->getUnit()->getProperty()->getDepositPecent()/ 100);
+                $transactionApi->addTransaction($response["id"], $deposit, "Unit Deposit", $now->format("Y-m-d"));
             }
 
             //update unit listed status
             $unitApi = new UnitApi($this->em, $this->logger);
-            $unitApi->updateUnit("listed", false, $application->getUnit());
-
-            //decline other applications for the unit
-            $applications = $this->em->getRepository("App\Entity\Application")->createQueryBuilder('a')
-                ->where('a.unit = :unitId')
-                ->andWhere("a.status = 'new' or a.status = 'docs_uploaded'")
-                ->setParameter('unitId', $application->getUnit())
-                ->getQuery()
-                ->getResult();
-
-            foreach ($applications as $application) {
-                $application->setStatus("rejected");
-                $this->em->persist($application);
-                $this->em->flush($application);
-            }
+            $unitApi->updateUnit("listed", false, $application->getUnit()->getGuid());
 
             if ($response["result_code"] == 0) {
                 return array(
-                    'result_message' => "Successfully created lease from the application. Other applications have been declined for the unit",
+                    'result_message' => "Successfully created lease from the application.",
                     'result_code' => 0
                 );
             } else {

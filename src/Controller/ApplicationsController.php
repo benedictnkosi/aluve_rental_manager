@@ -64,7 +64,7 @@ class ApplicationsController extends AbstractController
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $applicationsApi->acceptApplication($request->get("id"), $request->get("start_date"), $request->get("end_date"), $request->get("deposit"));
+        $response = $applicationsApi->acceptApplication($request->get("id"), $request->get("start_date"), $request->get("end_date"));
         return new JsonResponse($response, 200, array());
     }
 

@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    // Save checklist to JSON and write to console
+    sessionStorage.setItem("inspection_guid", "0");
     document.getElementById('saveButton').addEventListener('click', function () {
         saveInspection("active");
     });
@@ -8,6 +8,13 @@ $(document).ready(function () {
 
     initializeImgUploader();
 });
+
+let getURLParameter= (name) =>{
+    const queryString = window.location.search;
+    console.log(queryString);
+    const urlParams = new URLSearchParams(queryString);
+    return urlParams.get(name);
+}
 
 function initializeImgUploader() {
     var imgWrap = "";
@@ -72,7 +79,7 @@ function uploadInspectionImage(file_data) {
     const uid = getURLParameter("guid");
     const form_data = new FormData();
     form_data.append("file", file_data);
-    form_data.append("inspection_id", sessionStorage.getItem("inspection_id"));
+    form_data.append("inspection_guid", sessionStorage.getItem("inspection_guid"));
 
     if (file_data === undefined) {
         showToast("Error: Please upload file")
@@ -119,8 +126,8 @@ let saveInspection = (status) => {
     let url = "/api/lease/create/inspection";
     const data = {
         inspection:JSON.stringify(checklistData),
-        lease_id: sessionStorage.getItem("lease_id"),
-        inspection_id: sessionStorage.getItem("inspection_id"),
+        lease_guid: sessionStorage.getItem("lease_guid"),
+        inspection_guid: sessionStorage.getItem("inspection_guid"),
         status: status
     };
 
@@ -129,7 +136,7 @@ let saveInspection = (status) => {
         type: "post",
         data: data,
         success: function (response) {
-            sessionStorage.setItem("inspection_id", response.id)
+            sessionStorage.setItem("inspection_guid",response.id);
             showToast(response.result_message)
         }
     });
@@ -150,7 +157,7 @@ let getInspectionDetails = () => {
         success: function (data) {
             sessionStorage.setItem("bedrooms", data.bedrooms);
             sessionStorage.setItem("bathrooms", data.bathrooms);
-            sessionStorage.setItem("lease_id", data.lease_id
+            sessionStorage.setItem("lease_guid", guid
             );
             generateBedroomChecklist(parseInt(data.bedrooms));
             generateBathroomChecklist(parseInt(data.bathrooms));
@@ -273,7 +280,6 @@ function createCommentsField(id) {
     return commentsInput;
 }
 
-
 function generateBedroomChecklistData() {
     const numBedrooms = parseInt(sessionStorage.getItem("bedrooms"));
     const bedroomChecklistData = [];
@@ -392,4 +398,17 @@ function generateChecklistData(category) {
         stove: stoveChecked,
         stoveComments: stoveComments,
     };
+}
+
+let showToast = (message) =>{
+    const liveToast = document.getElementById('liveToast')
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(liveToast)
+    if(message.toLowerCase().includes("success")){
+        $('#toast-message').html('<div class="alert alert-success" role="alert">'+message+'</div>');
+    }else if(message.toLowerCase().includes("fail") || message.toLowerCase().includes("error")){
+        $('#toast-message').html('<div class="alert alert-danger" role="alert">'+message+'</div>');
+    }else{
+        $('#toast-message').html('<div class="alert alert-dark" role="alert">'+message+'</div>');
+    }
+    toastBootstrap.show();
 }
