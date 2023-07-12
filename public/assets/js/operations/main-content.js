@@ -30,6 +30,18 @@ $(document).ready(function () {
         $("div.spanner").removeClass("show");
         $("div.overlay").removeClass("show");
     });
+
+    $('.nav-links').unbind('click')
+    $(".nav-links").click(function (event) {
+        event.stopImmediatePropagation();
+        $(".headcol").css("position", "absolute");
+    });
+
+    $(".mobile-menu-link").click(function (event) {
+        $("#offcanvasNavbar").removeClass("show");
+    });
+
+
 });
 
 function updateSettingsView(selectedForm) {
@@ -81,4 +93,13 @@ let getURLParameter= (name) =>{
     console.log(queryString);
     const urlParams = new URLSearchParams(queryString);
     return urlParams.get(name);
+}
+
+function myFunction() {
+    var x = document.getElementById("myLinks");
+    if (x.style.display === "block") {
+        x.style.display = "none";
+    } else {
+        x.style.display = "block";
+    }
 }

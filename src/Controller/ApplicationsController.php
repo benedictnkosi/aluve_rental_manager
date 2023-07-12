@@ -81,7 +81,7 @@ class ApplicationsController extends AbstractController
     }
 
     /**
-     * @Route("api/lease_document/{name}")
+     * @Route("public/lease_document/{name}")
      */
     public function getLease($name, LoggerInterface $logger): BinaryFileResponse
     {

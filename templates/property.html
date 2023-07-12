@@ -14,6 +14,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/assets/css/features.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.1/css/all.min.css" rel="stylesheet">
+
     <style>
 
         .icon {
@@ -37,6 +38,7 @@
         .icon-shape i {
             font-size: 1.25rem;
         }
+
         /*features*/
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -200,6 +202,9 @@
     <script src="/assets/js/operations/dashboard.js"></script>
 </head>
 <body>
+
+
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="check2" viewBox="0 0 16 16">
         <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
@@ -422,7 +427,8 @@
 
 
 <!--modal for adding an expense\bill to lease-->
-<div class="modal fade" id="addExpenseToLeaseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addExpenseToLeaseModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -495,7 +501,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="payment-date">Date:</label>
-                                <label for="expense-date"></label><input type="text" class="form-control datepicker" id="expense-date"
+                                <label for="expense-date"></label><input type="text" class="form-control datepicker"
+                                                                         id="expense-date"
                                                                          placeholder="Select date" required>
                             </div>
                         </div>
@@ -531,7 +538,28 @@
 </div>
 
 <!--confirm action delete modal-->
-<div class="modal fade" id="confirmDeclineApplicationModal" tabindex="-1" aria-labelledby="confirmDeclineApplicationLabel" aria-hidden="true">
+<div class="modal fade" id="confirmMaintenanceModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmMaintenanceModalLabel">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to close this maintenance call?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btn-confirm-maintenance">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--confirm action delete modal-->
+<div class="modal fade" id="confirmDeclineApplicationModal" tabindex="-1"
+     aria-labelledby="confirmDeclineApplicationLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -550,7 +578,8 @@
 </div>
 
 <!--confirm action delete expense modal-->
-<div class="modal fade" id="confirmDeleteExpenseModal" tabindex="-1" aria-labelledby="confirmDeclineApplicationLabel" aria-hidden="true">
+<div class="modal fade" id="confirmDeleteExpenseModal" tabindex="-1" aria-labelledby="confirmDeclineApplicationLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -569,9 +598,9 @@
 </div>
 
 
-
 <!--confirm action delete unit modal-->
-<div class="modal fade" id="confirmDeleteUnitModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmDeleteUnitModal" tabindex="-1" aria-labelledby="confirmModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -590,7 +619,8 @@
 </div>
 
 <!--modal for accepting an application-->
-<div class="modal fade" id="acceptApplicationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="acceptApplicationModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -631,10 +661,15 @@
 </div>
 
 
+
 <div class="container-fluid">
+
+
+
     <div class="row">
         <!--left menu-->
-        <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
+
+        <div id="desktop-menu" class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
             <div class="offcanvas-lg offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu"
                  aria-labelledby="sidebarMenuLabel">
 
@@ -676,6 +711,17 @@
                                 Applications
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2" main-content="maintenance-content-div"
+                               header="Maintenance" href="javascript:void(0)">
+                                <svg class="bi">
+                                    <use xlink:href="#file-earmark"/>
+                                </svg>
+                                Maintenance
+                            </a>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center gap-2" main-content="expenses-content-div"
                                href="javascript:void(0)" header="Expenses">
@@ -721,6 +767,114 @@
             </div>
         </div>
 
+<!--        mobile menu-->
+        <nav id="mobile-menu" class="navbar bg-body-tertiary">
+            <div class="container-fluid">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" data-bs-dismiss="offcanvas"
+                                   main-content="dashboard-content-div" header="Dashboard" href="javascript:void(0)">
+                                    <svg class="bi">
+                                        <use xlink:href="#graph-up"/>
+                                    </svg>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" data-bs-dismiss="offcanvas" main-content="units-content-div"
+                                   header="Rental units" href="javascript:void(0)">
+                                    <svg class="bi">
+                                        <use xlink:href="#cart"/>
+                                    </svg>
+                                    Rental units
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" data-bs-dismiss="offcanvas" main-content="leases-content-div"
+                                   header="Leases" href="javascript:void(0)">
+                                    <svg class="bi">
+                                        <use xlink:href="#file-earmark"/>
+                                    </svg>
+                                    Leases
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" data-bs-dismiss="offcanvas" main-content="applications-content-div"
+                                   header="Applications" href="javascript:void(0)">
+                                    <svg class="bi">
+                                        <use xlink:href="#file-earmark"/>
+                                    </svg>
+                                    Applications
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" data-bs-dismiss="offcanvas" main-content="maintenance-content-div"
+                                   header="Maintenance" href="javascript:void(0)">
+                                    <svg class="bi">
+                                        <use xlink:href="#file-earmark"/>
+                                    </svg>
+                                    Maintenance
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" data-bs-dismiss="offcanvas" main-content="expenses-content-div"
+                                   href="javascript:void(0)" header="Expenses">
+                                    <svg class="bi">
+                                        <use xlink:href="#puzzle"/>
+                                    </svg>
+                                    Expenses
+                                </a>
+                            </li>
+                        </ul>
+                        <hr class="my-3">
+
+                        <ul class="nav flex-column mb-auto">
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" data-bs-dismiss="offcanvas" main-content="settings-content-div"
+                                   header="Settings" href="javascript:void(0)">
+                                    <svg class="bi">
+                                        <use xlink:href="#gear-wide-connected"/>
+                                    </svg>
+                                    Settings
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" data-bs-dismiss="offcanvas" main-content="" href="/properties">
+                                    <svg class="bi">
+                                        <use xlink:href="#house-fill"/>
+                                    </svg>
+                                    Properties
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" data-bs-dismiss="offcanvas" main-content=""
+                                   href="/logout">
+                                    <svg class="bi">
+                                        <use xlink:href="#door-closed"/>
+                                    </svg>
+                                    Sign out
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+
+
         <div class="overlay"></div>
         <div class="spanner">
             <div class="spinner-border text-primary" role="status">
@@ -729,7 +883,7 @@
         </div>
 
         <!--        main window on the right-->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <main class="col-md-12 ms-xl-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2" id="main-content-header">Dashboard</h1>
             </div>
@@ -758,7 +912,7 @@
 
                     <div class="row mt-5">
 
-                        <div class="col" >
+                        <div class="col">
                             <div class="card card-stats mb-4 mb-xl-0">
                                 <div class="card-body">
                                     <div class="row">
@@ -815,15 +969,12 @@
                     </div>
 
 
-
-
-
                 </div>
             </div>
 
             <!--            units div-------------------------------------------------------------------->
             <div id="units-content-div" class="main-content display-none">
-                <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5" id="div-units">
+                <div class="row row-cols-1 row-cols-lg-2 align-items-stretch g-4 py-5" id="div-units">
 
 
                 </div>
@@ -837,9 +988,9 @@
 
             <!--            new unit div-------------------------------------------------------------------->
             <div id="new-unit-content-div" class="main-content display-none">
-                <div class="w-75">
+                <div class="w-auto">
                     <form id="form-create-unit">
-                        <div class="form-check  new-unit-fields" >
+                        <div class="form-check  new-unit-fields">
                             <input class="form-check-input" type="checkbox" value="" id="checkBulkCreateUnits">
                             <label class="form-check-label" for="checkBulkCreateUnits">
                                 Bulk Create Units?
@@ -848,12 +999,13 @@
 
                         <div class="mb-3  new-unit-fields display-none" id="number-of-units-div">
                             <label for="number-of-units" class="col-form-label">Number Of Units To Create:</label>
-                            <input type="number" class="form-control" name="number-of-units" id="number-of-units" value="1" required>
+                            <input type="number" class="form-control" name="number-of-units" id="number-of-units"
+                                   value="1" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="unit-name" class="col-form-label" id="unit-name-label">Unit Name</label>
-                            <input type="text" class="form-control"  name="unit-name" id="unit-name" required>
+                            <input type="text" class="form-control" name="unit-name" id="unit-name" required>
                         </div>
 
                         <div class="mb-3">
@@ -872,7 +1024,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="unit-name" class="col-form-label">Min Gross Salary:</label>
-                            <input type="number" class="form-control" name="min-gross-salary" id="min-gross-salary" required>
+                            <input type="number" class="form-control" name="min-gross-salary" id="min-gross-salary"
+                                   required>
                         </div>
 
 
@@ -914,7 +1067,7 @@
             <!--            leases div-------------------------------------------------------------------->
             <div id="leases-content-div" class="main-content display-none">
 
-                <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5" id="div-leases">
+                <div class="row row-cols-1 row-cols-lg-2 align-items-stretch g-4 py-5" id="div-leases">
 
 
                 </div>
@@ -926,9 +1079,9 @@
             </div>
 
 
-            <!--            new lease div-------------------------------------------------------------------->
+            <!--            new lease div -------------------------------------------------------------------->
             <div id="new-lease-content-div" class="main-content display-none">
-                <div class="w-75">
+                <div class="w-auto">
                     <form id="form-create-lease">
                         <div class="mb-3">
                             <label for="lease-unit-name" class="col-form-label">Unit Name:</label>
@@ -967,8 +1120,10 @@
                                     ID Doc Type
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item id-doc-type" document-type="South African ID" href="javascript:void(0)">South African ID</a></li>
-                                    <li><a class="dropdown-item id-doc-type"  document-type="Passport" href="javascript:void(0)">Passport</a></li>
+                                    <li><a class="dropdown-item id-doc-type" document-type="South African ID"
+                                           href="javascript:void(0)">South African ID</a></li>
+                                    <li><a class="dropdown-item id-doc-type" document-type="Passport"
+                                           href="javascript:void(0)">Passport</a></li>
                                 </ul>
                             </div>
 
@@ -987,7 +1142,7 @@
                         <div class="mb-3">
                             <label for="lease-occupation" class="form-label">Occupation</label>
                             <input type="text" class="form-control" name="lease-occupation"
-                                   id="lease-occupation"required>
+                                   id="lease-occupation" required>
                         </div>
                         <div class="mb-3">
                             <label for="adult_count" class="form-label">Number Of Adults</label>
@@ -1016,7 +1171,8 @@
 
                         <div class="mb-3">
                             <label for="payment-rules" class="col-form-label">Payment Rules:</label>
-                            <input type="text" class="form-control" id="payment-rules" placeholder="nkosi,benzo,nhlaka" required>
+                            <input type="text" class="form-control" id="payment-rules" placeholder="nkosi,benzo,nhlaka"
+                                   required>
                         </div>
 
                         <div class="modal-footer">
@@ -1027,8 +1183,7 @@
                 </div>
             </div>
 
-
-            <!--            applicaitons div-------------------------------------------------------------------->
+            <!--            applications div -------------------------------------------------------------------->
             <div id="applications-content-div" class="main-content display-none">
                 <table class="table table-dark table-striped">
                     <thead>
@@ -1057,11 +1212,55 @@
             </div>
 
 
+            <!--            maintenance div -------------------------------------------------------------------->
+            <div id="maintenance-content-div" class="main-content display-none">
+
+                <div class="form-group">
+                    <div class="mb-3">
+                        <label for="maintenance-unit-name" class="col-form-label">Unit Name:</label>
+                        <div class="dropdown" id="maintenance-unit-name">
+                            <button class="btn btn-dark dropdown-toggle" id="maintenance-unit-dropdown-selected" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                Select unit
+                            </button>
+                            <ul class="dropdown-menu" id="maintenance-ul-units">
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <textarea class="form-control" id="call-summary" Placeholder="Summary of the issue"
+                              rows="3"></textarea>
+                    <button type="submit" id="btn-log-call" class="btn btn-secondary btn-lg ms-2 mb-5 mt-2">Log A Call</button>
+                </div>
+
+                <table class="table table-dark table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Summary</th>
+                        <th>Unit Name</th>
+                        <th>Date Logged</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody-maintenance">
+
+                    <!-- Add more rows here if needed -->
+                    </tbody>
+                </table>
+
+            </div>
+
+
             <!--            expenses div-------------------------------------------------------------------->
             <div id="expenses-content-div" class="main-content display-none w-75">
                 <div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
                     <p>
-                        <button type="button" class="btn btn-success" id="btn-new-expense"  data-bs-toggle="modal" data-bs-target="#propertyExpenseModal">Add Expense</button>
+                        <button type="button" class="btn btn-success" id="btn-new-expense" data-bs-toggle="modal"
+                                data-bs-target="#propertyExpenseModal">Add Expense
+                        </button>
                     </p>
                 </div>
                 <table class="table table-dark table-striped">
@@ -1080,16 +1279,16 @@
 
             </div>
 
-
-
             <!--            settings DIV -------------------------------------------------------------------->
             <div id="settings-content-div" class="main-content display-none w-75">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active settings-nav-link" form-to-show="settings-form-fees" aria-current="page" href="javascript:void(0)">Rent</a>
+                        <a class="nav-link active settings-nav-link" form-to-show="settings-form-fees"
+                           aria-current="page" href="javascript:void(0)">Rent</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link settings-nav-link" form-to-show="settings-form-security" href="javascript:void(0)">Security</a>
+                        <a class="nav-link settings-nav-link" form-to-show="settings-form-security"
+                           href="javascript:void(0)">Security</a>
                     </li>
                 </ul>
 
@@ -1121,7 +1320,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="rent-due-day" class="form-label">Rent Due (Day Of Month)</label>
-                        <input type="number" class="form-control property-value" field-name="rent-due-day" id="rent-due-day">
+                        <input type="number" class="form-control property-value" field-name="rent-due-day"
+                               id="rent-due-day">
                     </div>
                     <div class="mb-3">
                         <label for="late-fee-day" class="form-label">Auto-Late Fee (Day Of Month)</label>
@@ -1146,7 +1346,8 @@
                     <div class="mb-3">
                         <div class="mb-3">
                             <label for="property_lease" class="form-label">Property Lease</label>
-                            <a href="#" target="_blank" id="view_uploaded_property_lease" class="display-none">View Uploaded Lease</a>
+                            <a href="#" target="_blank" id="view_uploaded_property_lease" class="display-none">View
+                                Uploaded Lease</a>
                             <input type="file" class="form-control" id="property_lease">
                         </div>
                     </div>
@@ -1184,7 +1385,7 @@
 <script src="/assets/js/operations/settings.js"></script>
 <script src="/assets/js/operations/applications.js"></script>
 <script src="/assets/js/operations/expenses.js"></script>
-
+<script src="/assets/js/operations/maintenance.js"></script>
 <script
         src="/assets/js/operations/main-content.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>

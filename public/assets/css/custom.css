@@ -215,3 +215,21 @@ p {
 .bi-trash-fill {
     cursor: pointer;
 }
+
+@media only screen and (max-width: 1024px) {
+    #mobile-menu {
+        display: block;
+    }
+    #desktop-menu {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    #mobile-menu {
+        display: none;
+    }
+    #desktop-menu {
+        display: block;
+    }
+}

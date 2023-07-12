@@ -84,6 +84,12 @@ class LeaseApi extends AbstractController
                     $inspectionExist = true;
                 }
 
+                $documentApi = new DocumentApi($this->em, $this->logger);
+                $leaseDocument = $documentApi->getDocumentName($lease->getTenant()->getId(), "lease");
+                $leaseDocumentName = "";
+                if(array_key_exists("name", $leaseDocument)){
+                    $leaseDocumentName = $leaseDocument["name"];
+                }
                 $responseArray[] = array(
                     'unit_name' => $lease->getUnit()->getName(),
                     'unit_id' => $lease->getUnit()->getId(),
@@ -103,7 +109,8 @@ class LeaseApi extends AbstractController
                     'guid' => $lease->getGuid(),
                     'status' => $lease->getStatus(),
                     'inspection_exist' => $inspectionExist,
-                    'payment_rules' => $lease->getPaymentRules()
+                    'payment_rules' => $lease->getPaymentRules(),
+                    "lease_document_name" => $leaseDocumentName
                 );
             }
             return $responseArray;

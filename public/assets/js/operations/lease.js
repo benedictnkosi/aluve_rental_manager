@@ -161,7 +161,7 @@ let getAllLeases = () => {
                 html += '<div class="col">\n' +
                     '                            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg property-image"\n' +
                     '                                 style="background-image: url(\'/assets/images/house.jpg\');">\n' +
-                    '                                <div class="flex-column h-100 p-5 pb-3 text-white text-shadow-1">\n' +
+                    '                                <div class="flex-column h-100 p-2 pb-3 text-white text-shadow-1">\n' +
                     '                                    <h3 class="pt-1 mt-1 mb-4 display-6 lh-1 fw-bold">' +lease.tenant_name  + '</h3>\n' +
                     '                                    <ul class=" list-unstyled mt-auto">\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
@@ -220,8 +220,12 @@ let getAllLeases = () => {
                     '                                </button>\n' +
                     '                                <ul class="dropdown-menu dropdown-menu-dark">\n' +
                     '                                    <li><a class="dropdown-item bill-tenant-button" lease-id="'+lease.lease_id+'" href="#"  data-bs-toggle="modal" data-bs-target="#addExpenseToLeaseModal">Bill The Tenant</a></li>\n' +
-                    '                                    <li><a class="dropdown-item btn-cancel-lease" lease-id="'+lease.lease_id+'" href="#">Cancel Lease</a></li>\n' +
-                    '                                    <li><a class="dropdown-item" target="_blank" href="/statement/?guid='+lease.guid+'">View Statement</a></li>\n' +
+                    '                                    <li><a class="dropdown-item btn-cancel-lease" lease-id="'+lease.lease_id+'" href="#">Cancel Lease</a></li>\n';
+                                                    if(lease.lease_document_name.length > 1){
+                    html +=  '                                    <li><a class="dropdown-item" target="_blank" href="/public/lease_document/'+lease.lease_document_name+'">View Lease</a></li>';
+
+                                                    }
+                html +=     '                                    <li><a class="dropdown-item" target="_blank" href="/statement/?guid='+lease.guid+'">View Statement</a></li>\n' +
                     '                                    <li><a class="dropdown-item" target="_blank" href="/inspection/?guid='+lease.guid+'">New Inspection</a></li>\n';
                                                 if(lease.inspection_exist === true){
                                                     html += '                                    <li><a class="dropdown-item" target="_blank" href="/view/inspection/?guid='+lease.guid+'">View Latest Inspection</a></li>\n';

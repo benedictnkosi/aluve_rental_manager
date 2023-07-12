@@ -118,7 +118,7 @@ let getLeaseLink = () => {
                 $("#form-tenant-login").removeClass("display-none");
                 showToast("Error. Tenant authentication failed");
             } else {
-                $("#btn-download-lease").attr("href", "/api/lease_document/" + data.name);
+                $("#btn-download-lease").attr("href", "/public/lease_document/" + data.name);
                 $("#logged-in-content").removeClass("display-none");
                 $("#form-tenant-login").addClass("display-none");
             }

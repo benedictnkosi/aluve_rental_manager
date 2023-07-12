@@ -140,7 +140,7 @@ let getAllUnits = () => {
                 html += '<div class="col">\n' +
                     '                            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg property-image"\n' +
                     '                                 style="background-image: url(\'/assets/images/house.jpg\');">\n' +
-                    '                                <div class="flex-column h-100 p-5 pb-3 text-white text-shadow-1">\n' +
+                    '                                <div class="flex-column h-100 p-2 pb-3 text-white text-shadow-1">\n' +
                     '                                    <h3 class="pt-1 mt-1 mb-4 display-6 lh-1 fw-bold">' + unit.unit_name + '</h3>\n' +
                     '                                    <ul class=" list-unstyled mt-auto">\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
@@ -200,6 +200,8 @@ let getAllUnits = () => {
             $("#div-units").html(html);
 
             $("#ul-units").html(unitsDropDownHtml);
+
+            $("#maintenance-ul-units").html(unitsDropDownHtml);
 
             $(".btn-copy-listing-link").click(function (event) {
                 event.preventDefault();
@@ -266,6 +268,7 @@ let getAllUnits = () => {
             $(".lease-unit-dropdown").click(function (event) {
                 sessionStorage.setItem("lease-unit-id", event.target.getAttribute("lease-unit-id"));
                 $('#unit-dropdown-selected').html(event.target.innerText);
+                $('#maintenance-unit-dropdown-selected').html(event.target.innerText);
             });
         },
         error: function (xhr) {
