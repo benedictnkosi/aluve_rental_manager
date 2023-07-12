@@ -21,32 +21,38 @@ let getMaintenanceCalls = () => {
         success: function (data) {
             let html = "";
             data.forEach(function (response) {
-                html += '<tr>\n' +
-                    '                        <td>' + response.id + '</td>\n' +
-                    '                        <td>' + response.summary + '</td>\n' +
-                    '                        <td>' + response.unit + '</td>\n' +
-                    '                        <td>' + response.date + '</td>\n' +
-                    '                        <td>' + response.status + '</td>\n' +
-                    '                        <td>\n' +
-                    '                            <div class="btn-group">\n' +
-                    '                                <button class="btn btn-secondary " type="button">\n' +
-                    '                                    Actions\n' +
-                    '                                </button>\n' +
-                    '                                <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
-                    '                                    <span class="visually-hidden">Toggle Dropdown</span>\n' +
-                    '                                </button>\n' +
-                    '                                \n';
 
-                if (response.status.localeCompare("new") === 0) {
-                    html += '        <ul class="dropdown-menu dropdown-menu-dark"><li><a class="dropdown-item btn-mark-as-done" maintenance-id="' + response.id + '" href="#" data-bs-toggle="modal" data-bs-target="#confirmMaintenanceModal">Mark As Done</a></li></ul>\n';
-                }
+                html += '<div class="col-xl-3 col-md-6 mb-4">\n' +
+                    '                        <div class="card border-left-success shadow h-100 py-2">\n' +
+                    '                            <div class="card-body">\n' +
+                    '                                <div class="row no-gutters align-items-center">\n' +
+                    '                                    <div class="col mr-2">\n' +
+                    '                                        <div class="text-xs text-gray-800 mb-1 text-uppercase mb-1">\n' +
+                    '                                            '+response.unit+'</div>\n'+
+                '                                        <div class="text-xs text-gray-800 mb-1">\n' +
+                '                                            '+response.date+'</div>\n';
+                    if (response.status.localeCompare("new") === 0) {
+                        html +=   '                                        <div class="text-xs text-gray-800 mb-1">\n' +
+                            '                                            '+response.summary+'</div>\n' +
+                            '                                     <div class="text-xs text-gray-800 mb-1">\n' +
+                        '                                        <a data-bs-toggle="modal" data-bs-target="#confirmMaintenanceModal" role="button" maintenance-id="'+response.id+'" href="javascript:void(0)" class="btn-mark-as-done">Close Call</a>\n' +
+                        '                                    </div>\n';
+                    }else if(response.status.localeCompare("closed") === 0) {
+                        html +=   '                                        <div class="text-xs text-gray-800 mb-1">\n' +
+                            '                                            <s>'+response.summary+'</s></div>\n' +
+                            '<div class="col-auto">\n' +
+                            '                                        <i class="text-success bi bi-check2-circle"></i>\n' +
+                            '                                    </div>\n';
+                    }
 
-                html += '                            </div>\n' +
-                    '                        </td>\n' +
-                    '                    </tr>';
+                html +=
+                    '                                </div></div>\n' +
+                    '                            </div>\n' +
+                    '                        </div>\n' +
+                    '                    </div>';
             });
 
-            $("#tbody-maintenance").html(html);
+            $("#maintenance-div").html(html);
 
             $(".btn-mark-as-done").click(function (event) {
                 sessionStorage.setItem("maintenance-id", event.target.getAttribute("maintenance-id"));

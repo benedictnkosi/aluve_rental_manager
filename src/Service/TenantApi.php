@@ -36,6 +36,36 @@ class TenantApi extends AbstractController
         }
     }
 
+    public function getTenantLease($guid)
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('guid' => $guid));
+            if ($tenant == null) {
+                return array(
+                    'result_message' => "Error: Tenant not found",
+                    'result_code' => 1
+                );
+            }
+
+            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId(), 'status' => 'active'));
+            if ($lease == null) {
+                return array(
+                    'result_message' => "Error: Lease not found",
+                    'result_code' => 1
+                );
+            }
+            return $lease;
+        } catch (Exception $ex) {
+            $this->logger->error("Error " . print_r($responseArray, true));
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
+
     public function getTenant($guid)
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
@@ -50,6 +80,64 @@ class TenantApi extends AbstractController
             }
 
             return $tenant;
+        } catch (Exception $ex) {
+            $this->logger->error("Error " . print_r($responseArray, true));
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
+
+    public function getTenantById($id, $phone)
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('idNumber' => $id, 'phone'=>$phone));
+            if ($tenant == null) {
+                return array(
+                    'result_message' => "Error: Tenant not found",
+                    'result_code' => 1
+                );
+            }
+
+            return $tenant;
+        } catch (Exception $ex) {
+            $this->logger->error("Error " . print_r($responseArray, true));
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
+
+    public function getLeaseToSign($id, $phone): array
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('idNumber' => $id, 'phone'=>$phone));
+            if ($tenant == null) {
+                return array(
+                    'result_message' => "Error: Tenant not found",
+                    'result_code' => 1
+                );
+            }
+
+            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId(), 'status' => 'active'));
+            if ($lease == null) {
+                return array(
+                    'result_message' => "Error: Lease not found",
+                    'result_code' => 1
+                );
+            }
+
+            $leaseFileName = $lease->getUnit()->getProperty()->getLeaseFileName();
+            return array(
+                'name' => $leaseFileName,
+                'result_code' => 0
+            );
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
             return array(
@@ -155,6 +243,8 @@ class TenantApi extends AbstractController
             $tenant->setIdDocumentType($idDocType);
             $tenant->setSalary($salary);
             $tenant->setOccupation($occupation);
+            $tenant->setStatus("documents_pending");
+
             $this->em->persist($tenant);
             $this->em->flush($tenant);
 

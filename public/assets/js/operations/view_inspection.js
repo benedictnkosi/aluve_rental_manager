@@ -15,11 +15,17 @@ let getInspection = () => {
         url: url,
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
-            $("#header").html("Inspection - " + data.date);
-            let newData = replaceAll(data.json, "true", '"No Issues"');
-            newData = replaceAll(newData, "false", '"Issues Identified"');
-            convertJSONtoHTML(JSON.parse(newData));
-            populateImages(data.images)
+            if(data.result_code === 1){
+                $("#header").html("No Previous Inspections Found");
+                $("#inspection_images").html("");
+            }else{
+                $("#header").html("Inspection - " + data.date);
+                let newData = replaceAll(data.json, "true", '"No Issues"');
+                newData = replaceAll(newData, "false", '"Issues Identified"');
+                convertJSONtoHTML(JSON.parse(newData));
+                populateImages(data.images)
+            }
+
         },
         error: function (xhr) {
             console.log("error occured")

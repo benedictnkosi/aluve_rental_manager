@@ -54,13 +54,6 @@ class NavigationController extends AbstractController
         return $this->render('applications.html');
     }
 
-    /**
-     * @Route("/onboarding/", name="app_onboarding")
-     */
-    public function app_onboarding(LoggerInterface $logger): Response
-    {
-        return $this->render('onboarding.html');
-    }
 
     /**
      * @Route("/view/inspection/", name="app_inspection_view")

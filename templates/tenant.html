@@ -306,18 +306,22 @@
 </div>
 <div class="container mt-5 pt-lg-5 display-none" id="logged-in-content">
 
-    <div class="container py-5 h-100">
+<!--    download statement and signed lease-->
+    <div class="container py-5 h-100  active-tenant-div display-none">
         <h2 class="row d-flex justify-content-center align-items-center h-100 mb-5">Tenant Portal</h2>
 
 
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col col-xl-10 row d-flex justify-content-center align-items-center h-100">
                 <a href="#" target="_blank" id="btn-view-statement" class="btn btn-secondary w-25 m-2">View Statement</a>
-                <a href="#" target="_blank" id="btn-download-lease" class="btn btn-secondary w-25 m-2">Download Lease</a>
+                <a href="#" target="_blank" id="btn-download-lease" class="btn btn-secondary w-25 m-2">Download Signed Lease</a>
+                <a href="#" target="_blank" id="btn-view-Inspection" class="btn btn-secondary w-25 m-2">View Latest Inspection</a>
             </div>
         </div>
     </div>
-    <div class="container py-5 h-100">
+
+<!--    maintenance calls-->
+    <div class="container py-5 h-100  active-tenant-div display-none">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col col-xl-10">
 
@@ -331,7 +335,7 @@
                             <label for="call-summary">New</label>
                             <textarea class="form-control" id="call-summary" Placeholder="Summary of the issue"
                                       rows="3"></textarea>
-                            <button type="submit" id="btn-log-call" class="btn btn-secondary btn-lg ms-2 mt-5">Log A Call</button>
+                            <button type="submit" id="btn-log-call" class="btn btn-secondary mt-5">Log A Call</button>
                         </div>
 
                         <ul class="list-group mb-0" id="list-calls">
@@ -342,6 +346,42 @@
                 </div>
 
             </div>
+        </div>
+    </div>
+
+<!--    upload signed lease\ ID and proof of payment-->
+    <div class="container py-5 h-100 new-tenant-div display-none">
+        <div class="thanks-message text-center mt-5" id="text-message">
+            <h3>Thanks for uploading your documents!</h3> <span>Your documents have been sent to our team for verification! We will contact you shortly!</span>
+        </div>
+
+        <form id="regForm">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col col-xl-10 row d-flex justify-content-center align-items-center h-100">
+                    <a href="#" target="_blank" id="btn-download-lease-agreement" class="btn btn-secondary w-25 m-2">Download Lease Agreement</a>
+                </div>
+            </div>
+
+            <h3 class="mt-2">On-boarding Documents:</h3>
+            <div class="mb-3 mt-3">
+                <label for="onboarding_lease" class="form-label">Signed Lease</label>
+                <input type="file" class="form-control" id="onboarding_lease">
+            </div>
+            <div class="mb-3">
+                <label for="onboarding_iddoc" class="form-label">ID\Passport Document</label>
+                <input type="file" class="form-control" id="onboarding_iddoc">
+            </div>
+            <div class="mb-3">
+                <label for="onboarding_pop" class="form-label">Deposit Proof Of Payment</label>
+                <input type="file" class="form-control" id="onboarding_pop">
+            </div>
+        </form>
+    </div>
+
+    <!--    documents pending verification-->
+    <div class="container py-5 h-100 docs-uploaded-tenant-div display-none">
+        <div class=" text-center mt-5">
+            <h3>Thanks for uploading your documents!</h3> <span>Your documents have been sent to our team for verification! We will contact you shortly!</span>
         </div>
     </div>
 </div>

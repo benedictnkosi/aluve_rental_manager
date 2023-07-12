@@ -556,7 +556,6 @@
     </div>
 </div>
 
-
 <!--confirm action delete modal-->
 <div class="modal fade" id="confirmDeclineApplicationModal" tabindex="-1"
      aria-labelledby="confirmDeclineApplicationLabel" aria-hidden="true">
@@ -596,7 +595,6 @@
         </div>
     </div>
 </div>
-
 
 <!--confirm action delete unit modal-->
 <div class="modal fade" id="confirmDeleteUnitModal" tabindex="-1" aria-labelledby="confirmModalLabel"
@@ -652,15 +650,13 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" id="submitAcceptApplication" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-
 
 <div class="container-fluid">
 
@@ -974,7 +970,7 @@
 
             <!--            units div-------------------------------------------------------------------->
             <div id="units-content-div" class="main-content display-none">
-                <div class="row row-cols-1 row-cols-lg-2 align-items-stretch g-4 py-5" id="div-units">
+                <div class="row row-cols-1 row-cols-xl-3 row-cols-lg-2 align-items-stretch g-4 py-5" id="div-units">
 
 
                 </div>
@@ -1067,7 +1063,7 @@
             <!--            leases div-------------------------------------------------------------------->
             <div id="leases-content-div" class="main-content display-none">
 
-                <div class="row row-cols-1 row-cols-lg-2 align-items-stretch g-4 py-5" id="div-leases">
+                <div class="row row-cols-1 row-cols-xl-3 row-cols-lg-2 align-items-stretch g-4 py-5" id="div-leases">
 
 
                 </div>
@@ -1185,29 +1181,11 @@
 
             <!--            applications div -------------------------------------------------------------------->
             <div id="applications-content-div" class="main-content display-none">
-                <table class="table table-dark table-striped">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Unit</th>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>ID Number</th>
-                        <th>Adults</th>
-                        <th>Children</th>
-                        <th>Salary</th>
-                        <th>Occupation</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody id="tbody-applications">
 
-                    <!-- Add more rows here if needed -->
-                    </tbody>
-                </table>
+                <div class="row" id="applications-div">
+
+                </div>
+
 
             </div>
 
@@ -1231,25 +1209,10 @@
 
                     <textarea class="form-control" id="call-summary" Placeholder="Summary of the issue"
                               rows="3"></textarea>
-                    <button type="submit" id="btn-log-call" class="btn btn-secondary btn-lg ms-2 mb-5 mt-2">Log A Call</button>
+                    <button type="submit" id="btn-log-call" class="btn btn-secondary mb-5 mt-2">Log A Call</button>
                 </div>
 
-                <table class="table table-dark table-striped">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Summary</th>
-                        <th>Unit Name</th>
-                        <th>Date Logged</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody id="tbody-maintenance">
-
-                    <!-- Add more rows here if needed -->
-                    </tbody>
-                </table>
+                <div class="row" id="maintenance-div"></div>
 
             </div>
 
@@ -1258,24 +1221,14 @@
             <div id="expenses-content-div" class="main-content display-none w-75">
                 <div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
                     <p>
-                        <button type="button" class="btn btn-success" id="btn-new-expense" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-secondary" id="btn-new-expense" data-bs-toggle="modal"
                                 data-bs-target="#propertyExpenseModal">Add Expense
                         </button>
                     </p>
                 </div>
-                <table class="table table-dark table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Summary</th>
-                        <th scope="col">Amount</th>
-                    </tr>
-                    </thead>
-                    <tbody id="tbody-expenses">
+                <div class="row" id="expenses-div">
 
-                    </tbody>
-                </table>
+                </div>
 
             </div>
 

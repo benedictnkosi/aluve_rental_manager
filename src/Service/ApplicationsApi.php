@@ -36,7 +36,7 @@ class ApplicationsApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid ));
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
             if ($property == null) {
                 return array(
                     'result_message' => "Error. Property not found",
@@ -58,8 +58,8 @@ class ApplicationsApi extends AbstractController
                 );
             }
             //get documents
-            $documentApi = new DocumentApi($this->em,$this->logger);
-            foreach ($applications as $application){
+            $documentApi = new DocumentApi($this->em, $this->logger);
+            foreach ($applications as $application) {
                 $bankStatementDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Bank Statement");
                 $PayslipDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "payslip");
                 $coBankStatementDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Co-Bank Statement");
@@ -69,28 +69,28 @@ class ApplicationsApi extends AbstractController
                 $coBankStatementDocumentName = "";
                 $coPayslipDocumentName = "";
 
-                if($bankStatementDocument["result_code"] == 0){
+                if ($bankStatementDocument["result_code"] == 0) {
                     $bankStatementDocumentName = $bankStatementDocument["name"];
                 }
 
-                if($PayslipDocument["result_code"] == 0){
+                if ($PayslipDocument["result_code"] == 0) {
                     $PayslipDocumentName = $PayslipDocument["name"];
                 }
 
-                if($coBankStatementDocument["result_code"] == 0){
+                if ($coBankStatementDocument["result_code"] == 0) {
                     $coBankStatementDocumentName = $coBankStatementDocument["name"];
                 }
 
 
-                if($coPayslipDocument["result_code"] == 0){
+                if ($coPayslipDocument["result_code"] == 0) {
                     $coPayslipDocumentName = $coPayslipDocument["name"];
                 }
                 $responseArray[] = array(
                     "application" => $application,
-                    "applicant_bank_statement"=>$bankStatementDocumentName,
-                    "applicant_payslip"=>$PayslipDocumentName,
-                    "co_applicant_bank_statement"=>$coBankStatementDocumentName,
-                    "co_applicant_payslip"=>$coPayslipDocumentName,
+                    "applicant_bank_statement" => $bankStatementDocumentName,
+                    "applicant_payslip" => $PayslipDocumentName,
+                    "co_applicant_bank_statement" => $coBankStatementDocumentName,
+                    "co_applicant_payslip" => $coPayslipDocumentName,
                 );
             }
 
@@ -127,7 +127,7 @@ class ApplicationsApi extends AbstractController
 
             $tenantApi = new TenantApi($this->em, $this->logger);
             $response = $tenantApi->createTenant($request->get("application_name"), $request->get("application_phone"), $request->get("application_email"), $request->get("id_document_type"), $request->get("application_id_number"), $request->get("application_salary"), $request->get("application_occupation"), $request->get("adult_count"), $request->get("child_count"));
-            if($response["result_code"] == 1){
+            if ($response["result_code"] == 1) {
                 return $response;
             }
             $application = new Application();
@@ -156,7 +156,6 @@ class ApplicationsApi extends AbstractController
         }
     }
 
-
     public function addSupportingDoc($applicationId, $documentType, $fileName): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
@@ -170,7 +169,7 @@ class ApplicationsApi extends AbstractController
                 );
             }
             $tenant = $application->getTenant();
-            $documentApi = new DocumentApi($this->em,$this->logger);
+            $documentApi = new DocumentApi($this->em, $this->logger);
 
             if (strcmp($documentType, "statement") == 0) {
                 $documentApi->addDocument($tenant->getId(), "Bank Statement", $fileName);
@@ -236,9 +235,9 @@ class ApplicationsApi extends AbstractController
             }
 
             //send whatsapp with acceptance
-            $leaseLink = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/api/document/" . $application->getUnit()->getProperty()->getLeaseFileName();
-            $message = "We are happy to let you know that your application for " . $application->getUnit()->getName() . " @ " . $application->getUnit()->getProperty()->getName() . " has been accepted. 
-            Please download and sign the lease. " . $leaseLink;
+//            $leaseLink = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/api/document/" . $application->getUnit()->getProperty()->getLeaseFileName();
+//            $message = "We are happy to let you know that your application for " . $application->getUnit()->getName() . " @ " . $application->getUnit()->getProperty()->getName() . " has been accepted.
+//            Please download and sign the lease. " . $leaseLink;
 
             $communicationApi = new CommunicationApi($this->em, $this->logger);
             //$response = $communicationApi->sendWhatsApp($application->getPhone(), $message);
@@ -252,7 +251,7 @@ class ApplicationsApi extends AbstractController
 
             $leaseApi = new LeaseApi($this->em, $this->logger);
             $response = $leaseApi->createLease($application->getTenant(), $application->getUnit()->getGuid(), $startDate, $endDate, "0", "", "pending_docs");
-            if($response["result_code"] !== 0){
+            if ($response["result_code"] !== 0) {
                 return $response;
             }
 
@@ -272,7 +271,7 @@ class ApplicationsApi extends AbstractController
                 $transactionApi = new TransactionApi($this->em, $this->logger);
                 $now = new DateTime();
                 $unitRentalAmount = $application->getUnit()->getRent();
-                $deposit = $unitRentalAmount * ($application->getUnit()->getProperty()->getDepositPecent()/ 100);
+                $deposit = $unitRentalAmount * ($application->getUnit()->getProperty()->getDepositPecent() / 100);
                 $transactionApi->addTransaction($response["id"], $deposit, "Unit Deposit", $now->format("Y-m-d"));
             }
 
@@ -280,17 +279,24 @@ class ApplicationsApi extends AbstractController
             $unitApi = new UnitApi($this->em, $this->logger);
             $unitApi->updateUnit("listed", false, $application->getUnit()->getGuid());
 
-            if ($response["result_code"] == 0) {
+            //send sms to applicant
+            $smsApi = new SMSApi($this->em, $this->logger);
+            $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+            $message = "Application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has been accepted. Download lease " . $tenantPortalURL;
+            $isSMSSent = $smsApi->sendMessage("+27" . substr($application->getTenant()->getPhone(), 0, 9), $message);
+
+            if ($isSMSSent) {
                 return array(
                     'result_message' => "Successfully created lease from the application.",
                     'result_code' => 0
                 );
             } else {
                 return array(
-                    'result_message' => "Failed to convert application to lease. " . $response["result_message"],
+                    'result_message' => "Error. Created lease from the application. SMS to Applicant failed",
                     'result_code' => 1
                 );
             }
+
 
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
@@ -319,10 +325,23 @@ class ApplicationsApi extends AbstractController
             $this->em->persist($application);
             $this->em->flush($application);
 
-            return array(
-                'result_message' => "Successfully declined the application",
-                'result_code' => 0
-            );
+            //send sms to applicant
+            $smsApi = new SMSApi($this->em, $this->logger);
+            $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+            $message = "Unfortunately your application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has been declined.";
+            $isSMSSent = $smsApi->sendMessage("+27" . substr($application->getTenant()->getPhone(), 0, 9), $message);
+
+            if ($isSMSSent) {
+                return array(
+                    'result_message' => "Successfully declined the application",
+                    'result_code' => 0
+                );
+            } else {
+                return array(
+                    'result_message' => "Error. Declined the application. SMS to Applicant failed",
+                    'result_code' => 1
+                );
+            }
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
             return array(

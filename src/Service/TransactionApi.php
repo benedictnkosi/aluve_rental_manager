@@ -82,10 +82,26 @@ class TransactionApi extends AbstractController
             $this->em->persist($transaction);
             $this->em->flush($transaction);
 
-            return array(
-                'result_message' => "Successfully added transaction",
-                'result_code' => 0
-            );
+            if(strcmp($description, "Thank you for payment") == 0){
+                //send sms to applicant
+                $smsApi = new SMSApi($this->em, $this->logger);
+                $balance = $this->getBalanceDue($lease->getId())["result_message"];
+                $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+                $message = "Thank you for payment R" .$amount . " , Balance: R" . $balance . ". View Statement " . $tenantPortalURL ;
+                $isSMSSent = $smsApi->sendMessage("+27" . substr($lease->getTenant()->getPhone(), 0, 9), $message);
+
+                if ($isSMSSent) {
+                    return array(
+                        'result_message' => "Successfully added transaction",
+                        'result_code' => 0
+                    );
+                } else {
+                    return array(
+                        'result_message' => "Error. Added transaction. SMS to Applicant failed",
+                        'result_code' => 1
+                    );
+                }
+            }
 
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));

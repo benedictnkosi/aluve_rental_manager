@@ -4,13 +4,13 @@ $(document).ready(function () {
         rules: {}, submitHandler: function () {
             sessionStorage.setItem("tenant_id_number", $('#id-number').val());
             sessionStorage.setItem("tenant_phone_number", $('#phone-number').val());
-            getStatementLink();
-            getLeaseLink();
+            authenticateTenant();
         }
     });
 
     $("#form-tenant-login").submit(function (event) {
         event.preventDefault();
+
     });
 
     $("#btn-log-call").click(function (event) {
@@ -18,7 +18,17 @@ $(document).ready(function () {
         logACall();
     });
 
-    getMaintenanceCalls();
+    $('#onboarding_lease').change(function () {
+        uploadSupportingDocuments("lease", $("#onboarding_lease").prop("files")[0]);
+    });
+
+    $('#onboarding_iddoc').change(function () {
+        uploadSupportingDocuments("id", $("#onboarding_iddoc").prop("files")[0]);
+    });
+
+    $('#onboarding_pop').change(function () {
+        uploadSupportingDocuments("pop", $("#onboarding_pop").prop("files")[0]);
+    });
 
 });
 
@@ -82,6 +92,67 @@ let getMaintenanceCalls = () => {
     });
 }
 
+let authenticateTenant = () => {
+    let url = "/public/tenant/get/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    $.ajax({
+        type: "GET",
+        url: url,
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            if (data.result_code === 1) {
+                $("#logged-in-content").addClass("display-none");
+                $("#form-tenant-login").removeClass("display-none");
+                showToast("Error. Tenant verification failed");
+            } else {
+                $("#logged-in-content").removeClass("display-none");
+                $("#form-tenant-login").addClass("display-none");
+                sessionStorage.setItem("tenant_guid", data.guid);
+
+                if(data.status.localeCompare("new") == 0){
+                    getPropertyLeaseToSign();
+                    $(".new-tenant-div").removeClass("display-none");
+                    $(".active-tenant-div").addClass("display-none");
+                    $(".docs-uploaded-tenant-div").addClass("display-none");
+                }else if(data.status.localeCompare("alldocs_uploaded") == 0){
+                    $(".docs-uploaded-tenant-div").removeClass("display-none");
+                    $(".active-tenant-div").addClass("display-none");
+                    $(".new-tenant-div").addClass("display-none");
+                }else if(data.status.localeCompare("active") == 0){
+                    getSignedLeaseLink();
+                    getStatementLink();
+                    getInspectionLink();
+                    $(".new-tenant-div").addClass("display-none");
+                    $(".docs-uploaded-tenant-div").addClass("display-none");
+                    $(".active-tenant-div").removeClass("display-none");
+                }
+            }
+        },
+        error: function (xhr) {
+
+        }
+    });
+}
+
+let getPropertyLeaseToSign = () => {
+    let url = "/public/tenant/lease_to_sign/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    $.ajax({
+        type: "GET",
+        url: url,
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            if (data.name === undefined) {
+                showToast("Error. Property lease not found. Please contact agent.");
+                $("#btn-download-lease-agreement").removeAttr('href');
+            } else {
+                $("#btn-download-lease-agreement").attr("href", "/public/lease_document/" + data.name);
+            }
+        },
+        error: function (xhr) {
+
+        }
+    });
+}
+
 let getStatementLink = () => {
     let url = "/public/tenant/getlease/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
     $.ajax({
@@ -90,13 +161,10 @@ let getStatementLink = () => {
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             if (data.guid === undefined) {
-                $("#logged-in-content").addClass("display-none");
-                $("#form-tenant-login").removeClass("display-none");
-                showToast("Error. Tenant authentication failed");
+                showToast("Error: Statement link not found. Please contact agent.");
+                $("#btn-view-statement").removeAttr('href');
             } else {
                 $("#btn-view-statement").attr("href", "/statement/?guid=" + data.guid);
-                $("#logged-in-content").removeClass("display-none");
-                $("#form-tenant-login").addClass("display-none");
             }
 
         },
@@ -106,7 +174,7 @@ let getStatementLink = () => {
     });
 }
 
-let getLeaseLink = () => {
+let getSignedLeaseLink = () => {
     let url = "/public/tenant/getleaseDocumentName/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
     $.ajax({
         type: "GET",
@@ -114,15 +182,31 @@ let getLeaseLink = () => {
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             if (data.name === undefined) {
-                $("#logged-in-content").addClass("display-none");
-                $("#form-tenant-login").removeClass("display-none");
-                showToast("Error. Tenant authentication failed");
+                showToast("Error: Signed lease not found. Please contact agent.");
+                $("#btn-download-lease").removeAttr('href');
             } else {
                 $("#btn-download-lease").attr("href", "/public/lease_document/" + data.name);
-                $("#logged-in-content").removeClass("display-none");
-                $("#form-tenant-login").addClass("display-none");
             }
+        },
+        error: function (xhr) {
 
+        }
+    });
+}
+
+let getInspectionLink = () => {
+    let url = "/public/tenant/getlease/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    $.ajax({
+        type: "GET",
+        url: url,
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            if (data.guid === undefined) {
+                $("#btn-view-Inspection").removeAttr('href');
+            } else {
+
+                $("#btn-view-Inspection").attr("href", "/view/inspection/?guid=" + data.guid);
+            }
         },
         error: function (xhr) {
 
@@ -141,4 +225,47 @@ let showToast = (message) => {
         $('#toast-message').html('<div class="alert alert-dark" role="alert">' + message + '</div>');
     }
     toastBootstrap.show();
+}
+
+function uploadSupportingDocuments(documentType, file_data) {
+    let url = "/public/tenant/upload/lease";
+    const uid = sessionStorage.getItem("tenant_guid");
+    const form_data = new FormData();
+    form_data.append("file", file_data);
+    form_data.append("guid", uid);
+    form_data.append("document_type", documentType);
+
+    if (file_data === undefined) {
+        showToast("Error: Please upload file")
+        return;
+    }
+
+    const fileSize =file_data.size;
+    const fileMb = fileSize / 1024 ** 2;
+    if (fileMb >= 5) {
+        showToast("Error: Please upload files less than 5mb");
+        return;
+    }
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: form_data,
+        dataType: 'script',
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            const jsonObj = JSON.parse(response);
+            showToast(jsonObj.result_message);
+            if(jsonObj.alldocs_uploaded === true){
+                $(".docs-uploaded-tenant-div").removeClass("display-none");
+                $(".active-tenant-div").addClass("display-none");
+                $(".new-tenant-div").addClass("display-none");
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showToast(errorThrown);
+        }
+    });
 }

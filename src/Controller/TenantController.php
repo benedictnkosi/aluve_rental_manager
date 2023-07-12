@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\DocumentApi;
+use App\Service\FileUploaderApi;
 use App\Service\LeaseApi;
 use App\Service\PropertyApi;
 use App\Service\TenantApi;
@@ -28,6 +29,36 @@ class TenantController extends AbstractController
         }
 
         $response = $tenantApi->getTenant($guid);
+        $serializer = SerializerBuilder::create()->build();
+        $jsonContent = $serializer->serialize($response, 'json');
+        return new JsonResponse($jsonContent , 200, array(), true);
+    }
+
+    /**
+     * @Route("public/tenant/get/{id}/{phone}")
+     */
+    public function getTenantById($id, $phone, TenantApi $tenantApi, Request $request, LoggerInterface $logger): Response{
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('get')) {
+            return new JsonResponse("Method Not Allowed" , 405, array());
+        }
+
+        $response = $tenantApi->getTenantById($id, $phone);
+        $serializer = SerializerBuilder::create()->build();
+        $jsonContent = $serializer->serialize($response, 'json');
+        return new JsonResponse($jsonContent , 200, array(), true);
+    }
+
+    /**
+     * @Route("public/tenant/lease_to_sign/{id}/{phone}")
+     */
+    public function getLeaseToSign($id, $phone, TenantApi $tenantApi, Request $request, LoggerInterface $logger): Response{
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('get')) {
+            return new JsonResponse("Method Not Allowed" , 405, array());
+        }
+
+        $response = $tenantApi->getLeaseToSign($id, $phone);
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);
@@ -63,4 +94,57 @@ class TenantController extends AbstractController
         return new JsonResponse($jsonContent , 200, array(), true);
     }
 
+    /**
+     * @Route("public/tenant/upload/lease")
+     * @throws \Exception
+     */
+    public function uploadLeaseDocument( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, LeaseApi $leaseApi, TenantApi $tenantApi): Response
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('post')) {
+            return new JsonResponse("Internal server errors" , 500, array());
+        }
+
+        $file = $request->files->get('file');
+        if (empty($file))
+        {
+            $logger->info("No file specified");
+            return new Response("No file specified",
+                Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
+        }
+
+        $uploadDir = __DIR__ . '/../../files/application_documents/';
+        $uploader->setDir($uploadDir);
+        $uploader->setExtensions(array('pdf'));  //allowed extensions list//
+
+        $uploader->setMaxSize(5);//set max file size to be allowed in MB//
+
+        $response = $uploader->uploadFile();
+        if($response["result_code"] == 1){
+            //upload failed
+            header("HTTP/1.1 500 Internal Server Error");
+            return new Response($response["result_message"],
+                Response::HTTP_NOT_ACCEPTABLE, ['content-type' => 'text/plain']);
+        }
+
+        //write to DB
+        $lease = $tenantApi->getTenantLease($request->get("guid"));
+        if($lease == null || is_array($lease)){
+            $response = array(
+                'result_message' => "Error: Lease not found",
+                'result_code' => 1
+            );
+
+            return new JsonResponse($response, 200, array());
+        }
+
+        $response = $leaseApi->addLeaseDoc($lease->getGuid(), $request->get("document_type"), $response["file_name"]);
+        if($response["result_code"] == 1){
+            return new JsonResponse($response, 200, array());
+        }else{
+            return new JsonResponse($response, 201, array());
+
+        }
+
+    }
 }

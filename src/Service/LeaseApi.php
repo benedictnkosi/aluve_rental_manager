@@ -45,7 +45,7 @@ class LeaseApi extends AbstractController
         try {
 
             //validate property id
-            if (strlen($propertyGuid) !== 36 ) {
+            if (strlen($propertyGuid) !== 36) {
                 return array(
                     'result_message' => "Error. Property GUID is invalid",
                     'result_code' => 1
@@ -62,9 +62,11 @@ class LeaseApi extends AbstractController
 
 
             $leases = $this->em->getRepository("App\Entity\Leases")->createQueryBuilder('l')
+                ->leftJoin('l.unit', 'u')
                 ->where('l.property = :property')
                 ->andWhere("l.status = 'active' or l.status = 'pending_docs'")
                 ->setParameter('property', $property->getId())
+                ->orderBy('u.name', 'ASC')
                 ->getQuery()
                 ->getResult();
             if (sizeof($leases) < 1) {
@@ -87,7 +89,7 @@ class LeaseApi extends AbstractController
                 $documentApi = new DocumentApi($this->em, $this->logger);
                 $leaseDocument = $documentApi->getDocumentName($lease->getTenant()->getId(), "lease");
                 $leaseDocumentName = "";
-                if(array_key_exists("name", $leaseDocument)){
+                if (array_key_exists("name", $leaseDocument)) {
                     $leaseDocumentName = $leaseDocument["name"];
                 }
                 $responseArray[] = array(
@@ -138,9 +140,9 @@ class LeaseApi extends AbstractController
         $responseArray = array();
         try {
             //validate property id
-            if (strlen($guid) !== 36 ) {
+            if (strlen($guid) !== 36) {
                 return array(
-                    'result_message' => "Error. Property GUID is invalid",
+                    'result_message' => "Error. Lease GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -195,14 +197,14 @@ class LeaseApi extends AbstractController
         $responseArray = array();
         try {
             $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('idNumber' => $idNumber));
-            if($tenant == null){
+            if ($tenant == null) {
                 return array(
                     'result_message' => "Error. Tenant not found for ID number",
                     'result_code' => 1
                 );
             }
 
-            if(strcmp($tenant->getPhone(), $phoneNumber) !== 0){
+            if (strcmp($tenant->getPhone(), $phoneNumber) !== 0) {
                 return array(
                     'result_message' => "Error. Tenant authentication failed",
                     'result_code' => 1
@@ -210,7 +212,7 @@ class LeaseApi extends AbstractController
             }
 
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId()));
-            if($lease == null){
+            if ($lease == null) {
                 return array(
                     'result_message' => "Error. Lease not found for ID number",
                     'result_code' => 1
@@ -243,7 +245,7 @@ class LeaseApi extends AbstractController
                 );
             }
 
-            if(strcmp($status, "active") !== 0 && strcmp($status, "pending_docs") !== 0){
+            if (strcmp($status, "active") !== 0 && strcmp($status, "pending_docs") !== 0) {
                 return array(
                     'result_message' => "Error. Status value is invalid",
                     'result_code' => 1
@@ -373,7 +375,7 @@ class LeaseApi extends AbstractController
 
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function createInspection($leaseGuid,$inspectionGuid, $json, $status): array
+    public function createInspection($leaseGuid, $inspectionGuid, $json, $status): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -399,7 +401,7 @@ class LeaseApi extends AbstractController
                 );
             }
 
-            if(strcmp($status, "active") !== 0 && strcmp($status, "new") !== 0){
+            if (strcmp($status, "active") !== 0 && strcmp($status, "new") !== 0) {
                 return array(
                     'result_message' => "Error. Status value is invalid",
                     'result_code' => 1
@@ -414,9 +416,9 @@ class LeaseApi extends AbstractController
                 );
             }
 
-            if(strcmp($inspectionGuid, "0") == 0){
+            if (strcmp($inspectionGuid, "0") == 0) {
                 $inspection = new Inspection();
-            }else{
+            } else {
                 $inspection = $this->em->getRepository(Inspection::class)->findOneBy(array('guid' => $inspectionGuid));
             }
 
@@ -429,12 +431,30 @@ class LeaseApi extends AbstractController
             $this->em->persist($inspection);
             $this->em->flush($inspection);
 
-            return array(
-                'result_message' => "Successfully created inspection",
-                'result_code' => 0,
-                'id' => $inspection->getGuid()
-            );
+            if (strcmp($inspectionGuid, "0") == 0) {
+                //send sms to applicant
+                $smsApi = new SMSApi($this->em, $this->logger);
+                $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+                $message = "New inspection created. View on your tenant portal " . $tenantPortalURL;
+                $isSMSSent = $smsApi->sendMessage("+27" . substr($lease->getTenant()->getPhone(), 0, 9), $message);
 
+                if ($isSMSSent) {
+                    return array(
+                        'result_message' => "Successfully created inspection",
+                        'result_code' => 0
+                    );
+                } else {
+                    return array(
+                        'result_message' => "Error. Created inspection. SMS to tenant failed",
+                        'result_code' => 1
+                    );
+                }
+            } else {
+                return array(
+                    'result_message' => "Successfully created inspection",
+                    'result_code' => 0
+                );
+            }
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
             return array(
@@ -547,6 +567,27 @@ class LeaseApi extends AbstractController
                     && $due > 0
                     && strcmp($todayDay, $rentLateBy) == 0) {
                     $this->transactionApi->addTransaction($lease->getId(), $lateFee, "Late Rent Payment Fee", $now->format("Y-m-d"));
+
+                    //send sms to applicant
+                    $smsApi = new SMSApi($this->em, $this->logger);
+                    $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+                    $api = new TransactionApi($this->em, $this->logger);
+                    $balance = $api->getBalanceDue($lease->getId());
+                    $message = "Late payment fee added on your account R" . $lateFee . " , Balance: R" . $balance . ". View Statement " . $tenantPortalURL;
+                    $isSMSSent = $smsApi->sendMessage("+27" . substr($lease->getTenant()->getPhone(), 0, 9), $message);
+
+                    if ($isSMSSent) {
+                        return array(
+                            'result_message' => "Successfully added transaction",
+                            'result_code' => 0
+                        );
+                    } else {
+                        return array(
+                            'result_message' => "Error. Added transaction. SMS to Applicant failed",
+                            'result_code' => 1
+                        );
+                    }
+
                 }
             }
 
@@ -564,12 +605,64 @@ class LeaseApi extends AbstractController
     }
 
 
+    #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
+    public function raiseMonthlyRent(): array
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+            $leases = $this->em->getRepository(Leases::class)->findBy(array('status' => 'active'));
+            if (sizeof($leases) < 1) {
+                return array(
+                    'result_message' => "No leases found",
+                    'result_code' => 1
+                );
+            }
+
+            $now = new DateTime();
+            $now->modify( 'first day of next month' );
+            foreach ($leases as $lease) {
+                $rent = $lease->getUnit()->getRent();
+
+                $this->transactionApi->addTransaction($lease->getId(), $rent, $now->format("F Y") . " Rent", $now->format("Y-m-d"));
+
+                //send sms to applicant
+                $smsApi = new SMSApi($this->em, $this->logger);
+                $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+                $message = $now->format("F") ." added to your on your statement R" . $rent .". View Statement " . $tenantPortalURL;
+                $isSMSSent = $smsApi->sendMessage("+27" . substr($lease->getTenant()->getPhone(), 0, 9), $message);
+
+                if ($isSMSSent) {
+                    return array(
+                        'result_message' => "Successfully added monthly rent",
+                        'result_code' => 0
+                    );
+                } else {
+                    return array(
+                        'result_message' => "Error. Added monthly rent. SMS to Applicant failed",
+                        'result_code' => 1
+                    );
+                }
+            }
+            return array(
+                'result_message' => "Successfully added all late fees",
+                'result_code' => 0
+            );
+        } catch (Exception $ex) {
+            $this->logger->error("Error " . print_r($responseArray, true));
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
+
     public function addLeaseDoc($leaseGuid, $documentType, $fileName): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $documentApi = new DocumentApi($this->em,$this->logger);
+            $documentApi = new DocumentApi($this->em, $this->logger);
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseGuid));
             if ($lease == null) {
                 return array(
@@ -600,6 +693,13 @@ class LeaseApi extends AbstractController
 
             $this->em->persist($lease);
             $this->em->flush($lease);
+
+            //update tenant status
+            $tenant = $lease->getTenant();
+            $tenant->setStatus("alldocs_uploaded");
+            $this->em->persist($tenant);
+            $this->em->flush($tenant);
+
             return array(
                 'result_message' => "Successfully uploaded file",
                 'result_code' => 0,

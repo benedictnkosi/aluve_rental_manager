@@ -33,16 +33,29 @@ let getExpenses = () => {
             data.forEach(function (expense) {
                 const expenseDescription = expense.description === undefined ? "" : expense.description;
 
-                html += '<tr>\n' +
-                    '                        <td>'+expense.date+'</td>\n' +
-                    '                        <td>'+expense.expense.name+'</td>\n' +
-                    '                        <td>'+expenseDescription+'</td>\n' +
-                    '                        <td>R'+expense.amount.toLocaleString()+'</td>\n' +
-                    '                       <td><i class="bi bi-trash-fill" expense-id="'+expense.guid+'"></i></td>'
-                    '                    </tr>';
+                html += '<div class="col-xl-3 col-md-6 mb-4">\n' +
+                    '                        <div class="card border-left-success shadow h-100 py-2">\n' +
+                    '                            <div class="card-body">\n' +
+                    '                                <div class="row no-gutters align-items-center">\n' +
+                    '                                    <div class="col mr-2">\n' +
+                    '                                        <div class="text-xs font-weight-bold text-uppercase mb-1">\n' +
+                    '                                            '+expense.expense.name+'</div>\n' +
+                    '                                        <div class="text-xs text-gray-800 mb-1">\n' +
+                    '                                            '+expenseDescription+'</div>\n' +
+                    '                                        <div class="h5 mb-0 text-gray-800">R'+expense.amount.toLocaleString()+'</div>\n' +
+                    '                                        <div class="text-xs text-gray-800 mb-1">\n' +
+                    '                                            '+expense.date.substring(0, expense.date.indexOf("T")) +'</div>\n' +
+                    '                                    </div>\n' +
+                    '                                    <div class="col-auto">\n' +
+                    '                                        <i class="text-danger bi bi-trash-fill" expense-id="'+expense.guid+'"></i>\n' +
+                    '                                    </div>\n' +
+                    '                                </div>\n' +
+                    '                            </div>\n' +
+                    '                        </div>\n' +
+                    '                    </div>';
             });
 
-            $("#tbody-expenses").html(html);
+            $("#expenses-div").html(html);
 
             $('.bi-trash-fill').click(function (event) {
                 sessionStorage.setItem("expense-id", event.target.getAttribute("expense-id"));
