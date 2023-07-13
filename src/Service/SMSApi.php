@@ -29,7 +29,7 @@ class SMSApi extends AbstractController
         $this->logger->debug("phone number " . $phoneNumber);
         $this->logger->debug("message " . $message);
 
-        if (strcmp( $_SERVER['HTTP_HOST'], 'aluveapp.co.za' )===0 ) {
+        if (strcmp( $_SERVER['HTTP_HOST'], 'rentals.aluveapp.co.za' )===0 ) {
             //Retrieve your API Credentials
             $apiKey = SMS_API_KEY;
             $apiSecret = SMS_API_SECRET;
