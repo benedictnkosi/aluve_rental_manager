@@ -136,7 +136,7 @@ let saveInspection = (status) => {
         type: "post",
         data: data,
         success: function (response) {
-            sessionStorage.setItem("inspection_guid",response.id);
+            sessionStorage.setItem("inspection_guid",response.guid);
             showToast(response.result_message)
         }
     });

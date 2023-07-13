@@ -102,7 +102,19 @@ class TenantApi extends AbstractController
                 );
             }
 
-            return $tenant;
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('tenant' => $tenant->getId()));
+            if ($application == null) {
+                return array(
+                    'result_message' => "Error. No Application found",
+                    'result_code' => 1
+                );
+            }
+
+            return array(
+                'tenant' => $tenant,
+                'application' => $application,
+                'result_code' => 0
+            );
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
             return array(
@@ -112,28 +124,20 @@ class TenantApi extends AbstractController
         }
     }
 
-    public function getLeaseToSign($id, $phone): array
+    public function getLeaseToSign($applicationGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('idNumber' => $id, 'phone'=>$phone));
-            if ($tenant == null) {
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $applicationGuid));
+            if ($application == null) {
                 return array(
-                    'result_message' => "Error: Tenant not found",
+                    'result_message' => "Error: Application not found",
                     'result_code' => 1
                 );
             }
 
-            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId(), 'status' => 'active'));
-            if ($lease == null) {
-                return array(
-                    'result_message' => "Error: Lease not found",
-                    'result_code' => 1
-                );
-            }
-
-            $leaseFileName = $lease->getUnit()->getProperty()->getLeaseFileName();
+            $leaseFileName = $application->getUnit()->getProperty()->getLeaseFileName();
             return array(
                 'name' => $leaseFileName,
                 'result_code' => 0
@@ -233,7 +237,11 @@ class TenantApi extends AbstractController
                 );
             }
 
-            $tenant = new Tenant();
+            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('idNumber' => $idNumber));
+            if ($tenant == null) {
+                $tenant = new Tenant();
+            }
+
             $tenant->setName($name);
             $tenant->setEmail($email);
             $tenant->setPhone($phone);
@@ -243,7 +251,8 @@ class TenantApi extends AbstractController
             $tenant->setIdDocumentType($idDocType);
             $tenant->setSalary($salary);
             $tenant->setOccupation($occupation);
-            $tenant->setStatus("documents_pending");
+            $tenant->setStatus("new");
+            $tenant->setGuid($this->generateGuid());
 
             $this->em->persist($tenant);
             $this->em->flush($tenant);
@@ -262,6 +271,15 @@ class TenantApi extends AbstractController
                 'result_code' => 1
             );
         }
+    }
+
+    function generateGuid(): string
+    {
+        if (function_exists('com_create_guid') === true) {
+            return trim(com_create_guid(), '{}');
+        }
+
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
 
     function validateSouthAfricanID($idNumber): bool

@@ -50,15 +50,15 @@ class TenantController extends AbstractController
     }
 
     /**
-     * @Route("public/tenant/lease_to_sign/{id}/{phone}")
+     * @Route("public/tenant/lease_to_sign/{applicationGuid}")
      */
-    public function getLeaseToSign($id, $phone, TenantApi $tenantApi, Request $request, LoggerInterface $logger): Response{
+    public function getLeaseToSign($applicationGuid, TenantApi $tenantApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('get')) {
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $tenantApi->getLeaseToSign($id, $phone);
+        $response = $tenantApi->getLeaseToSign($applicationGuid);
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);
@@ -115,7 +115,7 @@ class TenantController extends AbstractController
 
         $uploadDir = __DIR__ . '/../../files/application_documents/';
         $uploader->setDir($uploadDir);
-        $uploader->setExtensions(array('pdf'));  //allowed extensions list//
+        $uploader->setExtensions(array('pdf','jpg','png','bmp','jpeg' ));  //allowed extensions list//
 
         $uploader->setMaxSize(5);//set max file size to be allowed in MB//
 
@@ -128,17 +128,7 @@ class TenantController extends AbstractController
         }
 
         //write to DB
-        $lease = $tenantApi->getTenantLease($request->get("guid"));
-        if($lease == null || is_array($lease)){
-            $response = array(
-                'result_message' => "Error: Lease not found",
-                'result_code' => 1
-            );
-
-            return new JsonResponse($response, 200, array());
-        }
-
-        $response = $leaseApi->addLeaseDoc($lease->getGuid(), $request->get("document_type"), $response["file_name"]);
+        $response = $leaseApi->addLeaseDoc($request->get("guid"), $request->get("document_type"), $response["file_name"]);
         if($response["result_code"] == 1){
             return new JsonResponse($response, 200, array());
         }else{

@@ -65,7 +65,21 @@ class ApplicationsController extends AbstractController
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $applicationsApi->acceptApplication($request->get("id"), $request->get("start_date"), $request->get("end_date"));
+        $response = $applicationsApi->acceptApplication($request->get("id"));
+        return new JsonResponse($response, 200, array());
+    }
+
+    /**
+     * @Route("api/application/convert_to_lease")
+     */
+    public function convertApplicationToLease(Request $request, LoggerInterface $logger, ApplicationsApi $applicationsApi): Response
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('PUT')) {
+            return new JsonResponse("Method Not Allowed", 405, array());
+        }
+
+        $response = $applicationsApi->convertApplicationToLease($request->get("id"), $request->get("start_date"), $request->get("end_date"));
         return new JsonResponse($response, 200, array());
     }
 
@@ -130,7 +144,7 @@ class ApplicationsController extends AbstractController
 
         $uploadDir = __DIR__ . '/../../files/application_documents/';
         $uploader->setDir($uploadDir);
-        $uploader->setExtensions(array('pdf'));  //allowed extensions list//
+        $uploader->setExtensions(array('pdf', 'jpeg', 'jpg', 'bmp', 'png'));  //allowed extensions list//
 
         $uploader->setMaxSize(5);//set max file size to be allowed in MB//
 

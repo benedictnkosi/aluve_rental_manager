@@ -88,12 +88,6 @@ let showToast = (message) =>{
     toastBootstrap.show();
 }
 
-let getURLParameter= (name) =>{
-    const queryString = window.location.search;
-    console.log(queryString);
-    const urlParams = new URLSearchParams(queryString);
-    return urlParams.get(name);
-}
 
 function myFunction() {
     var x = document.getElementById("myLinks");

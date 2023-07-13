@@ -134,18 +134,6 @@ class UnitApi extends AbstractController
         $responseArray = array();
         try {
             $successMessage = "Successfully created rental unit";
-            if(strcmp($guid, "0") == 0){
-                $unit = new Units();
-            } else {
-                $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $guid));
-                if($unit == null){
-                    return array(
-                        'result_message' => "Error: Unit not found",
-                        'result_code' => 0
-                    );
-                }
-                $successMessage = "Successfully updated rental unit";
-            }
 
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
@@ -155,22 +143,60 @@ class UnitApi extends AbstractController
                 );
             }
 
+
+            if(strcmp($guid, "0") == 0){
+                $unit = new Units();
+                $unit->setGuid($this->generateGuid());
+
+                //check if not duplicate
+                $existingUnit = $this->em->getRepository(Units::class)->findOneBy(array('name' => $name, 'property' => $property->getId()));
+                if($existingUnit !== null){
+                    return array(
+                        'result_message' => "Error: Unit with the same name already exists",
+                        'result_code' => 1
+                    );
+                }
+
+            } else {
+                $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $guid));
+                if($unit == null){
+                    return array(
+                        'result_message' => "Error: Unit not found",
+                        'result_code' => 1
+                    );
+                }
+                $successMessage = "Successfully updated rental unit";
+            }
+
+
+
+
             $this->logger->info("min salary " .$minGrossSalary);
             $unit->setName($name);
             $unit->setProperty($property);
-            $unit->setParking(intval($parking));
             $unit->setMinGrossSalary($minGrossSalary);
             $unit->setMaxOccupants($maxOccupants);
-            $unit->setChildrenAllowed($childrenAllowed);
             $unit->setRent($rent);
             $unit->setBedrooms($bedrooms);
             $unit->setBathrooms($bathrooms);
-            $unit->setGuid($this->generateGuid());
+
 
             if(strcmp($listed, "true") == 0){
                 $unit->setListed(true);
             }else{
                 $unit->setListed(false);
+            }
+
+            if(strcmp($parking, "true") == 0){
+                $unit->setParking(true);
+            }else{
+                $unit->setParking(false);
+            }
+
+            if(strcmp($childrenAllowed, "true") == 0){
+                $unit->setChildrenAllowed(true);
+            }else{
+                $unit->setChildrenAllowed(false);
             }
 
             $this->em->persist($unit);

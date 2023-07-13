@@ -45,7 +45,7 @@ function generateIncomeVSExpenses(){
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Income VS Expenses', // Title for the chart (can be customized)
+                        text: 'Income VS Expenses Past 30 days', // Title for the chart (can be customized)
                         font: {
                             size: 16 // Font size of the title (can be customized)
                         }
@@ -98,6 +98,13 @@ function generateExpensesPie(){
         url: url,
         contentType: "application/json; charset=UTF-8",
         success: function (expenses) {
+
+            if(expenses.result_code !== undefined){
+                if(expenses.result_code === 1){
+                    return;
+                }
+            }
+
             let chartStatus = Chart.getChart("pieChartExpenses"); // <canvas> id
             if (chartStatus !== undefined) {
                 chartStatus.destroy();
@@ -160,7 +167,11 @@ function generateExpensesByMonthGraph(){
         url: url,
         contentType: "application/json; charset=UTF-8",
         success: function (expenses) {
-
+            if(expenses.result_code !== undefined){
+                if(expenses.result_code === 1){
+                    return;
+                }
+            }
             let chartStatus = Chart.getChart("lineChartExpensesByMonth"); // <canvas> id
             if (chartStatus !== undefined) {
                 chartStatus.destroy();
@@ -185,7 +196,7 @@ function generateExpensesByMonthGraph(){
                 data: {
                     labels: months,
                     datasets: [{
-                        label: "Expense By Month",
+                        label: "Income",
                         data: incomeArray,
                         borderWidth: 2
                     },
@@ -220,9 +231,14 @@ let generateInvoicesDue = () => {
         url: url,
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
+            if(data.result_code !== undefined){
+                if(data.result_code === 1){
+                    return;
+                }
+            }
             const totalDue = data.total_due > 0 ? 0 : data.total_due;
 
-            $("#invoice-due-stat").html("R" + totalDue.toLocaleString());
+            $("#invoice-due-stat").html("R" + totalDue.toLocaleString() + ".00");
         },
         error: function (xhr) {
 

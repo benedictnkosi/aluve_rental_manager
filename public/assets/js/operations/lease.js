@@ -156,12 +156,18 @@ let getAllLeases = () => {
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             let html = "";
+            if(data.result_code !== undefined){
+                if(data.result_code === 1){
+                    return;
+                }
+            }
+
             data.forEach(function (lease) {
 
                 html += '<div class="col">\n' +
                     '                            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg property-image"\n' +
                     '                                 style="background-image: url(\'/assets/images/house.jpg\');">\n' +
-                    '                                <div class="flex-column h-100 p-2 pb-3 text-white text-shadow-1">\n' +
+                    '                                <div class="flex-column h-100 p-4 pb-3 text-white text-shadow-1">\n' +
                     '                                    <h3 class="pt-1 mt-1 mb-4 display-6 lh-1 fw-bold">' +lease.tenant_name  + '</h3>\n' +
                     '                                    <ul class=" list-unstyled mt-auto">\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
@@ -231,7 +237,7 @@ let getAllLeases = () => {
                                                     html += '                                    <li><a class="dropdown-item" target="_blank" href="/view/inspection/?guid='+lease.guid+'">View Latest Inspection</a></li>\n';
                                                 }
 
-                html +=  '                                    <li><a class="dropdown-item update-lease-dpr-button" lease-id="'+lease.lease_id+'" tenant_name="'+lease.tenant_name+'" phone="'+lease.phone_number+'" email="'+lease.email+'" salary="'+lease.salary+'" occupation="'+lease.occupation+'" unit_name="'+lease.unit_name+'" unit_id="'+lease.unit_id+'" lease_start="'+lease.lease_start+'" lease_end="'+lease.lease_end+'" payment_rules="'+lease.payment_rules+'" href="#">Update Lease</a></li>\n' +
+                html +=  '                                    <li><a class="dropdown-item update-lease-dpr-button" lease-id="'+lease.lease_id+'" tenant_name="'+lease.tenant_name+'" phone="'+lease.phone_number+'" email="'+lease.email+'" id_number="'+lease.id_number+'" id_type="'+lease.id_document_type+'" salary="'+lease.salary+'" occupation="'+lease.occupation+'" unit_name="'+lease.unit_name+'" unit_id="'+lease.unit_id+'" lease_start="'+lease.lease_start+'" lease_end="'+lease.lease_end+'" payment_rules="'+lease.payment_rules+'" href="#">Update Lease</a></li>\n' +
                     '                                ' +
                     '</ul>\n' +
                     '                            </div>\n' +
@@ -257,6 +263,9 @@ let getAllLeases = () => {
                 $("#payment-rules").val(event.target.getAttribute("payment_rules"));
                 $("#lease-occupation").val(event.target.getAttribute("occupation"));
                 $("#lease-salary").val(event.target.getAttribute("salary"));
+                $("#application_id_number").val(event.target.getAttribute("id_number"));
+                sessionStorage.setItem("document-type", event.target.getAttribute("id_type"));
+                $('#drop-id-doc-type-selected').html(event.target.getAttribute("id_type"));
                 updateView("new-lease-content-div", "Lease");
             });
 

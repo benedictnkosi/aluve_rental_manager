@@ -65,7 +65,7 @@ class MaintenanceApi extends AbstractController
 
             if (strlen($unitGuid)!== 36 && strlen($unitGuid) !== 0) {
                 return array(
-                    'result_message' => "Error. Unit Guid is invalid",
+                    'result_message' => "Error. Unit is invalid",
                     'result_code' => 1
                 );
             }

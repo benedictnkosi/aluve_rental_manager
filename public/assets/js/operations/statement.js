@@ -22,7 +22,11 @@ let getTransactions = () => {
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             let html = "";
-
+            if(data.result_code !== undefined){
+                if(data.result_code === 1){
+                    return;
+                }
+            }
             data.forEach(function (transaction) {
                 const delete_button = transaction.logged_in === true ? '<td><i class="bi bi-trash-fill" transaction-id="'+transaction.id+'"></i></td>' : "";
                 html += '<tr>\n' +

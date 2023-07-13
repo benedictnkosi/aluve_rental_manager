@@ -64,7 +64,7 @@ class LeaseApi extends AbstractController
             $leases = $this->em->getRepository("App\Entity\Leases")->createQueryBuilder('l')
                 ->leftJoin('l.unit', 'u')
                 ->where('l.property = :property')
-                ->andWhere("l.status = 'active' or l.status = 'pending_docs'")
+                ->andWhere("l.status = 'active'")
                 ->setParameter('property', $property->getId())
                 ->orderBy('u.name', 'ASC')
                 ->getQuery()
@@ -101,6 +101,7 @@ class LeaseApi extends AbstractController
                     'adults' => $tenant->getAdults(),
                     'children' => $tenant->getChildren(),
                     'id_number' => $tenant->getIdNumber(),
+                    'id_document_type' => $tenant->getIdDocumentType(),
                     'salary' => $tenant->getSalary(),
                     'occupation' => $tenant->getOccupation(),
                     'tenant_id' => $tenant->getId(),
@@ -374,7 +375,6 @@ class LeaseApi extends AbstractController
     }
 
 
-    #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
     public function createInspection($leaseGuid, $inspectionGuid, $json, $status): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
@@ -441,7 +441,8 @@ class LeaseApi extends AbstractController
                 if ($isSMSSent) {
                     return array(
                         'result_message' => "Successfully created inspection",
-                        'result_code' => 0
+                        'result_code' => 0,
+                        'guid'=> $inspection->getGuid()
                     );
                 } else {
                     return array(
@@ -452,7 +453,8 @@ class LeaseApi extends AbstractController
             } else {
                 return array(
                     'result_message' => "Successfully created inspection",
-                    'result_code' => 0
+                    'result_code' => 0,
+                    'guid'=> $inspection->getGuid()
                 );
             }
         } catch (Exception $ex) {
@@ -629,7 +631,7 @@ class LeaseApi extends AbstractController
                 //send sms to applicant
                 $smsApi = new SMSApi($this->em, $this->logger);
                 $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
-                $message = $now->format("F") ." added to your on your statement R" . $rent .". View Statement " . $tenantPortalURL;
+                $message = $now->format("F") ." Rent added to your on your statement R" . $rent .". View Statement " . $tenantPortalURL;
                 $isSMSSent = $smsApi->sendMessage("+27" . substr($lease->getTenant()->getPhone(), 0, 9), $message);
 
                 if ($isSMSSent) {
@@ -657,25 +659,25 @@ class LeaseApi extends AbstractController
         }
     }
 
-    public function addLeaseDoc($leaseGuid, $documentType, $fileName): array
+    public function addLeaseDoc($applicationGuid, $documentType, $fileName): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
             $documentApi = new DocumentApi($this->em, $this->logger);
-            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseGuid));
-            if ($lease == null) {
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $applicationGuid));
+            if ($application == null) {
                 return array(
-                    'result_message' => "Failed to upload document. Lease not found",
+                    'result_message' => "Failed to upload document. Application not found",
                     'result_code' => 1
                 );
             }
             if (strcmp($documentType, "lease") == 0) {
-                $lease->setLeaseAggreement($fileName);
+                $documentApi->addDocument($application->getTenant()->getId(), "Signed Lease", $fileName);
             } else if (strcmp($documentType, "id") == 0) {
-                $documentApi->addDocument($lease->getTenant()->getId(), "ID Document", $fileName);
+                $documentApi->addDocument($application->getTenant()->getId(), "ID Document", $fileName);
             } else if (strcmp($documentType, "pop") == 0) {
-                $documentApi->addDocument($lease->getTenant()->getId(), "Proof OF Payment", $fileName);
+                $documentApi->addDocument($application->getTenant()->getId(), "Proof OF Payment", $fileName);
             } else {
                 return array(
                     'result_message' => "Document type not suppoerted",
@@ -683,22 +685,18 @@ class LeaseApi extends AbstractController
                 );
             }
 
-            $leaseDocument = $documentApi->getDocumentName($lease->getTenant()->getId(), "ID Document");
-            $popDocument = $documentApi->getDocumentName($lease->getTenant()->getId(), "Proof OF Payment");
-            $allDocsUploaded = $lease->getLeaseAggreement() !== null && $leaseDocument["result_code"] == 0 && $popDocument["result_code"] == 0;
+            $leaseDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "ID Document");
+            $popDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Proof OF Payment");
+            $signedLeaseDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Signed Lease");
+
+            $allDocsUploaded = $signedLeaseDocument["result_code"] == 0 && $leaseDocument["result_code"] == 0 && $popDocument["result_code"] == 0;
 
             if ($allDocsUploaded) {
-                $lease->setStatus("docs_uploaded");
+                $application->setStatus("lease_uploaded");
             }
 
-            $this->em->persist($lease);
-            $this->em->flush($lease);
-
-            //update tenant status
-            $tenant = $lease->getTenant();
-            $tenant->setStatus("alldocs_uploaded");
-            $this->em->persist($tenant);
-            $this->em->flush($tenant);
+            $this->em->persist($application);
+            $this->em->flush($application);
 
             return array(
                 'result_message' => "Successfully uploaded file",

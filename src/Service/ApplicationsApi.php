@@ -46,7 +46,7 @@ class ApplicationsApi extends AbstractController
 
             $applications = $this->em->getRepository("App\Entity\Application")->createQueryBuilder('a')
                 ->where('a.property = :property')
-                ->andWhere("a.status = 'new' or a.status = 'docs_uploaded' or a.status = 'accepted'")
+                ->andWhere("a.status = 'financials_uploaded' or a.status = 'declined' or a.status = 'accepted' or a.status = 'lease_uploaded' or a.status = 'tenant'")
                 ->setParameter('property', $property->getId())
                 ->getQuery()
                 ->getResult();
@@ -64,10 +64,17 @@ class ApplicationsApi extends AbstractController
                 $PayslipDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "payslip");
                 $coBankStatementDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Co-Bank Statement");
                 $coPayslipDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Co-payslip");
+                $LeaseDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Signed Lease");
+                $idDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "ID Document");
+                $popDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Proof OF Payment");
+
                 $bankStatementDocumentName = "";
                 $PayslipDocumentName = "";
                 $coBankStatementDocumentName = "";
                 $coPayslipDocumentName = "";
+                $leaseDocumentName = "";
+                $idDocumentName = "";
+                $popDocumentName = "";
 
                 if ($bankStatementDocument["result_code"] == 0) {
                     $bankStatementDocumentName = $bankStatementDocument["name"];
@@ -85,12 +92,27 @@ class ApplicationsApi extends AbstractController
                 if ($coPayslipDocument["result_code"] == 0) {
                     $coPayslipDocumentName = $coPayslipDocument["name"];
                 }
+
+                if ($LeaseDocument["result_code"] == 0) {
+                    $leaseDocumentName = $LeaseDocument["name"];
+                }
+
+                if ($idDocument["result_code"] == 0) {
+                    $idDocumentName = $idDocument["name"];
+                }
+
+                if ($popDocument["result_code"] == 0) {
+                    $popDocumentName = $popDocument["name"];
+                }
                 $responseArray[] = array(
                     "application" => $application,
                     "applicant_bank_statement" => $bankStatementDocumentName,
                     "applicant_payslip" => $PayslipDocumentName,
                     "co_applicant_bank_statement" => $coBankStatementDocumentName,
                     "co_applicant_payslip" => $coPayslipDocumentName,
+                    "signed_lease" => $leaseDocumentName,
+                    "id_document" => $idDocumentName,
+                    "proof_of_payment" => $popDocumentName,
                 );
             }
 
@@ -130,19 +152,22 @@ class ApplicationsApi extends AbstractController
             if ($response["result_code"] == 1) {
                 return $response;
             }
+
+            $guid = $this->generateGuid();
+            $this->logger->info("guid is ". $guid);
             $application = new Application();
             $application->setTenant($response["tenant"]);
             $application->setUnit($unit);
             $application->setDate(new DateTime());
             $application->setUpdatedDate(new DateTime());
-            $application->setUid($this->generateGuid());
+            $application->setUid($guid);
             $application->setStatus("new");
             $application->setProperty($unit->getProperty());
             $this->em->persist($application);
             $this->em->flush($application);
 
             return array(
-                'result_message' => "Successfully created application",
+                'result_message' => "Successfully created application. Please upload documents",
                 'result_code' => 0,
                 'id' => $application->getId()
             );
@@ -191,7 +216,7 @@ class ApplicationsApi extends AbstractController
             $allDocsUploaded = $bankStatementDocument["result_code"] == 0 && $PayslipDocument["result_code"] == 0;
 
             if ($allDocsUploaded) {
-                $application->setStatus("docs_uploaded");
+                $application->setStatus("financials_uploaded");
             }
 
             $this->em->persist($application);
@@ -221,7 +246,54 @@ class ApplicationsApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function acceptApplication($applicationId, $startDate, $endDate): array
+    public function acceptApplication($applicationId): array
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
+            if ($application == null) {
+                return array(
+                    'result_message' => "Application not found",
+                    'result_code' => 1
+                );
+            }
+
+            $application->setStatus("accepted");
+            $this->em->persist($application);
+            $this->em->flush($application);
+
+            //send sms to applicant
+            $smsApi = new SMSApi($this->em, $this->logger);
+            $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+            $message = "Application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has been accepted. Please sign  lease " . $tenantPortalURL;
+            $isSMSSent = $smsApi->sendMessage("+27" . substr($application->getTenant()->getPhone(), 0, 9), $message);
+
+            if ($isSMSSent) {
+                return array(
+                    'result_message' => "Successfully accepted application.",
+                    'result_code' => 0
+                );
+            } else {
+                return array(
+                    'result_message' => "Error. Accepted the application. SMS to Applicant failed",
+                    'result_code' => 1
+                );
+            }
+
+
+        } catch (Exception $ex) {
+            $this->logger->error("Error " . print_r($responseArray, true));
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
+
+
+    #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
+    public function convertApplicationToLease($applicationId, $startDate, $endDate): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -239,6 +311,7 @@ class ApplicationsApi extends AbstractController
 //            $message = "We are happy to let you know that your application for " . $application->getUnit()->getName() . " @ " . $application->getUnit()->getProperty()->getName() . " has been accepted.
 //            Please download and sign the lease. " . $leaseLink;
 
+
             $communicationApi = new CommunicationApi($this->em, $this->logger);
             //$response = $communicationApi->sendWhatsApp($application->getPhone(), $message);
 //            if ($response["result_code"] !== 0) {
@@ -248,16 +321,21 @@ class ApplicationsApi extends AbstractController
 //                );
 //            }
 
-
             $leaseApi = new LeaseApi($this->em, $this->logger);
-            $response = $leaseApi->createLease($application->getTenant(), $application->getUnit()->getGuid(), $startDate, $endDate, "0", "", "pending_docs");
+             $response = $leaseApi->createLease($application->getTenant(), $application->getUnit()->getGuid(), $startDate, $endDate, "0", "", "active");
             if ($response["result_code"] !== 0) {
                 return $response;
             }
 
-            $application->setStatus("accepted");
+            $application->setStatus("tenant");
             $this->em->persist($application);
             $this->em->flush($application);
+
+            //update tenant status
+            $tenant = $application->getTenant();
+            $tenant->setStatus("active");
+            $this->em->persist($tenant);
+            $this->em->flush($tenant);
 
             //add application fee to the lease if enabled
             if (intval($application->getUnit()->getProperty()->getApplicationFee()) > 0) {
@@ -282,7 +360,7 @@ class ApplicationsApi extends AbstractController
             //send sms to applicant
             $smsApi = new SMSApi($this->em, $this->logger);
             $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
-            $message = "Application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has been accepted. Download lease " . $tenantPortalURL;
+            $message = "Application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has bee converted to a lease. Congratulations. " . $tenantPortalURL;
             $isSMSSent = $smsApi->sendMessage("+27" . substr($application->getTenant()->getPhone(), 0, 9), $message);
 
             if ($isSMSSent) {

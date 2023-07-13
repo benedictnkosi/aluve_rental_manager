@@ -291,12 +291,12 @@
 
         <div class="mb-3">
             <label for="id-number" class="col-form-label">ID Number:</label>
-            <input type="text" class="form-control" id="id-number" value="8804235651088" required>
+            <input type="text" class="form-control" id="id-number" value="benji" required>
         </div>
 
         <div class="mb-3">
             <label for="phone-number" class="col-form-label">Phone Number:</label>
-            <input type="number" class="form-control" id="phone-number" value="0837917430" required>
+            <input type="number" class="form-control" id="phone-number" value="0837917444" required>
         </div>
 
         <div class="modal-footer ">
@@ -307,7 +307,7 @@
 <div class="container mt-5 pt-lg-5 display-none" id="logged-in-content">
 
 <!--    download statement and signed lease-->
-    <div class="container py-5 h-100  active-tenant-div display-none">
+    <div class="container py-5 h-100 tenant display-none tenant-div-toggle">
         <h2 class="row d-flex justify-content-center align-items-center h-100 mb-5">Tenant Portal</h2>
 
 
@@ -321,7 +321,7 @@
     </div>
 
 <!--    maintenance calls-->
-    <div class="container py-5 h-100  active-tenant-div display-none">
+    <div class="container py-5 h-100 tenant display-none tenant-div-toggle">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col col-xl-10">
 
@@ -350,7 +350,7 @@
     </div>
 
 <!--    upload signed lease\ ID and proof of payment-->
-    <div class="container py-5 h-100 new-tenant-div display-none">
+    <div class="container py-5 h-100 accepted  display-none tenant-div-toggle">
         <div class="thanks-message text-center mt-5" id="text-message">
             <h3>Thanks for uploading your documents!</h3> <span>Your documents have been sent to our team for verification! We will contact you shortly!</span>
         </div>
@@ -362,7 +362,7 @@
                 </div>
             </div>
 
-            <h3 class="mt-2">On-boarding Documents:</h3>
+            <h3 class="mt-2">Application approved. Please upload your supporting documents</h3>
             <div class="mb-3 mt-3">
                 <label for="onboarding_lease" class="form-label">Signed Lease</label>
                 <input type="file" class="form-control" id="onboarding_lease">
@@ -379,9 +379,30 @@
     </div>
 
     <!--    documents pending verification-->
-    <div class="container py-5 h-100 docs-uploaded-tenant-div display-none">
+    <div class="container py-5 h-100 lease_uploaded display-none tenant-div-toggle">
         <div class=" text-center mt-5">
             <h3>Thanks for uploading your documents!</h3> <span>Your documents have been sent to our team for verification! We will contact you shortly!</span>
+        </div>
+    </div>
+
+    <!--    application pending decision-->
+    <div class="container py-5 h-100 financials_uploaded display-none tenant-div-toggle">
+        <div class=" text-center mt-5">
+            <h3>We got your application!</h3> <span>We will contact you shortly!</span>
+        </div>
+    </div>
+
+    <!--    application declined-->
+    <div class="container py-5 h-100 declined display-none tenant-div-toggle">
+        <div class=" text-center mt-5">
+            <h3>Application Declined!</h3> <span>Thank you for your interest in our accommodation!</span>
+        </div>
+    </div>
+
+    <!--    application invalid-->
+    <div class="container py-5 h-100 new display-none tenant-div-toggle">
+        <div class=" text-center mt-5">
+            <h3>Application Invalid!</h3> <span>You did not upload documents for this application!</span>
         </div>
     </div>
 </div>

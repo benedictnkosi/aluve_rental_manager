@@ -21,9 +21,11 @@ class RegistrationController extends AbstractController
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('post')) {
             return $this->render('signup.html', [
-                'error' => "Internal Server Error",
+                'error' => "",
             ]);
         }
+        $logger->info("Starting Method: " . __METHOD__);
+
         try {
             if (strlen($request->get("_password")) < 1 || strlen($request->get("_username")) < 1) {
                 return $this->render('signup.html', [
@@ -65,8 +67,7 @@ class RegistrationController extends AbstractController
             );
 
             $user->setEmail($request->get("_username"));
-            $roles = [$request->get("_role")];
-            $user->setRoles($roles);
+            $user->setRoles(["ROLE_ADMIN"]);
             $logger->info("debug 1");
             try {
                 $entityManager->persist($user);

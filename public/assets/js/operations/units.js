@@ -1,6 +1,6 @@
 $(document).ready(function () {
     getAllUnits();
-    sessionStorage.removeItem("unit-id")
+    sessionStorage.setItem("unit-id", "0");
 
     $("#form-create-unit").submit(function (event) {
         event.preventDefault();
@@ -25,7 +25,7 @@ $(document).ready(function () {
     });
 
     $("#btn-create-new-unit").click(function (event) {
-        sessionStorage.removeItem("unit-id")
+        sessionStorage.setItem("unit-id", "0");
         $('#checkBulkCreateUnits').prop("checked", false);
         updateView("new-unit-content-div", "Unit");
         $('.new-unit-fields').show();
@@ -34,6 +34,12 @@ $(document).ready(function () {
 
     $("#btn-close-new-unit").click(function (event) {
         updateView("units-content-div", "Lease");
+    });
+
+    $('.btn-confirm-delete-unit').unbind('click')
+    $("#btn-confirm-delete-unit").click(function (event) {
+        event.preventDefault();
+        deleteUnit(sessionStorage.getItem("unit-id"));
     });
 });
 
@@ -48,7 +54,7 @@ let createUnit = () => {
     const bedrooms = $("#unit-bedrooms").val().trim();
     const bathrooms = $("#unit-bathrooms").val().trim();
     const numberOfUnits = $("#number-of-units").val().trim();
-    const checkBulkCreateUnits = $("#checkParking").is(':checked');
+    const checkBulkCreateUnits = $("#checkBulkCreateUnits").is(':checked');
 
     let url = "/api/units/create";
     const data = {
@@ -117,6 +123,11 @@ let getAllUnits = () => {
         success: function (data) {
             let html = "";
             let unitsDropDownHtml = "";
+            if(data.result_code !== undefined){
+                if(data.result_code === 1){
+                    return;
+                }
+            }
             data.forEach(function (unit) {
                 let listed = "NOT LISTED";
                 let eyeIcon = "bi-eye-slash";
@@ -130,7 +141,7 @@ let getAllUnits = () => {
                 }
 
                 let parking = "Provided";
-                if (unit.parking === 0) {
+                if (unit.parking === false) {
                     parking = "Not Provided"
                 }
 
@@ -260,10 +271,7 @@ let getAllUnits = () => {
                 $('#confirmDeleteUnitModal').modal('toggle');
             });
 
-            $("#btn-confirm-delete-unit").click(function (event) {
-                event.preventDefault();
-                deleteUnit(sessionStorage.getItem("unit-id"));
-            });
+
 
             $(".lease-unit-dropdown").click(function (event) {
                 sessionStorage.setItem("lease-unit-id", event.target.getAttribute("lease-unit-id"));

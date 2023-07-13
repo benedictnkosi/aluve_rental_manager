@@ -106,24 +106,18 @@ let authenticateTenant = () => {
             } else {
                 $("#logged-in-content").removeClass("display-none");
                 $("#form-tenant-login").addClass("display-none");
-                sessionStorage.setItem("tenant_guid", data.guid);
+                sessionStorage.setItem("tenant_guid", data.tenant.guid);
+                sessionStorage.setItem("application_guid", data.application.uid);
 
-                if(data.status.localeCompare("new") == 0){
+                $(".tenant-div-toggle").addClass("display-none");
+                $("." + data.application.status).removeClass("display-none");
+
+                if(data.application.status.localeCompare("accepted") === 0) {
                     getPropertyLeaseToSign();
-                    $(".new-tenant-div").removeClass("display-none");
-                    $(".active-tenant-div").addClass("display-none");
-                    $(".docs-uploaded-tenant-div").addClass("display-none");
-                }else if(data.status.localeCompare("alldocs_uploaded") == 0){
-                    $(".docs-uploaded-tenant-div").removeClass("display-none");
-                    $(".active-tenant-div").addClass("display-none");
-                    $(".new-tenant-div").addClass("display-none");
-                }else if(data.status.localeCompare("active") == 0){
+                }else if(data.application.status.localeCompare("active") === 0){
                     getSignedLeaseLink();
                     getStatementLink();
                     getInspectionLink();
-                    $(".new-tenant-div").addClass("display-none");
-                    $(".docs-uploaded-tenant-div").addClass("display-none");
-                    $(".active-tenant-div").removeClass("display-none");
                 }
             }
         },
@@ -134,7 +128,7 @@ let authenticateTenant = () => {
 }
 
 let getPropertyLeaseToSign = () => {
-    let url = "/public/tenant/lease_to_sign/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    let url = "/public/tenant/lease_to_sign/" + sessionStorage.getItem("application_guid");
     $.ajax({
         type: "GET",
         url: url,
@@ -229,7 +223,7 @@ let showToast = (message) => {
 
 function uploadSupportingDocuments(documentType, file_data) {
     let url = "/public/tenant/upload/lease";
-    const uid = sessionStorage.getItem("tenant_guid");
+    const uid = sessionStorage.getItem("application_guid");
     const form_data = new FormData();
     form_data.append("file", file_data);
     form_data.append("guid", uid);
@@ -259,9 +253,8 @@ function uploadSupportingDocuments(documentType, file_data) {
             const jsonObj = JSON.parse(response);
             showToast(jsonObj.result_message);
             if(jsonObj.alldocs_uploaded === true){
-                $(".docs-uploaded-tenant-div").removeClass("display-none");
-                $(".active-tenant-div").addClass("display-none");
-                $(".new-tenant-div").addClass("display-none");
+                $(".lease_uploaded").removeClass("display-none");
+                $(".tenant-div-toggle").addClass("display-none");
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {

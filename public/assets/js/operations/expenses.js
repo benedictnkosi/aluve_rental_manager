@@ -30,11 +30,16 @@ let getExpenses = () => {
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             let html = "";
+            if(data.result_code !== undefined){
+                if(data.result_code === 1){
+                    return;
+                }
+            }
             data.forEach(function (expense) {
                 const expenseDescription = expense.description === undefined ? "" : expense.description;
 
                 html += '<div class="col-xl-3 col-md-6 mb-4">\n' +
-                    '                        <div class="card border-left-success shadow h-100 py-2">\n' +
+                    '                        <div class="card border-left-success shadow h-100 py-2"  style="background-image: url(\'/assets/images/house.jpg\');">\n' +
                     '                            <div class="card-body">\n' +
                     '                                <div class="row no-gutters align-items-center">\n' +
                     '                                    <div class="col mr-2">\n' +

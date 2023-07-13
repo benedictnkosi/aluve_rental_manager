@@ -79,6 +79,11 @@ let getAllProperties = () => {
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             let propertiesHTML = "";
+            if(data.result_code !== undefined){
+                if(data.result_code === 1){
+                    return;
+                }
+            }
             data.forEach(function (property) {
                 if (property.property.status.localeCompare("active") === 0) {
 

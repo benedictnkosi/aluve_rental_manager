@@ -530,12 +530,15 @@ ORDER BY
             }
 
             $date = DateTime::createFromFormat('d/m/Y', '01/'.$i.'/'.$year);
-            $responseArray[] = array(
-                'month' => $months[$i] . " " . substr($year, 2,2),
-                'income' => $incomeValue,
-                'expense' => $expenseValue,
-                'date' => $date->format("Y-M-d")
-            );
+            if($year !== 0 ){
+                $responseArray[] = array(
+                    'month' => $months[$i] . " " . substr($year, 2,2),
+                    'income' => $incomeValue,
+                    'expense' => $expenseValue,
+                    'date' => $date->format("Y-M-d")
+                );
+            }
+
 
 
         }
