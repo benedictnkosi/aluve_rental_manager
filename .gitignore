@@ -9,6 +9,7 @@
 /var/
 /vendor/
 /src/app/
+/files/
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
