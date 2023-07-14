@@ -26,10 +26,16 @@ $(document).ready(function () {
         $("div.overlay").addClass("show");
     });
 
-    $(document).ajaxComplete(function(){
+    $(document).ajaxComplete(function(event,xhr,options){
         $("div.spanner").removeClass("show");
         $("div.overlay").removeClass("show");
+
+        if(xhr.status === 302){
+            console.log("location " + xhr.getResponseHeader('location'));
+            window.location.href = "/logout";
+        }
     });
+
 
     $('.nav-links').unbind('click')
     $(".nav-links").click(function (event) {
@@ -41,7 +47,7 @@ $(document).ready(function () {
         $("#offcanvasNavbar").removeClass("show");
     });
 
-
+    isUserLoggedIn();
 });
 
 function updateSettingsView(selectedForm) {
@@ -96,4 +102,15 @@ function myFunction() {
     } else {
         x.style.display = "block";
     }
+}
+
+function isUserLoggedIn() {
+    let url =  "/no_auth/me";
+
+    $.get(url, function(data){
+        console.log(data[0].authenticated);
+        if (!data[0].authenticated) {
+            window.location.href = "/logout";
+        }
+    });
 }

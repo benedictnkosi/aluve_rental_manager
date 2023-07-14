@@ -61,4 +61,20 @@ class LoginController extends AbstractController
     {
 
     }
+
+    /**
+     * @Route("no_auth/me")
+     */
+    public function meAction(Request $request): JsonResponse
+    {
+        if (!$request->isMethod('get')) {
+            return new JsonResponse("Method Not Allowed" , 405, array());
+        }
+        $responseArray[] = array(
+            'authenticated' => $this->getUser() !== null,
+            'result_code' => 0
+        );
+
+        return new JsonResponse($responseArray);
+    }
 }
