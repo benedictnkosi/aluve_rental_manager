@@ -44,8 +44,10 @@ class MaintenanceApi extends AbstractController
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
+        $this->logger->debug("unit guid is: " . $unitGuid);
         try {
-            if(strcmp($unitGuid, "0")!== 0){
+            $unit = null;
+            if(strcmp($unitGuid, "0") !== 0){
                 $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $unitGuid));
                 if ($unit == null) {
                     return array(
@@ -63,7 +65,7 @@ class MaintenanceApi extends AbstractController
                 );
             }
 
-            if (strlen($unitGuid)!== 36 && strlen($unitGuid) !== 0) {
+            if (strlen($unitGuid)!== 36 && strlen($unitGuid) !== 1) {
                 return array(
                     'result_message' => "Error. Unit is invalid",
                     'result_code' => 1
@@ -85,7 +87,10 @@ class MaintenanceApi extends AbstractController
             }
 
             $maintenance = new Maintenance();
-            $maintenance->setUnit($unit->getId());
+            if($unit !== null){
+                $maintenance->setUnit($unit->getId());
+            }
+
             $maintenance->setProperty($property->getId());
             $maintenance->setSummary($summary);
             $maintenance->setStatus("new");

@@ -49,13 +49,13 @@ class RegistrationController extends AbstractController
             }
 
 
-            $passwordErrors = $this->validatePassword($request->get("_password"));
-            $logger->info("Size of errors: " . sizeof($passwordErrors));
-            if (sizeof($passwordErrors) > 0) {
-                return $this->render('signup.html', [
-                    'error' => $passwordErrors[0],
-                ]);
-            }
+//            $passwordErrors = $this->validatePassword($request->get("_password"));
+//            $logger->info("Size of errors: " . sizeof($passwordErrors));
+//            if (sizeof($passwordErrors) > 0) {
+//                return $this->render('signup.html', [
+//                    'error' => $passwordErrors[0],
+//                ]);
+//            }
 
             $user = new User();
 

@@ -88,7 +88,7 @@ class TenantController extends AbstractController
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $documentApi->getDocumentNameByIdNumber($idNumber, $phoneNumber,"Lease");
+        $response = $documentApi->getDocumentNameByIdNumber($idNumber, $phoneNumber,"Signed Lease");
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);
@@ -98,7 +98,7 @@ class TenantController extends AbstractController
      * @Route("public/tenant/upload/lease")
      * @throws \Exception
      */
-    public function uploadLeaseDocument( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, LeaseApi $leaseApi, TenantApi $tenantApi): Response
+    public function uploadLeaseDocuments( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, LeaseApi $leaseApi, TenantApi $tenantApi): Response
     {
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('post')) {

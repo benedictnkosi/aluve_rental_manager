@@ -236,7 +236,7 @@ let generateInvoicesDue = () => {
                     return;
                 }
             }
-            const totalDue = data.total_due > 0 ? 0 : data.total_due;
+            const totalDue = data.total_due < 0 ? 0 : data.total_due;
 
             $("#invoice-due-stat").html("R" + totalDue.toLocaleString() + ".00");
         },

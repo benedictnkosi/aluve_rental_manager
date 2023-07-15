@@ -672,17 +672,9 @@ class LeaseApi extends AbstractController
                     'result_code' => 1
                 );
             }
-            if (strcmp($documentType, "lease") == 0) {
-                $documentApi->addDocument($application->getTenant()->getId(), "Signed Lease", $fileName);
-            } else if (strcmp($documentType, "id") == 0) {
-                $documentApi->addDocument($application->getTenant()->getId(), "ID Document", $fileName);
-            } else if (strcmp($documentType, "pop") == 0) {
-                $documentApi->addDocument($application->getTenant()->getId(), "Proof OF Payment", $fileName);
-            } else {
-                return array(
-                    'result_message' => "Document type not suppoerted",
-                    'result_code' => 1
-                );
+            $response = $documentApi->addDocument($application->getTenant()->getId(), $documentType, $fileName);
+            if($response["result_code"] == 1){
+                return $response;
             }
 
             $leaseDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "ID Document");

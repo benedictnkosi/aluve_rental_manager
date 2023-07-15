@@ -100,7 +100,7 @@ class ApplicationsController extends AbstractController
     public function getLease($name, LoggerInterface $logger): BinaryFileResponse
     {
         $logger->info("Starting Method: " . __METHOD__);
-        $documentDir = __DIR__ . '/../../files/property_leases/';
+        $documentDir = __DIR__ . '/../../files/application_documents/';
         try{
             $file = new BinaryFileResponse($documentDir . $name);
         }catch(Exception){

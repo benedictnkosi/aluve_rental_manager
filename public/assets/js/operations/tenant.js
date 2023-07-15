@@ -19,15 +19,15 @@ $(document).ready(function () {
     });
 
     $('#onboarding_lease').change(function () {
-        uploadSupportingDocuments("lease", $("#onboarding_lease").prop("files")[0]);
+        uploadSupportingDocuments("Signed Lease", $("#onboarding_lease").prop("files")[0]);
     });
 
     $('#onboarding_iddoc').change(function () {
-        uploadSupportingDocuments("id", $("#onboarding_iddoc").prop("files")[0]);
+        uploadSupportingDocuments("ID Document", $("#onboarding_iddoc").prop("files")[0]);
     });
 
     $('#onboarding_pop').change(function () {
-        uploadSupportingDocuments("pop", $("#onboarding_pop").prop("files")[0]);
+        uploadSupportingDocuments("Proof OF Payment", $("#onboarding_pop").prop("files")[0]);
     });
 
 });
@@ -114,7 +114,7 @@ let authenticateTenant = () => {
 
                 if(data.application.status.localeCompare("accepted") === 0) {
                     getPropertyLeaseToSign();
-                }else if(data.application.status.localeCompare("active") === 0){
+                }else if(data.application.status.localeCompare("tenant") === 0){
                     getSignedLeaseLink();
                     getStatementLink();
                     getInspectionLink();
@@ -253,8 +253,8 @@ function uploadSupportingDocuments(documentType, file_data) {
             const jsonObj = JSON.parse(response);
             showToast(jsonObj.result_message);
             if(jsonObj.alldocs_uploaded === true){
-                $(".lease_uploaded").removeClass("display-none");
                 $(".tenant-div-toggle").addClass("display-none");
+                $(".lease_uploaded").removeClass("display-none");
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
