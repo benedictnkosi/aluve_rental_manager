@@ -86,7 +86,7 @@ let getUnit = () => {
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get('id');
 
-    let url = "/api/unit/get/" + id.replace("#", "");
+    let url = "/public/unit/get/" + id.replace("#", "");
     $.ajax({
         type: "GET",
         url: url,
