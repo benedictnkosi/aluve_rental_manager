@@ -238,7 +238,7 @@ let getAllLeases = () => {
 
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                                            <i class="bi-envelope bootstrap-icon-text"></i>\n' +
-                    '                                            <medium><a href = "mailto:' + lease.email + '">' + lease.email + '</medium>\n' +
+                    '                                            <medium><a href = "mailto:' + lease.email + '">' + lease.email + '</a></medium>\n' +
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                                            <i class="bi-person-hearts bootstrap-icon-text"></i>\n' +
