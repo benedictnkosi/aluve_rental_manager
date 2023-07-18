@@ -257,7 +257,7 @@ let getAllLeases = () => {
                     '                                            <medium>Occupation: ' + lease.occupation + '</medium>\n' +
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                                            <i class="bi-person-badge bootstrap-icon-text"></i>\n' +
+                    '                                            <i class="bi-currency-dollar bootstrap-icon-text"></i>\n' +
                     '                                            <medium>Salary: ' + lease.salary + '</medium>\n' +
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
