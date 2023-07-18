@@ -233,12 +233,12 @@ let getAllLeases = () => {
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                                            <i class="bi-telephone bootstrap-icon-text"></i>\n' +
-                    '                                            <medium>' + lease.phone_number + '</medium>\n' +
+                    '                                            <medium><a href="tel:' + lease.phone_number + '">' + lease.phone_number + '</a></medium>\n' +
                     '                                        </li>\n' +
 
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                                            <i class="bi-envelope bootstrap-icon-text"></i>\n' +
-                    '                                            <medium>' + lease.email + '</medium>\n' +
+                    '                                            <medium><a href = "mailto:' + lease.email + '">' + lease.email + '</medium>\n' +
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                                            <i class="bi-person-hearts bootstrap-icon-text"></i>\n' +
