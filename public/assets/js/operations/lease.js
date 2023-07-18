@@ -344,6 +344,7 @@ let getAllLeases = () => {
 
                 $('#drop-id-doc-type-selected').html(event.target.getAttribute("id_type"));
                 updateView("new-lease-content-div", "Lease");
+                $('#regForm').removeClass("display-none");
             });
 
             $(".add-payment-button").click(function (event) {
