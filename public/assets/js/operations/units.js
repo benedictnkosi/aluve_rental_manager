@@ -152,7 +152,7 @@ let getAllUnits = () => {
                     '                            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg property-image"\n' +
                     '                                 style="background-image: url(\'/assets/images/house.jpg\');">\n' +
                     '                                <div class="flex-column h-100 p-2 pb-3 text-white text-shadow-1">\n' +
-                    '                                    <h3 class="pt-1 mt-1 mb-4 display-6 lh-1 fw-bold">' + unit.unit_name + '</h3>\n' +
+                    '                                    <h3 class="pt-1 mt-1 mb-4 lh-1 fw-bold">' + unit.unit_name + '</h3>\n' +
                     '                                    <ul class=" list-unstyled mt-auto">\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                                            <i class="bi-currency-dollar bootstrap-icon-text"></i>\n' +

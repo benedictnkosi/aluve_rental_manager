@@ -93,7 +93,7 @@ let getAllProperties = () => {
                         '                         style="background-image: url(\'/assets/images/house.jpg\');">\n' +
                         '                        <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">\n' +
                         '                             <a href="/dashboard/?id='+property.property.guid+'">' +
-                        '<h4 class="pt-3 mt-3 mb-4 display-6 lh-1 fw-bold">' + property.property.name + '</h4></a>\n' +
+                        '<h4 class="pt-3 mt-3 mb-4 lh-1 fw-bold">' + property.property.name + '</h4></a>\n' +
                         '                            <ul class="d-flex list-unstyled mt-auto">\n' +
                         '                                <li class="d-flex align-items-center me-3">\n' +
                         '                                    <svg class="bi me-2" width="1em" height="1em">\n' +
