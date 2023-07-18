@@ -262,7 +262,7 @@ let getAllLeases = () => {
                     '                                            <medium>' + lease.lease_start + ' - ' + lease.lease_end + '</medium>\n' +
                     '                                        </li>\n';
 
-                if (lease.due > 0) {
+                if (lease.due.localeCompare("R0.00") !== 0) {
                     html += '                                        <li class=" align-items-center me-3 mt-2">\n' +
                         '                                            <i class="bi-currency-dollar bootstrap-icon-text"></i>\n' +
                         '                                            <medium style="color: #dc3545;">Due: ' + lease.due + '</medium>\n' +
