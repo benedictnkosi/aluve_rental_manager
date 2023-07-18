@@ -63,6 +63,9 @@ $(document).ready(function () {
         $("#lease-tenant-phone").val("");
         $("#lease-tenant-email").val("");
         $("#payment-rules").val("");
+        $("#application_id_number").val("");
+        $("#lease-salary").val("");
+        $("#lease-occupation").val("");
         updateView("new-lease-content-div", "Lease");
     });
 
