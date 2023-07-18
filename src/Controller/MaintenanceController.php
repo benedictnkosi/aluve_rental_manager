@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MaintenanceController extends AbstractController
 {
     /**
-     * @Route("public/maintenance/new")
+     * @Route("no_auth/maintenance/new")
      */
     public function createMaintenance(Request $request, LoggerInterface $logger, MaintenanceApi $maintenanceApi): Response
     {
@@ -64,7 +64,7 @@ class MaintenanceController extends AbstractController
 
 
     /**
-     * @Route("public/maintenance/get/{idNumber}/{phoneNumber}")
+     * @Route("no_auth/maintenance/get/{idNumber}/{phoneNumber}")
      */
     public function getMaintenanceCalls($idNumber, $phoneNumber, Request $request, LoggerInterface $logger,  MaintenanceApi $maintenanceApi): Response
     {

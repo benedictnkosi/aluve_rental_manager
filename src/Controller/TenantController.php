@@ -20,7 +20,7 @@ class TenantController extends AbstractController
 {
 
     /**
-     * @Route("public/tenant/get/{guid}")
+     * @Route("no_auth/tenant/get/{guid}")
      */
     public function getTenant($guid, TenantApi $tenantApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -35,7 +35,7 @@ class TenantController extends AbstractController
     }
 
     /**
-     * @Route("public/tenant/get/{id}/{phone}")
+     * @Route("no_auth/tenant/get/{id}/{phone}")
      */
     public function getTenantById($id, $phone, TenantApi $tenantApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -50,7 +50,7 @@ class TenantController extends AbstractController
     }
 
     /**
-     * @Route("public/tenant/lease_to_sign/{applicationGuid}")
+     * @Route("no_auth/tenant/lease_to_sign/{applicationGuid}")
      */
     public function getLeaseToSign($applicationGuid, TenantApi $tenantApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -65,7 +65,7 @@ class TenantController extends AbstractController
     }
 
     /**
-     * @Route("public/tenant/getlease/{idNumber}/{phoneNumber}")
+     * @Route("no_auth/tenant/getlease/{idNumber}/{phoneNumber}")
      */
     public function getLeaseByTenantId($idNumber,$phoneNumber, LeaseApi $leaseApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -80,7 +80,7 @@ class TenantController extends AbstractController
     }
 
     /**
-     * @Route("public/tenant/getleaseDocumentName/{idNumber}/{phoneNumber}")
+     * @Route("no_auth/tenant/getleaseDocumentName/{idNumber}/{phoneNumber}")
      */
     public function getLeaseDocumentNameByIdNumber($idNumber, $phoneNumber, DocumentApi $documentApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -95,7 +95,7 @@ class TenantController extends AbstractController
     }
 
     /**
-     * @Route("public/tenant/upload/lease")
+     * @Route("no_auth/tenant/upload/lease")
      * @throws \Exception
      */
     public function uploadLeaseDocuments( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, LeaseApi $leaseApi, TenantApi $tenantApi): Response

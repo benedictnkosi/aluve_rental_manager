@@ -16,7 +16,7 @@ class UnitController extends AbstractController
 {
 
     /**
-     * @Route("public/unit/get/{guid}")
+     * @Route("no_auth/unit/get/{guid}")
      */
     public function getUnit($guid, UnitApi $unitApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);

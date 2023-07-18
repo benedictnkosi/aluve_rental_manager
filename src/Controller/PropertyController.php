@@ -47,7 +47,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("public/property/upload_lease")
+     * @Route("no_auth/property/upload_lease")
      * @throws \Exception
      */
     public function uploadPropertyLease( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, PropertyApi $propertyApi): Response

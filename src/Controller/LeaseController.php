@@ -38,7 +38,7 @@ class LeaseController extends AbstractController
 
 
     /**
-     * @Route("public/lease/{guid}")
+     * @Route("no_auth/lease/{guid}")
      */
     public function getLease($guid, LeaseApi $leaseApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);

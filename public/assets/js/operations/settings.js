@@ -32,7 +32,7 @@ let updatePropertyField = (field, value) =>{
 }
 
 function uploadPropertyLease(file_data) {
-    let url = "/public/property/upload_lease";
+    let url = "/no_auth/property/upload_lease";
     const form_data = new FormData();
     form_data.append("file", file_data);
     form_data.append("property_id", sessionStorage.getItem("property-id"));

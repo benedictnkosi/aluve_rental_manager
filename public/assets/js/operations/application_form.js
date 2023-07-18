@@ -86,7 +86,7 @@ let getUnit = () => {
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get('id');
 
-    let url = "/public/unit/get/" + id.replace("#", "");
+    let url = "/no_auth/unit/get/" + id.replace("#", "");
     $.ajax({
         type: "GET",
         url: url,
@@ -129,7 +129,7 @@ let submitApplication = () => {
 
     const unitId = getURLParameter("id");
 
-    let url = "/public/application/new";
+    let url = "/no_auth/application/new";
     const data = {
         unit_id: unitId,
         application_name: tenantName,
@@ -174,7 +174,7 @@ let showToast = (message) =>{
 }
 
 function uploadSupportingDocuments(documentType, file_data) {
-    let url = "/public/application/upload/";
+    let url = "/no_auth/application/upload/";
     const form_data = new FormData();
     form_data.append("file", file_data);
     form_data.append("application_id", sessionStorage.getItem("application_id"));

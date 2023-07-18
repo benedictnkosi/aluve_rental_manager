@@ -42,7 +42,7 @@ class ApplicationsController extends AbstractController
 
 
     /**
-     * @Route("public/application/new")
+     * @Route("no_auth/application/new")
      */
     public function createApplication(Request $request, LoggerInterface $logger, ApplicationsApi $applicationsApi): Response
     {
@@ -95,7 +95,7 @@ class ApplicationsController extends AbstractController
     }
 
     /**
-     * @Route("public/lease_document/{name}")
+     * @Route("no_auth/lease_document/{name}")
      */
     public function getLease($name, LoggerInterface $logger): BinaryFileResponse
     {
@@ -124,7 +124,7 @@ class ApplicationsController extends AbstractController
         return new JsonResponse($response, 200, array());
     }
     /**
-     * @Route("public/application/upload/")
+     * @Route("no_auth/application/upload/")
      * @throws \Exception
      */
     public function uploadSupportingDocument( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, ApplicationsApi $applicationsApi): Response

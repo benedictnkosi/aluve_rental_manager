@@ -35,7 +35,7 @@ $(document).ready(function () {
 
 let logACall = () => {
     const summary = $("#call-summary").val().trim();
-    let url = "/public/maintenance/new";
+    let url = "/no_auth/maintenance/new";
     const data = {
         id_number: sessionStorage.getItem("tenant_id_number"),
         phone_number: sessionStorage.getItem("tenant_phone_number"),
@@ -56,7 +56,7 @@ let logACall = () => {
 }
 
 let getMaintenanceCalls = () => {
-    let url = "/public/maintenance/get/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    let url = "/no_auth/maintenance/get/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
     $.ajax({
         type: "GET",
         url: url,
@@ -93,7 +93,7 @@ let getMaintenanceCalls = () => {
 }
 
 let authenticateTenant = () => {
-    let url = "/public/tenant/get/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    let url = "/no_auth/tenant/get/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
     $.ajax({
         type: "GET",
         url: url,
@@ -128,7 +128,7 @@ let authenticateTenant = () => {
 }
 
 let getPropertyLeaseToSign = () => {
-    let url = "/public/tenant/lease_to_sign/" + sessionStorage.getItem("application_guid");
+    let url = "/no_auth/tenant/lease_to_sign/" + sessionStorage.getItem("application_guid");
     $.ajax({
         type: "GET",
         url: url,
@@ -148,7 +148,7 @@ let getPropertyLeaseToSign = () => {
 }
 
 let getStatementLink = () => {
-    let url = "/public/tenant/getlease/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    let url = "/no_auth/tenant/getlease/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
     $.ajax({
         type: "GET",
         url: url,
@@ -169,7 +169,7 @@ let getStatementLink = () => {
 }
 
 let getSignedLeaseLink = () => {
-    let url = "/public/tenant/getleaseDocumentName/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    let url = "/no_auth/tenant/getleaseDocumentName/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
     $.ajax({
         type: "GET",
         url: url,
@@ -189,7 +189,7 @@ let getSignedLeaseLink = () => {
 }
 
 let getInspectionLink = () => {
-    let url = "/public/tenant/getlease/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    let url = "/no_auth/tenant/getlease/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
     $.ajax({
         type: "GET",
         url: url,
@@ -222,7 +222,7 @@ let showToast = (message) => {
 }
 
 function uploadSupportingDocuments(documentType, file_data) {
-    let url = "/public/tenant/upload/lease";
+    let url = "/no_auth/tenant/upload/lease";
     const uid = sessionStorage.getItem("application_guid");
     const form_data = new FormData();
     form_data.append("file", file_data);

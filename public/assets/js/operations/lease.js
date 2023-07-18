@@ -92,7 +92,7 @@ $(document).ready(function () {
 });
 
 function uploadSupportingDocuments(documentType, file_data) {
-    let url = "/public/tenant/upload/lease";
+    let url = "/no_auth/tenant/upload/lease";
     const uid = sessionStorage.getItem("tenant_guid");
     const form_data = new FormData();
     form_data.append("file", file_data);
