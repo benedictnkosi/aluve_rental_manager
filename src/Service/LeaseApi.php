@@ -302,7 +302,7 @@ class LeaseApi extends AbstractController
                     );
                 }
 
-                $unit = $lease->getUnit();
+                $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $unitGuid));
                 $successMessage = "Successfully updated lease";
             }
 
