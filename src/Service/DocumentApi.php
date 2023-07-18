@@ -58,6 +58,14 @@ class DocumentApi extends AbstractController
                     'result_code' => 1
                 );
             }
+
+            //remove old document for tenant and id type
+            $document = $this->em->getRepository(Document::class)->findOneBy(array('tenant' => $tenant->getId(), 'documentType' => $documentType->getId()));
+            if($document !== null){
+                $this->em->remove($document);
+                $this->em->flush($document);
+            }
+
             $document = new Document();
             $document->setTenant($tenant);
             $document->setDocumentType($documentType);

@@ -690,6 +690,7 @@ class LeaseApi extends AbstractController
                     'result_code' => 1
                 );
             }
+
             $response = $documentApi->addDocument($tenant->getId(), $documentType, $fileName);
             if($response["result_code"] == 1){
                 return $response;
