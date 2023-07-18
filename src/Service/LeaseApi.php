@@ -249,7 +249,7 @@ class LeaseApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function createLease($tenant, $unitGuid, $startDate, $endDate, $leaseId, $paymentRules, $status = "active"): array
+    public function createLease($tenant, $unitId, $startDate, $endDate, $leaseId, $paymentRules, $status = "active"): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -286,7 +286,7 @@ class LeaseApi extends AbstractController
 
             if ($leaseId == 0) {
                 $lease = new Leases();
-                $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $unitGuid));
+                $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $unitId));
                 if ($unit == null) {
                     return array(
                         'result_message' => "Error: Unit not found",
@@ -302,7 +302,7 @@ class LeaseApi extends AbstractController
                     );
                 }
 
-                $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $unitGuid));
+                $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $unitId));
                 $successMessage = "Successfully updated lease";
             }
 
