@@ -65,7 +65,7 @@ class LeaseController extends AbstractController
     }
 
     /**
-     * @Route("api/lease/raiselatefee")
+     * @Route("no_auth/lease/raiselatefee")
      */
     public function raiseLateFee(Request $request,  LoggerInterface $logger, LeaseApi $leaseApi): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -78,7 +78,7 @@ class LeaseController extends AbstractController
     }
 
     /**
-     * @Route("api/lease/raiseMonthlyRent")
+     * @Route("no_auth/lease/raiseMonthlyRent")
      */
     public function raiseMonthlyRent(Request $request,  LoggerInterface $logger, LeaseApi $leaseApi): Response{
         $logger->info("Starting Method: " . __METHOD__);
