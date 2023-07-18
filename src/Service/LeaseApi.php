@@ -75,10 +75,30 @@ class LeaseApi extends AbstractController
                     'result_code' => 1
                 );
             }
-
+            $documentApi = new DocumentApi($this->em, $this->logger);
             foreach ($leases as $lease) {
+                $leaseDocumentName = "";
+                $idDocumentName = "";
+                $popDocumentName = "";
+
                 $tenant = $lease->getTenant();
                 $due = $this->transactionApi->getBalanceDue($lease->getId());
+
+                $LeaseDocument = $documentApi->getDocumentName($tenant->getId(), "Signed Lease");
+                $idDocument = $documentApi->getDocumentName($tenant->getId(), "ID Document");
+                $popDocument = $documentApi->getDocumentName($tenant->getId(), "Proof OF Payment");
+
+                if ($LeaseDocument["result_code"] == 0) {
+                    $leaseDocumentName = $LeaseDocument["name"];
+                }
+
+                if ($idDocument["result_code"] == 0) {
+                    $idDocumentName = $idDocument["name"];
+                }
+
+                if ($popDocument["result_code"] == 0) {
+                    $popDocumentName = $popDocument["name"];
+                }
 
                 $inspection = $this->em->getRepository(Inspection::class)->findBy(array('lease' => $lease, 'status' => "active"));
                 $inspectionExist = false;
@@ -87,15 +107,11 @@ class LeaseApi extends AbstractController
                 }
 
                 $documentApi = new DocumentApi($this->em, $this->logger);
-                $leaseDocument = $documentApi->getDocumentName($lease->getTenant()->getId(), "lease");
-                $leaseDocumentName = "";
-                if (array_key_exists("name", $leaseDocument)) {
-                    $leaseDocumentName = $leaseDocument["name"];
-                }
                 $responseArray[] = array(
                     'unit_name' => $lease->getUnit()->getName(),
                     'unit_id' => $lease->getUnit()->getId(),
                     'tenant_name' => $tenant->getName(),
+                    'tenant_guid' => $tenant->getGuid(),
                     'phone_number' => $tenant->getPhone(),
                     'email' => $tenant->getEmail(),
                     'adults' => $tenant->getAdults(),
@@ -113,7 +129,9 @@ class LeaseApi extends AbstractController
                     'status' => $lease->getStatus(),
                     'inspection_exist' => $inspectionExist,
                     'payment_rules' => $lease->getPaymentRules(),
-                    "lease_document_name" => $leaseDocumentName
+                    "signed_lease" => $leaseDocumentName,
+                    "id_document" => $idDocumentName,
+                    "proof_of_payment" => $popDocumentName,
                 );
             }
             return $responseArray;
@@ -659,36 +677,47 @@ class LeaseApi extends AbstractController
         }
     }
 
-    public function addLeaseDoc($applicationGuid, $documentType, $fileName): array
+    public function addLeaseDoc($tenantGuid, $documentType, $fileName, $applicationGuid = null): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
             $documentApi = new DocumentApi($this->em, $this->logger);
-            $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $applicationGuid));
-            if ($application == null) {
+            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('guid' => $tenantGuid));
+            if ($tenant == null) {
                 return array(
-                    'result_message' => "Failed to upload document. Application not found",
+                    'result_message' => "Failed to upload document. Tenant not found",
                     'result_code' => 1
                 );
             }
-            $response = $documentApi->addDocument($application->getTenant()->getId(), $documentType, $fileName);
+            $response = $documentApi->addDocument($tenant->getId(), $documentType, $fileName);
             if($response["result_code"] == 1){
                 return $response;
             }
 
-            $leaseDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "ID Document");
-            $popDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Proof OF Payment");
-            $signedLeaseDocument = $documentApi->getDocumentName($application->getTenant()->getId(), "Signed Lease");
+            $leaseDocument = $documentApi->getDocumentName($tenant->getId(), "ID Document");
+            $popDocument = $documentApi->getDocumentName($tenant->getId(), "Proof OF Payment");
+            $signedLeaseDocument = $documentApi->getDocumentName($tenant->getId(), "Signed Lease");
 
             $allDocsUploaded = $signedLeaseDocument["result_code"] == 0 && $leaseDocument["result_code"] == 0 && $popDocument["result_code"] == 0;
 
-            if ($allDocsUploaded) {
-                $application->setStatus("lease_uploaded");
-            }
 
-            $this->em->persist($application);
-            $this->em->flush($application);
+            if($applicationGuid !== null){
+                if ($allDocsUploaded) {
+                    $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $applicationGuid));
+                    if($application !== null){
+                        $application->setStatus("lease_uploaded");
+                        $this->em->persist($application);
+                        $this->em->flush($application);
+                    }else{
+                        return array(
+                            'result_message' => "Error. Failed to update application status",
+                            'result_code' => 1
+                        );
+                    }
+
+                }
+            }
 
             return array(
                 'result_message' => "Successfully uploaded file",

@@ -226,7 +226,8 @@ function uploadSupportingDocuments(documentType, file_data) {
     const uid = sessionStorage.getItem("application_guid");
     const form_data = new FormData();
     form_data.append("file", file_data);
-    form_data.append("guid", uid);
+    form_data.append("application_guid", uid);
+    form_data.append("tenant_guid", sessionStorage.getItem("tenant_guid"));
     form_data.append("document_type", documentType);
 
     if (file_data === undefined) {

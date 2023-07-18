@@ -10,6 +10,18 @@ $(document).ready(function () {
         }
     });
 
+    $('#onboarding_lease').change(function () {
+        uploadSupportingDocuments("Signed Lease", $("#onboarding_lease").prop("files")[0]);
+    });
+
+    $('#onboarding_iddoc').change(function () {
+        uploadSupportingDocuments("ID Document", $("#onboarding_iddoc").prop("files")[0]);
+    });
+
+    $('#onboarding_pop').change(function () {
+        uploadSupportingDocuments("Proof OF Payment", $("#onboarding_pop").prop("files")[0]);
+    });
+
     $("#form-create-lease").submit(function (event) {
         event.preventDefault();
     });
@@ -78,6 +90,48 @@ $(document).ready(function () {
     });
 
 });
+
+function uploadSupportingDocuments(documentType, file_data) {
+    let url = "/public/tenant/upload/lease";
+    const uid = sessionStorage.getItem("tenant_guid");
+    const form_data = new FormData();
+    form_data.append("file", file_data);
+    form_data.append("tenant_guid", uid);
+    form_data.append("document_type", documentType);
+
+    if (file_data === undefined) {
+        showToast("Error: Please upload file")
+        return;
+    }
+
+    const fileSize =file_data.size;
+    const fileMb = fileSize / 1024 ** 2;
+    if (fileMb >= 5) {
+        showToast("Error: Please upload files less than 5mb");
+        return;
+    }
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: form_data,
+        dataType: 'script',
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            const jsonObj = JSON.parse(response);
+            showToast(jsonObj.result_message);
+            if(jsonObj.alldocs_uploaded === true){
+                $(".tenant-div-toggle").addClass("display-none");
+                $(".lease_uploaded").removeClass("display-none");
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showToast(errorThrown);
+        }
+    });
+}
 
 let createLease = () => {
     const tenantName = $("#lease-tenant-name").val().trim();
@@ -227,17 +281,26 @@ let getAllLeases = () => {
                     '                                <ul class="dropdown-menu dropdown-menu-dark">\n' +
                     '                                    <li><a class="dropdown-item bill-tenant-button" lease-id="'+lease.lease_id+'" href="#"  data-bs-toggle="modal" data-bs-target="#addExpenseToLeaseModal">Bill The Tenant</a></li>\n' +
                     '                                    <li><a class="dropdown-item btn-cancel-lease" lease-id="'+lease.lease_id+'" href="#">Cancel Lease</a></li>\n';
-                                                    if(lease.lease_document_name.length > 1){
-                    html +=  '                                    <li><a class="dropdown-item" target="_blank" href="/public/lease_document/'+lease.lease_document_name+'">View Lease</a></li>';
 
-                                                    }
+                if (lease.signed_lease.length !== 0) {
+                    html += '                                      <li><a class="dropdown-item" target="_blank" href="/api/document/'+lease.signed_lease+'">Signed Lease</a></li>\n';
+                }
+
+                if (lease.id_document.length !== 0) {
+                    html += '                                      <li><a class="dropdown-item" target="_blank" href="/api/document/'+lease.id_document+'">ID Document</a></li>\n';
+                }
+
+                if (lease.proof_of_payment.length !== 0) {
+                    html += '                                      <li><a class="dropdown-item" target="_blank" href="/api/document/'+lease.proof_of_payment+'">Proof Of Deposit</a></li>\n';
+                }
+
                 html +=     '                                    <li><a class="dropdown-item" target="_blank" href="/statement/?guid='+lease.guid+'">View Statement</a></li>\n' +
                     '                                    <li><a class="dropdown-item" target="_blank" href="/inspection/?guid='+lease.guid+'">New Inspection</a></li>\n';
                                                 if(lease.inspection_exist === true){
                                                     html += '                                    <li><a class="dropdown-item" target="_blank" href="/view/inspection/?guid='+lease.guid+'">View Latest Inspection</a></li>\n';
                                                 }
 
-                html +=  '                                    <li><a class="dropdown-item update-lease-dpr-button" lease-id="'+lease.lease_id+'" tenant_name="'+lease.tenant_name+'" phone="'+lease.phone_number+'" email="'+lease.email+'" id_number="'+lease.id_number+'" id_type="'+lease.id_document_type+'" salary="'+lease.salary+'" occupation="'+lease.occupation+'" unit_name="'+lease.unit_name+'" unit_id="'+lease.unit_id+'" lease_start="'+lease.lease_start+'" lease_end="'+lease.lease_end+'" payment_rules="'+lease.payment_rules+'" href="#">Update Lease</a></li>\n' +
+                html +=  '                                    <li><a class="dropdown-item update-lease-dpr-button" lease-id="'+lease.lease_id+'" tenant_guid="'+lease.tenant_guid+'" tenant_name="'+lease.tenant_name+'" phone="'+lease.phone_number+'" email="'+lease.email+'" id_number="'+lease.id_number+'" id_type="'+lease.id_document_type+'" salary="'+lease.salary+'" occupation="'+lease.occupation+'" unit_name="'+lease.unit_name+'" unit_id="'+lease.unit_id+'" lease_start="'+lease.lease_start+'" lease_end="'+lease.lease_end+'" payment_rules="'+lease.payment_rules+'" href="#">Update Lease</a></li>\n' +
                     '                                ' +
                     '</ul>\n' +
                     '                            </div>\n' +
@@ -265,6 +328,8 @@ let getAllLeases = () => {
                 $("#lease-salary").val(event.target.getAttribute("salary"));
                 $("#application_id_number").val(event.target.getAttribute("id_number"));
                 sessionStorage.setItem("document-type", event.target.getAttribute("id_type"));
+                sessionStorage.setItem("tenant_guid", event.target.getAttribute("tenant_guid"));
+
                 $('#drop-id-doc-type-selected').html(event.target.getAttribute("id_type"));
                 updateView("new-lease-content-div", "Lease");
             });

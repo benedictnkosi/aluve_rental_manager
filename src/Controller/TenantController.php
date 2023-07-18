@@ -128,7 +128,13 @@ class TenantController extends AbstractController
         }
 
         //write to DB
-        $response = $leaseApi->addLeaseDoc($request->get("guid"), $request->get("document_type"), $response["file_name"]);
+        if(is_null($request->get("application_guid"))){
+            $response = $leaseApi->addLeaseDoc($request->get("tenant_guid"), $request->get("document_type"), $response["file_name"]);
+        }else{
+            $response = $leaseApi->addLeaseDoc($request->get("tenant_guid"), $request->get("document_type"), $response["file_name"], $request->get("application_guid"));
+        }
+
+
         if($response["result_code"] == 1){
             return new JsonResponse($response, 200, array());
         }else{
