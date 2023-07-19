@@ -287,10 +287,10 @@ let getAllLeases = () => {
                     '                                <button class="btn btn-secondary add-payment-button" lease-id="' + lease.lease_id + '" type="button" data-bs-toggle="modal" data-bs-target="#leasePaymentModal">\n' +
                     '                                    Add Payment\n' +
                     '                                </button>\n' +
-                    '                                <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
+                    '                                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
                     '                                    <span class="visually-hidden">Toggle Dropdown</span>\n' +
                     '                                </button>\n' +
-                    '                                <ul class="dropdown-menu dropdown-menu-dark">\n' +
+                    '                                <ul class="dropdown-menu">\n' +
                     '                                    <li><a class="dropdown-item bill-tenant-button" lease-id="' + lease.lease_id + '" href="#"  data-bs-toggle="modal" data-bs-target="#addExpenseToLeaseModal">Bill The Tenant</a></li>\n' +
                     '                                    <li><a class="dropdown-item btn-cancel-lease" lease-id="' + lease.lease_id + '" href="#">Cancel Lease</a></li>\n';
 
