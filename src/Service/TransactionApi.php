@@ -26,12 +26,13 @@ class TransactionApi extends AbstractController
 
     private $em;
     private $logger;
+    private $authApi;
 
     public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
         $this->em = $entityManager;
         $this->logger = $logger;
-
+        $this->authApi = new AuthApi($this->em, $this->logger);
         if (session_id() === '') {
             $logger->info("Session id is empty" . __METHOD__);
             session_start();
@@ -169,6 +170,9 @@ class TransactionApi extends AbstractController
                     'result_code' => 1
                 );
             }
+
+            $auth = $this->authApi->isAuthorisedToChangeLease($transaction->getLease()->getId());
+            if($auth["result_code"] == 1){return $auth;}
 
             $this->em->remove($transaction);
             $this->em->flush($transaction);

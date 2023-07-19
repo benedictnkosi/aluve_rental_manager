@@ -95,7 +95,7 @@ let logACall = () => {
 let closeACall = () => {
     let url = "/api/maintenance/close";
     const data = {
-        unit_id: sessionStorage.getItem("maintenance-id"),
+        maintenance_id: sessionStorage.getItem("maintenance-id"),
     };
 
     $.ajax({

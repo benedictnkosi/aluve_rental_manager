@@ -123,6 +123,7 @@ class ApplicationsController extends AbstractController
         $response = $applicationsApi->declineApplication($request->get("id"));
         return new JsonResponse($response, 200, array());
     }
+
     /**
      * @Route("no_auth/application/upload/")
      * @throws \Exception

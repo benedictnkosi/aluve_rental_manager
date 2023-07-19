@@ -36,6 +36,8 @@ class LoginController extends AbstractController
         if ($this->getUser() !== null) {
             $logger->info("Session: " . print_r($_SESSION, true));
             $logger->info("user roles: " . print_r($this->getUser()->getRoles(), true));
+            $logger->info("user email: " . print_r($this->getUser()->getUserIdentifier(), true));
+            $_SESSION["username"] = $this->getUser()->getUserIdentifier();
             return $this->render('properties.html');
         } else {
             return $this->redirectToRoute("app_login");

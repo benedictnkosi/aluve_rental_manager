@@ -19,6 +19,7 @@ use Exception;
 use JetBrains\PhpStorm\ArrayShape;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class LeaseApi extends AbstractController
 {
@@ -26,11 +27,13 @@ class LeaseApi extends AbstractController
     private $em;
     private $logger;
     private $transactionApi;
+    private $authApi;
 
     public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
         $this->em = $entityManager;
         $this->logger = $logger;
+        $this->authApi = new AuthApi($this->em, $this->logger);
         $this->transactionApi = new TransactionApi($entityManager, $logger);
         if (session_id() === '') {
             $logger->info("Session id is empty" . __METHOD__);
@@ -286,7 +289,7 @@ class LeaseApi extends AbstractController
 
             if ($leaseId == 0) {
                 $lease = new Leases();
-                $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $unitId));
+                $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $unitId));
                 if ($unit == null) {
                     return array(
                         'result_message' => "Error: Unit not found",
@@ -295,6 +298,10 @@ class LeaseApi extends AbstractController
                 }
             } else {
                 $lease = $this->em->getRepository(Leases::class)->findOneBy(array('id' => $leaseId));
+
+                $auth = $this->authApi->isAuthorisedToChangeUnit($lease->getUnit()->getId());
+                if($auth["result_code"] == 1){return $auth;}
+
                 if ($lease == null) {
                     return array(
                         'result_message' => "Error. Lease not found",
@@ -302,7 +309,7 @@ class LeaseApi extends AbstractController
                     );
                 }
 
-                $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $unitId));
+                $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $unitId));
                 $successMessage = "Successfully updated lease";
             }
 

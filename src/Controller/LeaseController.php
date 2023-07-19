@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Document;
 use App\Service\ApplicationsApi;
+use App\Service\AuthApi;
 use App\Service\DocumentApi;
 use App\Service\FileUploaderApi;
 use App\Service\LeaseApi;
@@ -54,11 +55,14 @@ class LeaseController extends AbstractController
     /**
      * @Route("api/lease/update")
      */
-    public function updateLease(Request $request,  LoggerInterface $logger, LeaseApi $leaseApi): Response{
+    public function updateLease(Request $request,  LoggerInterface $logger, LeaseApi $leaseApi, AuthApi $authApi): Response{
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('put')) {
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
+
+        $auth = $authApi->isAuthorisedToChangeLease($request->get('id'));
+        if($auth["result_code"] == 1){ return new JsonResponse($auth , 200, array());}
 
         $response = $leaseApi->updateLease($request->get('field'), $request->get('value'), $request->get('id'));
         return new JsonResponse($response , 200, array());

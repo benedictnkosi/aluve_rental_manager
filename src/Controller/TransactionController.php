@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\AuthApi;
 use App\Service\ExpenseApi;
 use App\Service\LeaseApi;
 use App\Service\PropertyApi;
@@ -22,11 +23,16 @@ class TransactionController extends AbstractController
     /**
      * @Route("api/transaction/payment")
      */
-    public function addPayment(Request $request, LoggerInterface $logger, TransactionApi $transactionApi): Response
+    public function addPayment(Request $request, LoggerInterface $logger, TransactionApi $transactionApi, AuthApi $authApi): Response
     {
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('POST')) {
             return new JsonResponse("Method Not Allowed", 405, array());
+        }
+
+        $auth = $authApi->isAuthorisedToChangeLease($request->get("lease_id"));
+        if($auth["result_code"] == 1){
+            return new JsonResponse($auth, 200, array());
         }
 
         $response = $transactionApi->addTransaction($request->get("lease_id"), intval($request->get("amount")) * -1, "Thank you for payment", $request->get("payment_date"));
@@ -37,12 +43,15 @@ class TransactionController extends AbstractController
     /**
      * @Route("api/transaction/bill_tenant")
      */
-    public function billTenant(Request $request, LoggerInterface $logger, TransactionApi $transactionApi): Response
+    public function billTenant(Request $request, LoggerInterface $logger, TransactionApi $transactionApi, AuthApi $authApi): Response
     {
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('POST')) {
             return new JsonResponse("Method Not Allowed", 405, array());
         }
+
+        $auth = $authApi->isAuthorisedToChangeLease($request->get("lease_id"));
+        if($auth["result_code"] == 1){return new JsonResponse($auth, 200, array());}
 
         $response = $transactionApi->addTransaction($request->get("lease_id"), $request->get("amount"),$request->get("summary") , $request->get("bill_date"));
         return new JsonResponse($response, 200, array());
@@ -89,8 +98,6 @@ class TransactionController extends AbstractController
         $response = $transactionApi->getTransactions($guid);
         return new JsonResponse($response, 200, array());
     }
-
-
 
 
     /**

@@ -19,11 +19,13 @@ class ApplicationsApi extends AbstractController
 
     private $em;
     private $logger;
+    private $authApi;
 
     public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
         $this->em = $entityManager;
         $this->logger = $logger;
+        $this->authApi = new AuthApi($this->em, $this->logger);
 
         if (session_id() === '') {
             $logger->info("Session id is empty" . __METHOD__);
@@ -259,6 +261,9 @@ class ApplicationsApi extends AbstractController
                 );
             }
 
+            $auth = $this->authApi->isAuthorisedToChangeUnit($application->getUnit()->getId());
+            if($auth["result_code"] == 1){return $auth;}
+
             $application->setStatus("accepted");
             $this->em->persist($application);
             $this->em->flush($application);
@@ -306,6 +311,8 @@ class ApplicationsApi extends AbstractController
                 );
             }
 
+            $auth = $this->authApi->isAuthorisedToChangeUnit($application->getUnit()->getId());
+            if($auth["result_code"] == 1){return $auth;}
             //send whatsapp with acceptance
 //            $leaseLink = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/api/document/" . $application->getUnit()->getProperty()->getLeaseFileName();
 //            $message = "We are happy to let you know that your application for " . $application->getUnit()->getName() . " @ " . $application->getUnit()->getProperty()->getName() . " has been accepted.
@@ -398,6 +405,9 @@ class ApplicationsApi extends AbstractController
                     'result_code' => 1
                 );
             }
+
+            $auth = $this->authApi->isAuthorisedToChangeUnit($application->getUnit()->getId());
+            if($auth["result_code"] == 1){return $auth;}
 
             $application->setStatus("declined");
             $this->em->persist($application);

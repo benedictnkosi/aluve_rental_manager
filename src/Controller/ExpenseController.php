@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\AuthApi;
 use App\Service\ExpenseApi;
 use App\Service\LeaseApi;
 use App\Service\PropertyApi;
@@ -24,7 +25,7 @@ class ExpenseController extends AbstractController
     /**
      * @Route("api/expenses/new")
      */
-    public function recordExpense(Request $request, LoggerInterface $logger, ExpenseApi $expenseApi): Response
+    public function recordExpense(Request $request, LoggerInterface $logger, ExpenseApi $expenseApi, AuthApi $authApi): Response
     {
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('POST')) {

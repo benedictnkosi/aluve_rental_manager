@@ -58,7 +58,7 @@ class MaintenanceController extends AbstractController
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $maintenanceApi->closeMaintenanceCall($request->get("unit_id"));
+        $response = $maintenanceApi->closeMaintenanceCall($request->get("maintenance_id"));
         return new JsonResponse($response, 200, array());
     }
 

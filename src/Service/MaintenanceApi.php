@@ -27,11 +27,13 @@ class MaintenanceApi extends AbstractController
 
     private $em;
     private $logger;
+    private $authApi;
 
     public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
         $this->em = $entityManager;
         $this->logger = $logger;
+        $this->authApi = new AuthApi($this->em, $this->logger);
 
         if (session_id() === '') {
             $logger->info("Session id is empty" . __METHOD__);
@@ -314,6 +316,9 @@ class MaintenanceApi extends AbstractController
                     'result_code' => 1
                 );
             }
+
+            $auth = $this->authApi->isAuthorisedToChangeUnit($maintenanceCall->getProperty());
+            if($auth["result_code"] == 1){return $auth;}
 
             $maintenanceCall->setStatus("closed");
             $this->em->persist($maintenanceCall);
