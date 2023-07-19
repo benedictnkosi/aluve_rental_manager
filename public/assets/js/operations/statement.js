@@ -24,6 +24,9 @@ let getTransactions = () => {
             let html = "";
             if(data.result_code !== undefined){
                 if(data.result_code === 1){
+                    $("#tbody-transactions").html("");
+                    $("#amount-due").html("Amount Due: R0.00");
+
                     return;
                 }
             }

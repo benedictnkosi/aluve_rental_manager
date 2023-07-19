@@ -317,9 +317,6 @@ class MaintenanceApi extends AbstractController
                 );
             }
 
-            $auth = $this->authApi->isAuthorisedToChangeUnit($maintenanceCall->getProperty());
-            if($auth["result_code"] == 1){return $auth;}
-
             $maintenanceCall->setStatus("closed");
             $this->em->persist($maintenanceCall);
             $this->em->flush($maintenanceCall);
