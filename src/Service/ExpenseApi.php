@@ -436,6 +436,7 @@ FROM
     `transaction`, leases
 WHERE lease = leases.id and
 leases.property = ".$property->getId()." and 
+   amount > 0 and 
     `date` >= CURDATE() - INTERVAL ".$numberOfDays." DAY
 GROUP BY
     `month_num`
