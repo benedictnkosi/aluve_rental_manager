@@ -301,20 +301,20 @@ class TransactionApi extends AbstractController
                     $endOfAccountIndex = strrpos($emailSubject, " @");
                     $partialAccountNumber = substr($emailSubject, $startOfAccountIndex, $endOfAccountIndex - $startOfAccountIndex);
 
-                    $leases = $this->em->getRepository("App\Entity\Leases")->createQueryBuilder('l')
-                        ->where('l.paymentRules LIKE :rule')
-                        ->setParameter('rule', "%$ref%")
-                        ->getQuery()
-                        ->getResult();
+                    $leases = $this->em->getRepository(Leases::class)->findBy(array('status' => 'active'));
 
                     if(sizeof($leases) > 0){
                         foreach ($leases as $lease){
                             $this->logger->info("account number " . $lease->getUnit()->getProperty()->getAccountNumber());
                             $this->logger->info("partial account number " . $partialAccountNumber);
-                            if(str_contains($lease->getUnit()->getProperty()->getAccountNumber(), $partialAccountNumber)){
-                                $this->logger->info("Leases found matching payment reference");
-                                $this->addTransaction($lease->getId(), $amount, "Thank you for payment - $ref", $now->format("Y-m-d"));
-                                $leaseFound = "yes";
+                            $this->logger->info("ref " . $ref);
+                            $this->logger->info("lease pay rule " . $lease->getPaymentRules());
+                            if(str_contains($ref, $lease->getPaymentRules())){
+                                if(str_contains($lease->getUnit()->getProperty()->getAccountNumber(), $partialAccountNumber)){
+                                    $this->logger->info("Leases found matching payment reference");
+                                    $this->addTransaction($lease->getId(), $amount, "Thank you for payment - $ref", $now->format("Y-m-d"));
+                                    $leaseFound = "yes";
+                                }
                             }
                         }
                     }else{
