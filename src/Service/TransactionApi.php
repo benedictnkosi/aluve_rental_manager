@@ -325,7 +325,7 @@ class TransactionApi extends AbstractController
                             if(str_contains(strtolower($ref), strtolower($lease->getPaymentRules())) && strlen($lease->getPaymentRules()>1)){
                                 if(str_contains($lease->getUnit()->getProperty()->getAccountNumber(), $partialAccountNumber)){
                                     $this->logger->info("Leases found matching payment reference");
-                                    $response = $this->addTransaction($lease->getId(), $amount, "Thank you for payment - $ref", $now->format("Y-m-d"), $emailID);
+                                    $response = $this->addTransaction($lease->getId(), $amount * -1, "Thank you for payment - $ref", $now->format("Y-m-d"), $emailID);
                                     $this->logger->info(print_r($response,true));
                                     $leaseFound = "yes";
                                 }else{
