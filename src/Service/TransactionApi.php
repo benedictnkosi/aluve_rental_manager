@@ -40,7 +40,7 @@ class TransactionApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function addTransaction($leaseId, $amount, $description, $transactionDate): array
+    public function addTransaction($leaseId, $amount, $description, $transactionDate, $emailID = 0): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -53,7 +53,8 @@ class TransactionApi extends AbstractController
                 );
             }
 
-            if (strlen($amount) < 1 || !is_numeric($amount) || strlen($amount) > 6) {
+            if (strlen($amount) < 1 || !is_numeric($amount) || strlen($amount) > 10) {
+                $this->logger->debug("Amount " . $amount);
                 return array(
                     'result_message' => "Error. Amount is invalid",
                     'result_code' => 1
@@ -74,11 +75,23 @@ class TransactionApi extends AbstractController
                 );
             }
 
+            //check that email not already imported
+            if($emailID > 0){
+                $transaction = $this->em->getRepository(Transaction::class)->findOneBy(array('emailId' => $emailID));
+                if($transaction !== null){
+                    return array(
+                        'result_message' => "Transaction already added",
+                        'result_code' => 0
+                    );
+                }
+            }
+
             $transaction = new Transaction();
             $transaction->setDate(new DateTime($transactionDate));
             $transaction->setAmount(intval($amount));
             $transaction->setDescription($description);
             $transaction->setLease($lease);
+            $transaction->setEmailId($emailID);
 
             $this->em->persist($transaction);
             $this->em->flush($transaction);
@@ -309,10 +322,10 @@ class TransactionApi extends AbstractController
                             $this->logger->info("partial account number " . $partialAccountNumber);
                             $this->logger->info("ref " . $ref);
                             $this->logger->info("lease pay rule " . $lease->getPaymentRules());
-                            if(str_contains(strtolower($ref), strtolower($lease->getPaymentRules()))){
+                            if(str_contains(strtolower($ref), strtolower($lease->getPaymentRules())) && strlen($lease->getPaymentRules()>1)){
                                 if(str_contains($lease->getUnit()->getProperty()->getAccountNumber(), $partialAccountNumber)){
                                     $this->logger->info("Leases found matching payment reference");
-                                    $response = $this->addTransaction($lease->getId(), $amount, "Thank you for payment - $ref", $now->format("Y-m-d"));
+                                    $response = $this->addTransaction($lease->getId(), $amount, "Thank you for payment - $ref", $now->format("Y-m-d"), $emailID);
                                     $this->logger->info(print_r($response,true));
                                     $leaseFound = "yes";
                                 }else{

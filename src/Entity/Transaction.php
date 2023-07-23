@@ -132,5 +132,28 @@ class Transaction
         $this->lease = $lease;
     }
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="email_id", type="integer", nullable=false)
+     */
+    private $emailId = '0';
+
+    /**
+     * @return int
+     */
+    public function getEmailId(): int|string
+    {
+        return $this->emailId;
+    }
+
+    /**
+     * @param int $emailId
+     */
+    public function setEmailId(int|string $emailId): void
+    {
+        $this->emailId = $emailId;
+    }
+
 
 }
