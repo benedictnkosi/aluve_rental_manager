@@ -309,12 +309,16 @@ class TransactionApi extends AbstractController
                             $this->logger->info("partial account number " . $partialAccountNumber);
                             $this->logger->info("ref " . $ref);
                             $this->logger->info("lease pay rule " . $lease->getPaymentRules());
-                            if(str_contains($ref, $lease->getPaymentRules())){
+                            if(str_contains(strtolower($ref), strtolower($lease->getPaymentRules()))){
                                 if(str_contains($lease->getUnit()->getProperty()->getAccountNumber(), $partialAccountNumber)){
                                     $this->logger->info("Leases found matching payment reference");
                                     $this->addTransaction($lease->getId(), $amount, "Thank you for payment - $ref", $now->format("Y-m-d"));
                                     $leaseFound = "yes";
+                                }else{
+                                    $this->logger->info("account does not match");
                                 }
+                            }else{
+                                $this->logger->info("ref does not match");
                             }
                         }
                     }else{
