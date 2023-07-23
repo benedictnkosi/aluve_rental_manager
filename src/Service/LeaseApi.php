@@ -587,10 +587,16 @@ class LeaseApi extends AbstractController
             $now = new DateTime();
             foreach ($leases as $lease) {
                 $lateFee = $lease->getUnit()->getProperty()->getLateFee();
-                $due = intval($this->transactionApi->getBalanceDue($lease->getId())["result_message"]);
+                $response = $this->transactionApi->getBalanceDue($lease->getId());
+                $due = intval($response["result_message"]);
+                $this->logger->debug("due is this " . $due);
                 $todayDay = $now->format("d");
                 $rentLateBy = $lease->getUnit()->getProperty()->getRentLateDays();
 
+                $this->logger->debug("late fee: " . $lateFee);
+                $this->logger->debug("due: " . $due);
+                $this->logger->debug("rent late by : " . $rentLateBy);
+                $this->logger->debug("is raise fee day: " . strcmp($todayDay, $rentLateBy) == 0);
                 if (intval($lateFee) > 0
                     && $due > 0
                     && strcmp($todayDay, $rentLateBy) == 0) {
@@ -599,30 +605,27 @@ class LeaseApi extends AbstractController
                     //send sms to applicant
                     $smsApi = new SMSApi($this->em, $this->logger);
                     $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
-                    $api = new TransactionApi($this->em, $this->logger);
-                    $balance = $api->getBalanceDue($lease->getId());
-                    $message = "Late payment fee added on your account R" . $lateFee . " , Balance: R" . $balance . ". View Statement " . $tenantPortalURL;
+                    $message = "Late payment fee added on your account R" . $lateFee . " , Balance: R" . $due . ". View Statement " . $tenantPortalURL;
                     $isSMSSent = $smsApi->sendMessage("+27" . substr($lease->getTenant()->getPhone(), 0, 9), $message);
 
                     if ($isSMSSent) {
-                        return array(
+                        $responseArray = array(
                             'result_message' => "Successfully added transaction",
                             'result_code' => 0
                         );
                     } else {
-                        return array(
+                        $responseArray = array(
                             'result_message' => "Error. Added transaction. SMS to Applicant failed",
                             'result_code' => 1
                         );
                     }
 
+                }else{
+                    $this->logger->error("Conditions to raise fees not met");
                 }
             }
 
-            return array(
-                'result_message' => "Successfully added all late fees",
-                'result_code' => 0
-            );
+            return $responseArray;
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
             return array(

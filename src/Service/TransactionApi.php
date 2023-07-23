@@ -223,6 +223,7 @@ class TransactionApi extends AbstractController
                 $total = $total + intval($transaction->getAmount());
             }
 
+
             return array(
                 'result_message' => $total,
                 'result_code' => 0
