@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    getMaintenanceCalls();
+    //getMaintenanceCalls();
 
     $("#btn-log-call").click(function (event) {
         event.preventDefault();

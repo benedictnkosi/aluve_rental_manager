@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    getApplications();
+    //getApplications();
 
     $("#submitAcceptApplication").click(function (event) {
         event.preventDefault();

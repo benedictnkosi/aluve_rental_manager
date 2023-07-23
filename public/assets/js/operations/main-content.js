@@ -76,6 +76,15 @@ function updateView(selectedDiv, header) {
         case "applications-content-div":
             getApplications();
             break;
+        case "expenses-content-div":
+            getExpenses();
+            break;
+        case "maintenance-content-div":
+            getMaintenanceCalls();
+            break;
+        case "settings-content-div":
+            getProperty();
+            break;
         default:
 
     }

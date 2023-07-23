@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    getAllLeases();
+    //getAllLeases();
     sessionStorage.setItem("lease-id", "0")
     sessionStorage.setItem("lease-unit-id", "0")
 

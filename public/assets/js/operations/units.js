@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    getAllUnits();
+    //getAllUnits();
     sessionStorage.setItem("unit-id", "0");
 
     $("#form-create-unit").submit(function (event) {
