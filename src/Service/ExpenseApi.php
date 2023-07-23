@@ -294,7 +294,7 @@ class ExpenseApi extends AbstractController
             }
 
             $sql = "SELECT sum(amount) as total FROM `transaction`, leases WHERE lease = leases.id and
-leases.property = ".$property->getId()." and `amount` > 0 and `date` > (DATE(NOW()) - INTERVAL ".$numberOfDays." DAY)";
+leases.property = ".$property->getId()." and `amount` < 0 and `date` > (DATE(NOW()) - INTERVAL ".$numberOfDays." DAY)";
             $databaseHelper = new DatabaseApi($this->logger);
             $result = $databaseHelper->queryDatabase($sql);
 
@@ -311,7 +311,7 @@ leases.property = ".$property->getId()." and `amount` > 0 and `date` > (DATE(NOW
                 }
 
                 return array(
-                    'total' => $sum,
+                    'total' => $sum * -1,
                     'result_code' => 0,
                     'result_message' => "success"
                 );
