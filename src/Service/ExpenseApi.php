@@ -436,7 +436,7 @@ FROM
     `transaction`, leases
 WHERE lease = leases.id and
 leases.property = ".$property->getId()." and 
-   amount > 0 and 
+   amount < 0 and 
     `date` >= CURDATE() - INTERVAL ".$numberOfDays." DAY
 GROUP BY
     `month_num`
@@ -448,15 +448,14 @@ ORDER BY
             $result = $databaseHelper->queryDatabase($sql);
 
             if (!$result) {
-                return array(
-                );
+                return array();
             } else {
                 while ($results = $result->fetch_assoc()) {
                     $this->logger->info("income found " . $results["month"]);
                     $responseArray[] = array(
                         'month' => $results["month"],
                         'month_num' => $results["month_num"],
-                        'total' => $results["total"],
+                        'total' => intval($results["total"]) * -1,
                         'year' => $results["year"]
                     );
                 }
@@ -516,6 +515,7 @@ ORDER BY
             $expenseValue = 0;
             $year = 0;
             foreach ($incomeArray as $income) {
+                $this->logger->info("income month num " . print_r($income, true));
                 if (strcmp($income['month_num'], $i) == 0) {
                     $incomeValue = $income['total'];
                     $year = $income['year'];
