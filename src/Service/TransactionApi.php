@@ -261,7 +261,7 @@ class TransactionApi extends AbstractController
     {
         $this->logger->info("Starting Method: " . __METHOD__);
         $responseArray = array();
-
+        try {
         // testing with a boolean response
         $isConnectable = $imap->testConnection('full_config_connection');
 
@@ -278,7 +278,7 @@ class TransactionApi extends AbstractController
         $exampleConnection = $imap->get('full_config_connection');
 
         // testing with a full error message
-        try {
+
             $search = 'ON ' . date('d-M-Y') . ' BODY "paid to"';
             $emails = $exampleConnection->searchMailbox($search);
             $now = new DateTime();
