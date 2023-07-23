@@ -159,6 +159,7 @@ class LeaseApi extends AbstractController
     public function getLease($guid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
+        $this->logger->info("Guid: " . $guid);
         $responseArray = array();
         try {
             //validate property id
