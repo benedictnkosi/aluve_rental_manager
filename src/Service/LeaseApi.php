@@ -661,21 +661,18 @@ class LeaseApi extends AbstractController
                 $isSMSSent = $smsApi->sendMessage("+27" . substr($lease->getTenant()->getPhone(), 0, 9), $message);
 
                 if ($isSMSSent) {
-                    return array(
+                    $responseArray[] = array(
                         'result_message' => "Successfully added monthly rent",
                         'result_code' => 0
                     );
                 } else {
-                    return array(
+                    $responseArray[] = array(
                         'result_message' => "Error. Added monthly rent. SMS to Applicant failed",
                         'result_code' => 1
                     );
                 }
             }
-            return array(
-                'result_message' => "Successfully added all late fees",
-                'result_code' => 0
-            );
+            return $responseArray;
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
             return array(
