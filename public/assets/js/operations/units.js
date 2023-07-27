@@ -177,7 +177,7 @@ let getAllUnits = () => {
                     '                                            <medium>Max Occupants: ' + unit.max_occupants + '</medium>\n' +
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                                            <i class="bi-person-plus-fill bootstrap-icon-text"></i>\n' +
+                    '                                            <i class="bi-speedometer bootstrap-icon-text"></i>\n' +
                     '                                            <medium>Meter: ' + unit.meter + '</medium>\n' +
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
