@@ -22,6 +22,13 @@ class Units
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="meter", type="string", length=20, nullable=false, options={"default"="none"})
+     */
+    private $meter = 'none';
+
+    /**
      * @var string|null
      *
      * @ORM\Column(name="name", type="string", length=45, nullable=true)
@@ -315,6 +322,22 @@ class Units
     public function setGuid(string $guid): void
     {
         $this->guid = $guid;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMeter(): string
+    {
+        return $this->meter;
+    }
+
+    /**
+     * @param string $meter
+     */
+    public function setMeter(string $meter): void
+    {
+        $this->meter = $meter;
     }
 
 }

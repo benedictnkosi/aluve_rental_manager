@@ -54,6 +54,7 @@ let createUnit = () => {
     const bedrooms = $("#unit-bedrooms").val().trim();
     const bathrooms = $("#unit-bathrooms").val().trim();
     const numberOfUnits = $("#number-of-units").val().trim();
+    const meter = $("#unit-meter").val().trim();
     const checkBulkCreateUnits = $("#checkBulkCreateUnits").is(':checked');
 
     let url = "/api/units/create";
@@ -70,7 +71,8 @@ let createUnit = () => {
         bathrooms: bathrooms,
         bulkCreate: checkBulkCreateUnits,
         numberOfUnits: numberOfUnits,
-        property_id: sessionStorage.getItem("property-id")
+        property_id: sessionStorage.getItem("property-id"),
+        meter: meter
     };
 
     $.ajax({
@@ -173,6 +175,10 @@ let getAllUnits = () => {
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                                            <i class="bi-person-plus-fill bootstrap-icon-text"></i>\n' +
                     '                                            <medium>Max Occupants: ' + unit.max_occupants + '</medium>\n' +
+                    '                                        </li>\n' +
+                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
+                    '                                            <i class="bi-person-plus-fill bootstrap-icon-text"></i>\n' +
+                    '                                            <medium>Meter: ' + unit.meter + '</medium>\n' +
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                                            <i class="bi-car-front bootstrap-icon-text"></i>\n' +

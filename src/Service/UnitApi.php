@@ -67,6 +67,7 @@ class UnitApi extends AbstractController
                         'bedrooms' => $unit->getBedrooms(),
                         'bathrooms' => $unit->getbathrooms(),
                         'guid' => $unit->getGuid(),
+                        'meter' => $unit->getMeter(),
 
                     );
                 } else {
@@ -90,6 +91,7 @@ class UnitApi extends AbstractController
                         'bedrooms' => $unit->getBedrooms(),
                         'bathrooms' => $unit->getBathrooms(),
                         'guid' => $unit->getGuid(),
+                        'meter' => $unit->getMeter(),
                     );
                 }
 
@@ -128,7 +130,7 @@ class UnitApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function createUnit($name, $guid, $listed, $parking, $childrenAllowed, $maxOccupants, $minGrossSalary, $rent, $bedrooms, $bathrooms, $propertyGuid): array
+    public function createUnit($name, $guid, $listed, $parking, $childrenAllowed, $maxOccupants, $minGrossSalary, $rent, $bedrooms, $bathrooms, $propertyGuid, $meter): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -179,7 +181,7 @@ class UnitApi extends AbstractController
             $unit->setRent($rent);
             $unit->setBedrooms($bedrooms);
             $unit->setBathrooms($bathrooms);
-
+            $unit->setMeter($meter);
 
             if(strcmp($listed, "true") == 0){
                 $unit->setListed(true);
