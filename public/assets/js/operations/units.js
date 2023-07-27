@@ -194,7 +194,7 @@ let getAllUnits = () => {
                     '                                        </li>\n' +
                     '                                        <li class=" align-items-center me-3 mt-2">\n' +
                     '                            <div class="btn-group">\n' +
-                    '                                <button class="btn btn-secondary btn-update-unit"  unit-id="' + unit.guid + '" unit-bedrooms="' + unit.bedrooms + '" unit-bathrooms="' + unit.bathrooms + '"unit-rent="' + unit.rent + '" parking="' + unit.parking + '" children="' + unit.children + '" min-salary="' + unit.min_gross_salary + '" max-occupants="' + unit.max_occupants + '"listed="' + unit.listed + '" unit-name="' + unit.unit_name + '" type="button">\n' +
+                    '                                <button class="btn btn-secondary btn-update-unit"  unit-id="' + unit.guid + '" unit-bedrooms="' + unit.bedrooms + '" unit-bathrooms="' + unit.bathrooms + '"unit-meter="' + unit.meter + '"unit-rent="' + unit.rent + '" parking="' + unit.parking + '" children="' + unit.children + '" min-salary="' + unit.min_gross_salary + '" max-occupants="' + unit.max_occupants + '"listed="' + unit.listed + '" unit-name="' + unit.unit_name + '" type="button">\n' +
                     '                                    Update unit\n' +
                     '                                </button>\n' +
                     '                                <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
@@ -238,6 +238,7 @@ let getAllUnits = () => {
                 const rent = parseInt(event.target.getAttribute('unit-rent').replace("R", ""))
                 const bedrooms = event.target.getAttribute('unit-bedrooms')
                 const bathrooms = event.target.getAttribute('unit-bathrooms')
+                const meter = event.target.getAttribute('unit-meter')
 
                 sessionStorage.setItem("unit-id", unitId)
 
@@ -247,6 +248,7 @@ let getAllUnits = () => {
                 $('#min-gross-salary').val(minSalary);
                 $('#unit-bedrooms').val(bedrooms);
                 $('#unit-bathrooms').val(bathrooms);
+                $('#unit-meter').val(meter);
 
                 if (children.localeCompare("true") === 0) {
                     $('#checkChildrenAllowed').prop('checked', true);
