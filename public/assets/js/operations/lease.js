@@ -247,7 +247,7 @@ let getAllLeases = () => {
       }
 
       data.forEach(function (lease) {
-        const dueClass = lease.due.localeCompare("R0.00") !== 0 ? "" : "";
+        const dueClass = lease.due.localeCompare("R0.00") !== 0 ? "border-left-red" : "";
 
         html +=
           '<div class="lease-card">\n' +
@@ -354,7 +354,6 @@ let populateLeaseDetails = (leaseGuid) => {
         }
       }
 
-      const dueClass = lease.due.localeCompare("R0.00") !== 0 ? "" : "";
       sessionStorage.setItem("lease-guid", lease.lease_guid);
       sessionStorage.setItem("tenant_guid", lease.tenant_guid);
       
