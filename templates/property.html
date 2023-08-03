@@ -7,6 +7,7 @@
     <link href="/assets/css/dashboard.css" rel="stylesheet"/>
     <link href="/assets/css/custom.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/assets/css/style/units.css">
+    <link rel="stylesheet" href="/assets/css/style/leases.css">
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -80,12 +81,12 @@
                     <div class="modal-footer">
                         <button
                                 type="button"
-                                class="btn btn-secondary"
+                                class="btn transparent-green-button"
                                 data-bs-dismiss="modal"
                         >
                             Close
                         </button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn transparent-green-button">Submit</button>
                     </div>
                 </form>
             </div>
@@ -155,12 +156,12 @@
                     <div class="modal-footer">
                         <button
                                 type="button"
-                                class="btn btn-secondary"
+                                class="btn transparent-green-button"
                                 data-bs-dismiss="modal"
                         >
                             Close
                         </button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn transparent-green-button">Submit</button>
                     </div>
                 </form>
             </div>
@@ -197,7 +198,7 @@
                         >
                         <div class="dropdown" id="drop-expense-name">
                             <button
-                                    class="btn btn-dark dropdown-toggle"
+                                    class="btn dropdown-toggle"
                                     id="drop-expense-name-selected"
                                     type="button"
                                     data-bs-toggle="dropdown"
@@ -245,12 +246,12 @@
                     <div class="modal-footer">
                         <button
                                 type="button"
-                                class="btn btn-secondary"
+                                class="btn transparent-green-button"
                                 data-bs-dismiss="modal"
                         >
                             Close
                         </button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn transparent-green-button">Submit</button>
                     </div>
                 </form>
             </div>
@@ -283,14 +284,14 @@
             <div class="modal-footer">
                 <button
                         type="button"
-                        class="btn btn-secondary"
+                        class="btn transparent-green-button"
                         data-bs-dismiss="modal"
                 >
                     Cancel
                 </button>
                 <button
                         type="button"
-                        class="btn btn-primary"
+                        class="btn transparent-green-button"
                         id="btn-confirm-delete-lease"
                 >
                     Confirm
@@ -327,14 +328,14 @@
             <div class="modal-footer">
                 <button
                         type="button"
-                        class="btn btn-secondary"
+                        class="btn transparent-green-button"
                         data-bs-dismiss="modal"
                 >
                     Cancel
                 </button>
                 <button
                         type="button"
-                        class="btn btn-primary"
+                        class="btn transparent-green-button"
                         id="btn-confirm-maintenance"
                 >
                     Confirm
@@ -371,14 +372,14 @@
             <div class="modal-footer">
                 <button
                         type="button"
-                        class="btn btn-secondary"
+                        class="btn transparent-green-button"
                         data-bs-dismiss="modal"
                 >
                     Cancel
                 </button>
                 <button
                         type="button"
-                        class="btn btn-primary"
+                        class="btn transparent-green-button"
                         id="btn-confirm-decline-application"
                 >
                     Confirm
@@ -415,14 +416,14 @@
             <div class="modal-footer">
                 <button
                         type="button"
-                        class="btn btn-secondary"
+                        class="btn transparent-green-button"
                         data-bs-dismiss="modal"
                 >
                     Cancel
                 </button>
                 <button
                         type="button"
-                        class="btn btn-primary"
+                        class="btn transparent-green-button"
                         id="btn-confirm-delete-expense"
                 >
                     Confirm
@@ -459,14 +460,14 @@
             <div class="modal-footer">
                 <button
                         type="button"
-                        class="btn btn-secondary"
+                        class="btn transparent-green-button"
                         data-bs-dismiss="modal"
                 >
                     Cancel
                 </button>
                 <button
                         type="button"
-                        class="btn btn-primary"
+                        class="btn transparent-green-button"
                         id="btn-confirm-delete-unit"
                 >
                     Confirm
@@ -502,7 +503,7 @@
                     <div class="modal-footer">
                         <button
                                 type="button"
-                                class="btn btn-secondary"
+                                class="btn transparent-green-button"
                                 data-bs-dismiss="modal"
                         >
                             Close
@@ -510,7 +511,7 @@
                         <button
                                 type="button"
                                 id="submitAcceptApplication"
-                                class="btn btn-primary"
+                                class="btn transparent-green-button"
                         >
                             Submit
                         </button>
@@ -581,7 +582,7 @@
                     <div class="modal-footer">
                         <button
                                 type="button"
-                                class="btn btn-secondary"
+                                class="btn transparent-green-button"
                                 data-bs-dismiss="modal"
                         >
                             Close
@@ -589,7 +590,7 @@
                         <button
                                 type="button"
                                 id="submitConvertApplication"
-                                class="btn btn-primary"
+                                class="btn transparent-green-button"
                         >
                             Submit
                         </button>
@@ -991,7 +992,7 @@
                     <p>
                         <button
                                 type="button"
-                                class="btn green-button w-100"
+                                class="btn transparent-green-button w-100"
                                 id="btn-create-new-unit"
                         >
                             Add New Unit
@@ -1004,6 +1005,11 @@
             <div id="new-unit-content-div" class="main-content display-none">
                 <div class="container">
                     <main>
+
+                        <div class="py-5 text-center">
+                            <p class="lead" id="unit-name-header"></p>
+                        </div>
+
  
                         <div class="row g-5 justify-content-center">
 
@@ -1208,20 +1214,20 @@
 
                                 
 
-<div class="d-flex gap-2">
-    <div class="col-6"><button
-        type="button"
-        class="btn green-button  w-100"
-        id="btn-close-new-unit"
->
-    Close
-</button></div>
+<div class="d-flex gap-2 mb-2">
+    
     <div class="col-6">
         <button type="submit" class="btn green-button w-100">
             Submit
         </button>
     </div>
-
+    <div class="col-6"><button
+        type="button"
+        class="btn btn-danger  rounded-0 w-100 btn-delete-unit display-none"
+>
+    Delete
+</button></div>
+</div>
                                 </form>
                             </div>
                         </div>
@@ -1232,14 +1238,14 @@
             <!--            leases div-------------------------------------------------------------------->
             <div id="leases-content-div" class="main-content display-none">
                 <div
-                        class="row row-cols-1 row-cols-xl-3 row-cols-lg-2 align-items-stretch g-4 py-5"
+                        class="properties-container"
                         id="div-leases"
                 ></div>
                 <div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
                     <p>
                         <button
                                 type="button"
-                                class="btn btn-success"
+                                class="btn transparent-green-button w-100"
                                 id="btn-new-lease"
                         >
                             New Lease
@@ -1249,28 +1255,29 @@
             </div>
 
             <!--            new lease div -------------------------------------------------------------------->
-            <div id="new-lease-content-div" class="main-content display-none">
+            <div id="new-lease-content-div" class="main-content display-none container">
                 <div class="w-auto">
                     <form id="form-create-lease">
+                        <div class="row g-3">
                         <div class="mb-3">
                             <label for="lease-unit-name" class="col-form-label"
                             >Unit Name:</label
                             >
                             <div class="dropdown" id="lease-unit-name">
                                 <button
-                                        class="btn btn-dark dropdown-toggle"
-                                        id="unit-dropdown-selected"
+                                        class="btn dropdown-toggle"
+                                        id="ul-lease-units-selected"
                                         type="button"
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false"
                                 >
                                     Select unit
                                 </button>
-                                <ul class="dropdown-menu" id="ul-units"></ul>
+                                <ul class="dropdown-menu" id="ul-lease-units"></ul>
                             </div>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="col-sm-12">
                             <label for="lease-tenant-name" class="col-form-label"
                             >Tenant Name:</label
                             >
@@ -1282,7 +1289,7 @@
                             />
                         </div>
 
-                        <div class="mb-3">
+                        <div class="col-sm-6">
                             <label for="lease-tenant-phone" class="col-form-label"
                             >Phone Number:</label
                             >
@@ -1294,7 +1301,7 @@
                             />
                         </div>
 
-                        <div class="mb-3">
+                        <div class="col-sm-6">
                             <label for="lease-tenant-email" class="col-form-label"
                             >Email:</label
                             >
@@ -1306,13 +1313,13 @@
                             />
                         </div>
 
-                        <div class="mb-3">
+                        <div class="col-sm-6">
                             <label for="application_id_doc_type" class="form-label"
                             >ID Document Type</label
                             >
                             <div class="dropdown" id="application_id_doc_type">
                                 <button
-                                        class="btn btn-dark dropdown-toggle"
+                                        class="btn dropdown-toggle"
                                         id="drop-id-doc-type-selected"
                                         type="button"
                                         data-bs-toggle="dropdown"
@@ -1340,7 +1347,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="mb-3">
+                        <div class="col-sm-6">
                             <label for="application_id_number" class="form-label"
                             >ID\Passport Number</label
                             >
@@ -1353,7 +1360,7 @@
                             />
                         </div>
 
-                        <div class="mb-3">
+                        <div class="col-sm-6">
                             <label for="lease-salary" class="form-label"
                             >Combined Gross Salary</label
                             >
@@ -1365,7 +1372,7 @@
                                     required
                             />
                         </div>
-                        <div class="mb-3">
+                        <div class="col-sm-6">
                             <label for="lease-occupation" class="form-label"
                             >Occupation</label
                             >
@@ -1377,7 +1384,7 @@
                                     required
                             />
                         </div>
-                        <div class="mb-3">
+                        <div class="col-sm-6">
                             <label for="adult_count" class="form-label"
                             >Number Of Adults</label
                             >
@@ -1390,7 +1397,7 @@
                                     required
                             />
                         </div>
-                        <div class="mb-3">
+                        <div class="col-sm-6">
                             <label for="child_count" class="form-label"
                             >Number Of Children</label
                             >
@@ -1403,7 +1410,7 @@
                                     required
                             />
                         </div>
-                        <div class="mb-3">
+                        <div class="col-sm-12">
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="lease-start-date">Start Date:</label>
@@ -1428,7 +1435,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="col-sm-12">
                             <small class="d-block"
                             >Forward all payment notification emails to
                                 payments@hotelrunner.co.za and update the last 4 digits of
@@ -1447,18 +1454,30 @@
                             />
                         </div>
 
-                        <div>
-                            <button
-                                    type="button"
-                                    class="btn btn-secondary m-1"
-                                    id="btn-close-new-lease"
-                            >
-                                Close
-                            </button>
-                            <button type="submit" class="btn btn-primary m-1">
-                                Submit
-                            </button>
+
+                        <div class="row mb-2 mt-3 ml-03">
+                            <div class="col-sm-4 mt-1">
+                                <button type="submit" class="btn green-button w-100">
+                                    Submit
+                                </button>
+                            </div>
+
+                            <div class="col-sm-4 mt-1">
+                                <button
+                                type="button"
+                                class="btn transparent-green-button rounded-0  w-100 btn-close-new-lease"
+                        >
+                            Cancel Lease
+                        </button></div>
+                            
+                            <div class="col-sm-4 mt-1">
+                                <button type="submit" class="btn rounded-0  transparent-green-button w-100">
+                                    New Inspection
+                                </button>
+                            </div>
                         </div>
+                        
+
                     </form>
 
                     <form id="regForm" class="m-5 display-none">
@@ -1467,6 +1486,7 @@
                             <label for="onboarding_lease" class="form-label"
                             >Signed Lease</label
                             >
+                            <a id="signed-lease-pdf-icon" target="_blank" role="button" class="display-none"><i class="fa-solid fa-file-pdf" style="color: #ca535f;" ></i></a>
                             <input
                                     type="file"
                                     class="form-control"
@@ -1477,6 +1497,7 @@
                             <label for="onboarding_iddoc" class="form-label"
                             >ID\Passport Document</label
                             >
+                            <a id="id-ducument-pdf-icon" target="_blank" role="button" class="display-none"><i class="fa-solid fa-file-pdf" style="color: #ca535f;" ></i></a>
                             <input
                                     type="file"
                                     class="form-control"
@@ -1487,8 +1508,10 @@
                             <label for="onboarding_pop" class="form-label"
                             >Deposit Proof Of Payment</label
                             >
+                            <a  id="pop-pdf-icon"  target="_blank" role="button" class="display-none"><i class="fa-solid fa-file-pdf" style="color: #ca535f;"></i></a>
                             <input type="file" class="form-control" id="onboarding_pop"/>
                         </div>
+                    </div>
                     </form>
                 </div>
             </div>
@@ -1507,7 +1530,7 @@
                         >
                         <div class="dropdown" id="maintenance-unit-name">
                             <button
-                                    class="btn btn-dark dropdown-toggle"
+                                    class="btn dropdown-toggle"
                                     id="maintenance-unit-dropdown-selected"
                                     type="button"
                                     data-bs-toggle="dropdown"
@@ -1528,7 +1551,7 @@
                     <button
                             type="submit"
                             id="btn-log-call"
-                            class="btn btn-secondary mb-5 mt-2"
+                            class="btn transparent-green-button mb-5 mt-2"
                     >
                         Log A Call
                     </button>
@@ -1543,7 +1566,7 @@
                     <p>
                         <button
                                 type="button"
-                                class="btn btn-secondary"
+                                class="btn transparent-green-button"
                                 id="btn-new-expense"
                                 data-bs-toggle="modal"
                                 data-bs-target="#propertyExpenseModal"
@@ -1578,7 +1601,7 @@
 
                 <!--                    <h2>Item List</h2>-->
 
-                <!--                    <button class="btn btn-primary mt-3" id="addItemBtn">Add Item</button>-->
+                <!--                    <button class="btn transparent-green-button mt-3" id="addItemBtn">Add Item</button>-->
 
                 <!--                    <div class="mb-3">-->
                 <!--                        <label for="settings-email" class="form-label">Email address</label>-->

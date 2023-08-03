@@ -48,6 +48,23 @@ class UnitController extends AbstractController
     }
 
     /**
+     * @Route("api/unitsnames/get/{propertyGuid}")
+     */
+    public function getUnitsNames($propertyGuid, UnitApi $unitApi, Request $request, LoggerInterface $logger): Response{
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('get')) {
+            return new JsonResponse("Method Not Allowed" , 405, array());
+        }
+
+        $response = $unitApi->getUnitsNames($propertyGuid);
+        $serializer = SerializerBuilder::create()->build();
+        $jsonContent = $serializer->serialize($response, 'json');
+        return new JsonResponse($jsonContent , 200, array(), true);
+    }
+
+
+
+    /**
      * @Route("api/units/update")
      */
     public function updateUnit(Request $request,  LoggerInterface $logger, UnitApi $unitApi): Response{

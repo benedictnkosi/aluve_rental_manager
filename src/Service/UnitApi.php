@@ -106,6 +106,48 @@ class UnitApi extends AbstractController
         }
     }
 
+
+    public function getUnitsNames($propertyGuid): array
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+
+            $Property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid, 'status' => 'active'));
+            if ($Property == null) {
+                return array(
+                    'result_message' => "Error. No units found",
+                    'result_code' => 1
+                );
+            }
+
+            $units = $this->em->getRepository(Units::class)->findBy(array('property' => $Property->getId(), 'status' => 'active'));
+            if (sizeof($units) < 1) {
+                return array(
+                    'result_message' => "Error. No units found",
+                    'result_code' => 1
+                );
+            }
+
+            foreach ($units as $unit) {
+                {
+                    $responseArray[] = array(
+                        'unit_name' => $unit->getName(),
+                        'unit_id' => $unit->getId(),
+                        'guid' => $unit->getGuid(),
+                    );
+                }
+            }
+            return $responseArray;
+        } catch (Exception $ex) {
+            $this->logger->error("Error " . print_r($responseArray, true));
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
+
     public function getUnit($guid)
     {
         $this->logger->debug("Starting Method: " . __METHOD__);

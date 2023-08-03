@@ -87,6 +87,7 @@ class LeaseApi extends AbstractController
                 $tenant = $lease->getTenant();
                 $due = $this->transactionApi->getBalanceDue($lease->getId());
 
+
                 $LeaseDocument = $documentApi->getDocumentName($tenant->getId(), "Signed Lease");
                 $idDocument = $documentApi->getDocumentName($tenant->getId(), "ID Document");
                 $popDocument = $documentApi->getDocumentName($tenant->getId(), "Proof OF Payment");
@@ -109,7 +110,7 @@ class LeaseApi extends AbstractController
                     $inspectionExist = true;
                 }
 
-                $documentApi = new DocumentApi($this->em, $this->logger);
+
                 $responseArray[] = array(
                     'unit_name' => $lease->getUnit()->getName(),
                     'unit_id' => $lease->getUnit()->getId(),
@@ -124,6 +125,7 @@ class LeaseApi extends AbstractController
                     'salary' => $tenant->getSalary(),
                     'occupation' => $tenant->getOccupation(),
                     'tenant_id' => $tenant->getId(),
+                    'rent' => $lease->getUnit()->getRent(),
                     'lease_start' => $lease->getStart()->format("Y-M-d"),
                     'lease_end' => $lease->getEnd()->format("Y-M-d"),
                     'lease_id' => $lease->getId(),
@@ -135,6 +137,75 @@ class LeaseApi extends AbstractController
                     "signed_lease" => $leaseDocumentName,
                     "id_document" => $idDocumentName,
                     "proof_of_payment" => $popDocumentName,
+                );
+            }
+            return $responseArray;
+        } catch (Exception $ex) {
+            $this->logger->error("Error " . print_r($responseArray, true));
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
+
+
+
+    public function getLeasesSummary($propertyGuid): array
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+
+            //validate property id
+            if (strlen($propertyGuid) !== 36) {
+                return array(
+                    'result_message' => "Error. Property GUID is invalid",
+                    'result_code' => 1
+                );
+            }
+
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
+            if ($property == null) {
+                return array(
+                    'result_message' => "Error. Property not found",
+                    'result_code' => 1
+                );
+            }
+
+
+            $leases = $this->em->getRepository("App\Entity\Leases")->createQueryBuilder('l')
+                ->leftJoin('l.unit', 'u')
+                ->where('l.property = :property')
+                ->andWhere("l.status = 'active'")
+                ->setParameter('property', $property->getId())
+                ->orderBy('u.name', 'ASC')
+                ->getQuery()
+                ->getResult();
+            if (sizeof($leases) < 1) {
+                return array(
+                    'result_message' => "Error. No leases found",
+                    'result_code' => 1
+                );
+            }
+            foreach ($leases as $lease) {
+
+                $tenant = $lease->getTenant();
+                $due = $this->transactionApi->getBalanceDue($lease->getId());
+
+                $responseArray[] = array(
+                    'unit_name' => $lease->getUnit()->getName(),
+                    'unit_id' => $lease->getUnit()->getId(),
+                    'tenant_name' => $tenant->getName(),
+                    'tenant_guid' => $tenant->getGuid(),
+                    'tenant_id' => $tenant->getId(),
+                    'rent' => $lease->getUnit()->getRent(),
+                    'lease_start' => $lease->getStart()->format("Y-M-d"),
+                    'lease_end' => $lease->getEnd()->format("Y-M-d"),
+                    'lease_id' => $lease->getId(),
+                    'due' => "R" . number_format(intval($due["result_message"]), 2, '.', ''),
+                    'guid' => $lease->getGuid(),
+                    'status' => $lease->getStatus()
                 );
             }
             return $responseArray;
@@ -178,10 +249,40 @@ class LeaseApi extends AbstractController
                 );
             }
 
+            $leaseDocumentName = "";
+            $idDocumentName = "";
+            $popDocumentName = "";
+
+            $tenant = $lease->getTenant();
+
             $allDocsUploaded = $lease->getLeaseAggreement() !== null && $lease->getIdDocument() !== null && $lease->getDepositPop() !== null;
 
+            $documentApi = new DocumentApi($this->em, $this->logger);
+
+            $LeaseDocument = $documentApi->getDocumentName($tenant->getId(), "Signed Lease");
+            $idDocument = $documentApi->getDocumentName($tenant->getId(), "ID Document");
+            $popDocument = $documentApi->getDocumentName($tenant->getId(), "Proof OF Payment");
+
+            if ($LeaseDocument["result_code"] == 0) {
+                $leaseDocumentName = $LeaseDocument["name"];
+            }
+
+            if ($idDocument["result_code"] == 0) {
+                $idDocumentName = $idDocument["name"];
+            }
+
+            if ($popDocument["result_code"] == 0) {
+                $popDocumentName = $popDocument["name"];
+            }
+
+            $inspection = $this->em->getRepository(Inspection::class)->findBy(array('lease' => $lease, 'status' => "active"));
+            $inspectionExist = false;
+            if (sizeof($inspection) > 0) {
+                $inspectionExist = true;
+            }
+
             $now = new DateTime();
-            $tenant = $lease->getTenant();
+
             $due = $this->transactionApi->getBalanceDue($lease->getId());
             return array(
                 'unit_name' => $lease->getUnit()->getName(),
@@ -192,17 +293,26 @@ class LeaseApi extends AbstractController
                 'adults' => $tenant->getAdults(),
                 'children' => $tenant->getChildren(),
                 'id_number' => $tenant->getIdNumber(),
+                'id_document_type' => $tenant->getIdDocumentType(),
                 'tenant_id' => $tenant->getId(),
+                'tenant_guid' => $tenant->getGuid(),
                 'lease_start' => $lease->getStart()->format("Y-M-d"),
                 'lease_end' => $lease->getEnd()->format("Y-M-d"),
                 'lease_id' => $lease->getId(),
+                'lease_guid' => $lease->getGuid(),
+                'salary' => $tenant->getSalary(),
+                'occupation' => $tenant->getOccupation(),
                 'due' => number_format(intval($due["result_message"]), 2, '.', ''),
                 'statement_date' => $now->format("Y-M-d"),
                 'property' => $lease->getUnit()->getProperty()->getName() . ", " . $lease->getUnit()->getProperty()->getAddress(),
                 'payment_rules' => $lease->getPaymentRules(),
                 'alldocs_uploaded' => $allDocsUploaded,
                 'bedrooms' => $lease->getUnit()->getBedrooms(),
-                'bathrooms' => $lease->getUnit()->getBathrooms()
+                'bathrooms' => $lease->getUnit()->getBathrooms(),
+                'inspection_exist' => $inspectionExist,
+                "signed_lease" => $leaseDocumentName,
+                "id_document" => $idDocumentName,
+                "proof_of_payment" => $popDocumentName,
             );
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
@@ -731,7 +841,8 @@ class LeaseApi extends AbstractController
             return array(
                 'result_message' => "Successfully uploaded file",
                 'result_code' => 0,
-                'alldocs_uploaded' => $allDocsUploaded
+                'alldocs_uploaded' => $allDocsUploaded,
+                'document_name' => $fileName
             );
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));

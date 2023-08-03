@@ -104,14 +104,14 @@ a{
 }
 
 #property_name {
-    background: #EEEEEE !important;
+    background: var(--bs-body-bg) !important;
     color: #45AAB1 !important;
     width:100%;
 }
 
 
 .header-property-name{
-    background: #EEEEEE !important;
+    background: var(--bs-body-bg) !important;
     color: #45AAB1 !important;
     width:100%;
 }
@@ -134,4 +134,21 @@ a{
 
 .btn{
     --bs-btn-font-weight: 200 !important;
+}
+
+.fa-solid{
+    margin-left:1em;
+}
+
+.border-left-red{
+    border-right: 5px solid #dc3545 !important;
+}
+ 
+
+li a{
+    color: var(--bs-body-color) !important;
+}
+
+.ml-03{
+    margin-left: 0.3em !important;
 }

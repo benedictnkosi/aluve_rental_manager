@@ -11,8 +11,8 @@
     background:transparent;
     width: 300px;
     margin-top: 1em;
-    margin-left:1em;
-    margin-right:1em;
+    /* margin-left:1em;
+    margin-right:1em; */
     border-radius: 10px;
     text-align: center;
     border: 1px solid #5AB8B8;
@@ -58,13 +58,12 @@ box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 
     border: 1px solid #5AB8B8;
     background-color: #5AB8B8;
     color: #EEEEEE;
-    width: 150px;
+    width: 100%;
     text-align: left;
-    margin-left: 1em;
+    /* margin-left: 1em; */
     padding:5px;
     box-sizing: border-box;
     font-weight: 300;
   }
 
 
- 

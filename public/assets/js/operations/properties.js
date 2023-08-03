@@ -1,5 +1,8 @@
 $(document).ready(function () {
     sessionStorage.setItem("property-id","0");
+    sessionStorage.setItem("current_page", "dashboard-content-div")
+    sessionStorage.setItem("current_page_header", "Dashboard")
+    
     getAllProperties();
 
     $("#form-create-property").submit(function (event) {

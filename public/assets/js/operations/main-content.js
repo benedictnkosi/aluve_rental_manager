@@ -5,7 +5,14 @@ $(document).ready(function () {
     if (sessionStorage.getItem("current_page") === null) {
         updateView('dashboard-content-div', "Dashboard");
     } else {
-        updateView(sessionStorage.getItem("current_page"), sessionStorage.getItem("current_page_header"));
+        if(sessionStorage.getItem("current_page").localeCompare("new-unit-content-div") === 0){
+            updateView("units-content-div", "Units");
+        }else if(sessionStorage.getItem("current_page").localeCompare("new-lease-content-div") === 0){
+            updateView("leases-content-div", "Leases");
+        }else{
+            updateView(sessionStorage.getItem("current_page"), sessionStorage.getItem("current_page_header"));
+        }
+    
     }
 
     $(".nav-link").click(function (event) {
@@ -59,7 +66,7 @@ function updateView(selectedDiv, header) {
     $(".main-content").addClass("display-none");
     $("#" + selectedDiv).removeClass("display-none");
     //hide mobile menu
-    $("#offcanvasNavbar").removeClass("show");
+    $("#navbarSupportedContent").removeClass("show");
     
     $("#main-content-header").html(header);
 
