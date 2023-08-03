@@ -1,0 +1,10 @@
+imap:
+    connections:
+        full_config_connection:
+            mailbox: "{mail.hotelrunner.co.za:993/imap/ssl/novalidate-cert}INBOX"
+            username: "payments@hotelrunner.co.za"
+            password: "S]c~e#o^1VKB"
+            attachments_dir: "%kernel.project_dir%/var/imap/attachments"
+            create_attachments_dir_if_not_exists: true # default true
+            created_attachments_dir_permissions: 777 # default 770
+            server_encoding: "UTF-8"

@@ -1,0 +1,80 @@
+.mobile-clouds{
+    width: 95%;
+    margin: auto;
+    height: 7em;
+}
+
+.cloud{
+    border-radius: 50%;
+    background-color: #70E5E5;
+    width: 200px;
+    height: 200px;
+    border:1px solid #4ddddd;
+}
+
+.cloud1{
+    top: -4em;
+    z-index: 1;
+    position:absolute;
+}
+
+.cloud2{
+    top: -2em;
+    left: -4em;
+    position:absolute;
+}
+
+.landing-image{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.landing-image img{
+    width: 175px;
+    height: 180px;
+}
+
+.landing-about{
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+    flex-direction: column;
+}
+
+.landing-about h1{
+    font-size: 2em;
+    font-weight: 300;
+    margin-bottom: 0.5em;
+}
+
+.landing-about p {
+    font-size: 0.7em;
+    font-weight: 300;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.landing-about button{
+    width: 60%;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    font-size: 0.7em;
+}
+
+@media screen and (min-width: 1024px){
+    .landing-about button{
+        width: 30%;
+        font-size: 1em;
+    }
+    .landing-about p {
+        font-size: 1em;
+        font-weight: 300;
+        text-align: center;
+        font-family: sans-serif;
+    }
+}
