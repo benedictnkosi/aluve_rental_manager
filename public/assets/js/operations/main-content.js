@@ -58,6 +58,9 @@ function updateSettingsView(selectedForm) {
 function updateView(selectedDiv, header) {
     $(".main-content").addClass("display-none");
     $("#" + selectedDiv).removeClass("display-none");
+    //hide mobile menu
+    $("#offcanvasNavbar").removeClass("show");
+    
     $("#main-content-header").html(header);
 
     sessionStorage.setItem("current_page", selectedDiv);

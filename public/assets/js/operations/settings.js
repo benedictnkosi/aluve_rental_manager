@@ -1,6 +1,6 @@
 $(document).ready(function () {
     sessionStorage.setItem("update_property_settings", "false");
-   //getProperty();
+   getProperty();
     $('.property-value').focus(function () {
         sessionStorage.setItem("update_property_settings", "true");
     });

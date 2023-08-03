@@ -217,7 +217,7 @@ p {
 }
 
 @media only screen and (max-width: 1024px) {
-    #mobile-menu {
+    .aluve-nav {
         display: block;
     }
     #desktop-menu {
@@ -226,10 +226,11 @@ p {
 }
 
 @media only screen and (min-width: 1024px) {
-    #mobile-menu {
+    .aluve-nav{
         display: none;
     }
     #desktop-menu {
         display: block;
+        background-color: #45AAB1;
     }
 }
