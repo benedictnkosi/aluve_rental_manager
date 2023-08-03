@@ -1,0 +1,137 @@
+*{
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+body{
+    background: #D9D9D9;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 14px !important;
+    width:100%;
+    font-weight: 300;
+
+}
+
+.green-button {
+    border-radius: 0 !important;
+    background-color: #45AAB1 !important;
+    color: #EEEEEE !important;
+}
+
+.transparent-green-button {
+    background-color: transparent !important;
+    border: 1px solid #45AAB1 !important;
+    color: #45AAB1 !important;
+  }
+
+  .transparent-white-button {
+    background-color: transparent !important;
+    border: 1px solid #EEEEEE !important;
+    color: #EEEEEE !important;
+  }
+
+
+.white-button {
+    border-radius: 0 !important;
+    background-color: #EEEEEE !important;
+    color: #45AAB1 !important;
+}
+
+.container{
+    width: 100%;
+    margin: auto;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
+
+a{
+    color: #EEEEEE !important;
+    text-decoration: none!important;
+}
+
+/* navigation */
+
+
+
+.aluve-nav{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background: #45AAB1;
+    height: 4em;
+    border-bottom-left-radius: 10px; 
+    border-bottom-right-radius: 10px;
+    color: #EEEEEE;
+}
+
+.navbar{
+    width: 100% !important;
+    font-size: 14px !important;
+    font-weight: 250 !important;
+}
+
+.navbar-brand{
+    font-size: 14px !important;
+    color: #EEEEEE !important;
+    margin-left: 5px !important;
+    padding-left: 1em;
+}
+
+.nav-link{
+    font-size: 14px !important;
+    color: #EEEEEE !important;
+    margin-right: 5px !important;
+    padding-right: 1em;
+}
+
+#navbarSupportedContent{
+    background: #45AAB1;
+    padding: 5px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    z-index: 999;
+}
+
+.green-text{
+    color: #45AAB1;
+}
+
+
+.modal-content{
+    font-weight: 200 !important;
+    font-size: 14px;
+}
+
+#property_name {
+    background: #EEEEEE !important;
+    color: #45AAB1 !important;
+    width:100%;
+}
+
+
+.header-property-name{
+    background: #EEEEEE !important;
+    color: #45AAB1 !important;
+    width:100%;
+}
+
+.col-form-label{
+    font-size: 14px !important;
+}
+
+@media only screen and (min-width: 1024px) {
+    .w-md-50{
+        width: 50% !important;
+    }
+}
+
+@media only screen and (max-width: 1023px) {
+    .w-sm-100{
+        width: 100% !important;
+    }
+}
+
+.btn{
+    --bs-btn-font-weight: 200 !important;
+}
