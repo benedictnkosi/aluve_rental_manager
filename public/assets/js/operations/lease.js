@@ -279,14 +279,14 @@ let getAllLeases = () => {
           lease.rent +
           ".00</p>\n" +
           "    </div>\n" +
-          '    <div class="lease-due-div ' +
+          '    <a class="dropdown-item" target="_blank" href="/statement/?guid=' + lease.guid + '"><div class="lease-due-div ' +
           dueClass +
           '">\n' +
           "      <p>Due</p>\n" +
           "      <p>" +
           lease.due +
           "</p>\n" +
-          "    </div>\n" +
+          "    </div></a>\n" +
           "  </div>\n" +
           '<div class="col-12 mt-2 w-100">\n' +
           '<button type="submit" class="btn transparent-green-button w-100 add-payment-button" lease-guid="' +
