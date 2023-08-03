@@ -251,7 +251,7 @@ let getAllLeases = () => {
 
         html +=
           '<div class="lease-card">\n' +
-          '<img src="/assets/images/person2.jpg" alt="landing-image" border="0" role="button" lease-guid="' +
+          '<img src="/assets/images/default-person.jpg" alt="landing-image" border="0" role="button" lease-guid="' +
           lease.guid +
           '" class="update-lease-dpr-button">\n' +
           '<div class="lease-details">\n' +
