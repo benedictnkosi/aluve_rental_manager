@@ -150,67 +150,26 @@ let getAllUnits = () => {
                 unitsDropDownHtml += '<li><a class="dropdown-item lease-unit-dropdown" lease-unit-id="'+unit.guid+'"\n' +
                     '                                           href="javascript:void(0)">'+unit.unit_name+'</a></li>';
 
-                html += '<div class="col">\n' +
-                    '                            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg property-image"\n' +
-                    '                                 style="background-image: url(\'/assets/images/house.jpg\');">\n' +
-                    '                                <div class="flex-column h-100 p-2 pb-3 text-white text-shadow-1">\n' +
-                    '                                    <h3 class="pt-1 mt-1 mb-4 lh-1 fw-bold">' + unit.unit_name + ' -  ' + unit.tenant_name + '</h3>\n' +
-                    '                                    <ul class=" list-unstyled mt-auto">\n' +
-                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                                            <i class="bi-currency-dollar bootstrap-icon-text"></i>\n' +
-                    '                                            <medium>Rent: ' + unit.rent + '</medium>\n' +
-                    '                                        </li>\n' +
-                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                                            <i class="bi-moon-stars-fill bootstrap-icon-text"></i>\n' +
-                    '                                            <medium>Bedrooms: ' + unit.bedrooms + '</medium>\n' +
-                    '                                        </li>\n' +
-                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                                            <i class="bi-gender-female bootstrap-icon-text" bootstrap-icon-text"></i>\n' +
-                    '                                            <medium>Bathrooms: ' + unit.bathrooms + '</medium>\n' +
-                    '                                        </li>\n' +
-                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                                            <i class="bi-currency-dollar bootstrap-icon-text"></i>\n' +
-                    '                                            <medium>Minimum Gross Salary: ' + unit.min_gross_salary + '</medium>\n' +
-                    '                                        </li>\n' +
-                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                                            <i class="bi-person-plus-fill bootstrap-icon-text"></i>\n' +
-                    '                                            <medium>Max Occupants: ' + unit.max_occupants + '</medium>\n' +
-                    '                                        </li>\n' +
-                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                                            <i class="bi-speedometer bootstrap-icon-text"></i>\n' +
-                    '                                            <medium>Meter: ' + unit.meter + '</medium>\n' +
-                    '                                        </li>\n' +
-                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                                            <i class="bi-car-front bootstrap-icon-text"></i>\n' +
-                    '                                            <medium>Parking: ' + parking + '</medium>\n' +
-                    '                                        </li>\n' +
-                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                                            <i class="bi-person-slash bootstrap-icon-text"></i>\n' +
-                    '                                            <medium>Children: ' + children + '</medium>\n' +
-                    '                                        </li>\n' +
-                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                                            <i class="' + eyeIcon + ' bootstrap-icon-text"></i>\n' +
-                    '                                            <medium>' + listed + '</medium>\n' +
-                    '                                        </li>\n' +
-                    '                                        <li class=" align-items-center me-3 mt-2">\n' +
-                    '                            <div class="btn-group">\n' +
-                    '                                <button class="btn btn-secondary btn-update-unit"  unit-id="' + unit.guid + '" unit-bedrooms="' + unit.bedrooms + '" unit-bathrooms="' + unit.bathrooms + '"unit-meter="' + unit.meter + '"unit-rent="' + unit.rent + '" parking="' + unit.parking + '" children="' + unit.children + '" min-salary="' + unit.min_gross_salary + '" max-occupants="' + unit.max_occupants + '"listed="' + unit.listed + '" unit-name="' + unit.unit_name + '" type="button">\n' +
-                    '                                    Update unit\n' +
-                    '                                </button>\n' +
-                    '                                <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
-                    '                                    <span class="visually-hidden">Toggle Dropdown</span>\n' +
-                    '                                </button>\n' +
-                    '                                <ul class="dropdown-menu dropdown-menu-dark">\n' +
-                    '                                    <li><a class="dropdown-item btn-delete-unit" href="javascript:void(0)" unit-id="' + unit.guid + '" >Delete Unit</a></li>\n' +
-                    '                                    <li><a class="dropdown-item btn-copy-listing-link" unit-id="' + unit.guid + '" href="javascript:void(0)">Copy Application Link</a></li>\n' +
-                    '</ul>\n' +
-                    '                            </div>\n' +
-                    '                                        </li>\n' +
-                    '                                    </ul>\n' +
-                    '                                </div>\n' +
-                    '                            </div>\n' +
-                    '                    </div>';
+    
+                html += '<div class="property-card">\n' +
+                '<img src="/assets/images/unit2.jpg" alt="landing-image" border="0">\n' +
+                '<div class="property-details">\n' +
+                '<p><a class="btn-update-unit"  unit-id="' + unit.guid + '" unit-bedrooms="' + unit.bedrooms + '" unit-bathrooms="' + unit.bathrooms + '"unit-meter="' + unit.meter + '"unit-rent="' + unit.rent + '" parking="' + unit.parking + '" children="' + unit.children + '" min-salary="' + unit.min_gross_salary + '" max-occupants="' + unit.max_occupants + '" listed="' + unit.listed + '" unit-name="' + unit.unit_name + '">' + unit.unit_name + '</a></p>\n';
 
+                if(unit.tenant_name){
+                    html += '<p>' + unit.tenant_name + '</p>\n';
+                }else{
+                    html += '<p>Vacant</p>\n';
+                }
+                
+                html += ' </a><div><i class="fa-solid fa-bed"></i> ' + unit.bedrooms + '\n' +
+                '   <i class="fa-solid fa-shower"></i> ' + unit.bathrooms + '\n' +
+                ' </div>\n' +
+                '</div>\n' +
+                '</div> ';
+
+
+                
 
             });
 
@@ -242,6 +201,7 @@ let getAllUnits = () => {
 
                 sessionStorage.setItem("unit-id", unitId)
 
+    
                 $('#unit-name').val(unitName);
                 $('#unit-rent').val(rent);
                 $('#max-occupants').val(maxOccupants);
@@ -268,7 +228,7 @@ let getAllUnits = () => {
                     $('#checkListed').prop('checked', false);
                 }
 
-                updateView("new-unit-content-div", "Unit");
+                updateView("new-unit-content-div", unitName);
                 $('.new-unit-fields').hide();
                 $('#unit-name-label').text("Unit Name:");
             });

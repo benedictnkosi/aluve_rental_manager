@@ -47,7 +47,7 @@ let createProperty = () =>{
 }
 
 let deleteProperty = () =>{
-    let url = "/api/properties/update";
+    let url = "/api/property/update";
     const data = {
         field: "status",
         value: "deleted",
@@ -87,33 +87,22 @@ let getAllProperties = () => {
             data.forEach(function (property) {
                 if (property.property.status.localeCompare("active") === 0) {
 
-                    propertiesHTML += '<div class="col">\n' +
-                        '               \n' +
-                        '                    <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg property-image"\n' +
-                        '                         style="background-image: url(\'/assets/images/house.jpg\');">\n' +
-                        '                        <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">\n' +
-                        '                             <a href="/dashboard/?id='+property.property.guid+'">' +
-                        '<h4 class="pt-3 mt-3 mb-4 lh-1 fw-bold">' + property.property.name + '</h4></a>\n' +
-                        '                            <ul class="d-flex list-unstyled mt-auto">\n' +
-                        '                                <li class="d-flex align-items-center me-3">\n' +
-                        '                                    <svg class="bi me-2" width="1em" height="1em">\n' +
-                        '                                        <use xlink:href="#geo-fill"/>\n' +
-                        '                                    </svg>\n' +
-                        '                                    <small>' + property.property.address + '</small>\n' +
-                        '                                </li>' +
-                        '<li class="d-flex align-items-center me-3">\n' +
-                        '                                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#newPropertyModal" data-bs-action="update" property-id="' + property.property.guid + '" property-name="' + property.property.name + '" property-address="' + property.property.address + '">Update\n' +
+                    propertiesHTML += '<a href="/dashboard/?id='+property.property.guid+'"> <div class="property-card">\n' +
+                        '        <img src="/assets/images/property2.jpg" alt="landing-image" border="0">\n' +
+                        '        <div class="property-details">\n' +
+                        '            <p>' + property.property.name + '</p>\n' +
+                        '            <p>' + property.property.address + '</p></a>\n' +
+                        '            <div><i class="fa-solid fa-bed"></i> 2\n' +
+                        '                <i class="fa-solid fa-car"></i> 1\n' +
+                        '                <button type="button" class="btn btn-info transparent-white-button w-100 mt-2 d-block" data-bs-toggle="modal" data-bs-target="#newPropertyModal" data-bs-action="update" property-id="' + property.property.guid + '" property-name="' + property.property.name + '" property-address="' + property.property.address + '">Update\n' +
                         '        </button>\n' +
-                        '                                </li>\n' +
-                        '                            </ul>\n' +
-                        '                        </div>\n' +
-                        '                    </div>\n' +
-                        '                \n' +
-                        '            </div>';
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '    </div>';
                 }
             });
 
-            $("#div-properties").html(propertiesHTML);
+            $(".properties-container").html(propertiesHTML);
             const newPropertyModal = document.getElementById('newPropertyModal')
             if (newPropertyModal) {
                 newPropertyModal.addEventListener('show.bs.modal', event => {
@@ -136,6 +125,10 @@ let getAllProperties = () => {
                         modalTitle.textContent = `Update Property`
                         modalPropertyName.value = propertyName
                         modalPropertyAddress.value = propertyAddress
+
+                        $("#btn-delete-property").removeClass("d-none");
+                    }else{
+                        $("#btn-delete-property").addClass("d-none");
                     }
                 })
             }
