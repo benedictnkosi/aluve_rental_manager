@@ -383,6 +383,8 @@ let populateLeaseDetails = (leaseGuid) => {
         $("#pop-pdf-icon").removeClass("display-none");
     }
 
+    $("#new-inspection-link").attr("href", "/inspection/?guid=" + lease.lease_guid);
+
       sessionStorage.setItem("document-type", lease.id_document_type);
       sessionStorage.setItem("tenant_guid", lease.tenant_guid);
     },
