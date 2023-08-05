@@ -335,6 +335,8 @@ let getAllLeases = () => {
         );
         $("#confirmModal").modal("toggle");
       });
+
+      $('#btn-new-lease').removeClass('d-none');
     },
     error: function (xhr) {},
   });

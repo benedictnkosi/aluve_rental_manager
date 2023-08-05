@@ -267,7 +267,7 @@ let getAllUnits = () => {
         const bedrooms = event.target.getAttribute("unit-bedrooms");
         const bathrooms = event.target.getAttribute("unit-bathrooms");
         const meter = event.target.getAttribute("unit-meter");
- $(".btn-delete-unit").removeClass("display-none");
+        $(".btn-delete-unit").removeClass("display-none");
         sessionStorage.setItem("unit-id", unitId);
 
         $("#unit-name-header").html(unitName);
@@ -315,6 +315,8 @@ let getAllUnits = () => {
         $("#unit-dropdown-selected").html(event.target.innerText);
         $("#maintenance-unit-dropdown-selected").html(event.target.innerText);
       });
+
+      $('#btn-create-new-unit').removeClass('d-none');
     },
     error: function (xhr) {},
   });

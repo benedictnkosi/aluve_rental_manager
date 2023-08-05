@@ -40,6 +40,21 @@ class ApplicationsController extends AbstractController
         return new JsonResponse($jsonContent , 200, array(), true);
     }
 
+    /**
+     * @Route("api/application/get/{applicationGuid}")
+     */
+    public function getApplication($applicationGuid, Request $request, LoggerInterface $logger, ApplicationsApi $applicationsApi): Response
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('GET')) {
+            return new JsonResponse("Method Not Allowed", 405, array());
+        }
+
+        $response = $applicationsApi->getApplication($applicationGuid);
+        $serializer = SerializerBuilder::create()->build();
+        $jsonContent = $serializer->serialize($response, 'json');
+        return new JsonResponse($jsonContent , 200, array(), true);
+    }
 
     /**
      * @Route("no_auth/application/new")

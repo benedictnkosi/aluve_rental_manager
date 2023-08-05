@@ -14,12 +14,73 @@ $(document).ready(function () {
     $("#btn-confirm-decline-application").click(function () {
         declineApplication();
     });
+
+    $(".btn-accept-application").click(function () {
+        $('#acceptApplicationModal').modal('toggle');
+    });
+
+    $(".btn-decline-application").click(function () {
+        $('#confirmDeclineApplicationModal').modal('toggle');
+    });
+
+    $(".btn-convert-application").click(function () {
+        $('#convertApplicationModal').modal('toggle');
+    });
+
+    $(".application-details-close").click(function () {
+        $('.closable-div').addClass('d-none');
+        $('#applications-div').removeClass('d-none');
+    });
+    
 });
+
+let openApplicationDetails = (applicaitonGuid) => {
+    sessionStorage.setItem("application-guid", applicaitonGuid);
+    let url = "/api/application/get/" + applicaitonGuid
+    $.ajax({
+        type: "GET",
+        url: url,
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            let html = "";
+            if (data.result_code !== undefined) {
+                if (data.result_code === 1) {
+                    return;
+                }
+            }
+
+            $('#applicant_name').html(data.application.tenant.name);
+            $('#applicant_email').html(data.application.tenant.email);
+            $('#applicant_phone').html(data.application.tenant.phone);
+            $('#applicant_salary').html("R" + data.application.tenant.salary.toLocaleString());
+            $('#applicant_adults').html(data.application.tenant.adults);
+            $('#applicant_children').html(data.application.tenant.children);
+            $('#applicant_id_number').html(data.application.tenant.id_number);
+            $('#applicant_occupation').html(data.application.tenant.occupation);
+
+            data.documents.forEach(function (document) {
+                html += '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/api/document/' + document.name + '"><i class="fa-solid fa-file-pdf red-icon me-3"></i><small>'+document.document_type.name+'</small></a></p>\n';
+            });
+
+            $("#application-documents").html(html);
+
+            $('#applications-div').addClass('d-none');
+            $('.application-card-details').removeClass('d-none');
+            
+        },
+        error: function (xhr) {
+
+        }
+    });
+
+
+}
+
 
 let declineApplication = () => {
     let url = "/api/application/decline";
     const data = {
-        id: sessionStorage.getItem("application-id")
+        id: sessionStorage.getItem("application-guid")
     };
 
     $.ajax({
@@ -30,7 +91,7 @@ let declineApplication = () => {
             showToast(response.result_message);
             if (response.result_code === 0) {
                 $('#confirmDeclineApplicationModal').modal('toggle');
-                sessionStorage.setItem("application-id", "0");
+                sessionStorage.setItem("application-guid", "0");
                 getApplications();
             }
         }
@@ -58,106 +119,43 @@ let getApplications = () => {
                     return;
                 }
             }
-            data.forEach(function (response) {
+            data.forEach(function (application) {
 
-                html += '<div class="col-xl-3 col-md-6 mb-4">\n' +
-                    '                        <div class="card border-left-success shadow h-100 py-2" style="background-image: url(\'/assets/images/house.jpg\');">\n' +
-                    '                            <div class="card-body">\n' +
-                    '                                <div class="row no-gutters align-items-center">\n' +
-                    '                                    <div class="col mr-2">\n' +
-                    '                                        <div class="h5 mb-0 font-weight-bold text-gray-800">\n' +
-                    '                                            ' + response.application.tenant.name + '</div>\n' +
-                    '                                        <div class="text-xs text-gray-800 mb-1"><i class="bi-house bootstrap-icon-text"></i>\n' +
-                    '                                            ' + response.application.unit.name + '</div>\n' +
-                    '                                        <div class="text-xs font-weight-bold text-uppercase mb-1"><i class="bi-telephone bootstrap-icon-text"></i>\n' +
-                    '                                            ' + response.application.tenant.phone + '</div>\n' +
-                    '                                        <div class="text-xs font-weight-boldtext-uppercase mb-1"><i class="bi-person-badge bootstrap-icon-text"></i>\n' +
-                    '                                            ' + response.application.tenant.id_number + '</div>\n' +
-                    '                                        <div class="text-xs font-weight-boldtext-uppercase mb-1">\n' +
-                    '                                            <i class="bi-person-hearts bootstrap-icon-text"></i>\n' +
-                    '                                            Adults: ' + response.application.tenant.adults + ', Children: ' + response.application.tenant.children + '\n' +
-                    '                                        </div>\n' +
-                    '                                        <div class="text-xs font-weight-boldtext-uppercase mb-1"><i class="bi-person-badge bootstrap-icon-text"></i>' + response.application.tenant.occupation + '</div>\n' +
-                    '                                        <div class="text-xs font-weight-boldtext-uppercase mb-1"><i class="bi-currency-dollar bootstrap-icon-text"></i>R' + response.application.tenant.salary.toLocaleString() + '</div>\n' +
-                    '                                        <div class="text-xs font-weight-boldtext-uppercase mb-1"><i class="bi-clipboard-check bootstrap-icon-text"></i>' + response.application.status + '</div>\n' +
-                    '                                        <div class="text-xs font-weight-boldtext-uppercase mb-1"><i class="bi-calendar-check-fill bootstrap-icon-text"></i>R' + response.application.date.substring(0, response.application.date.indexOf("T")) + '</div>\n' +
-                    '                            <div class="btn-group">\n' +
-                    '                                <button class="btn btn-dark " type="button">\n' +
-                    '                                    Actions\n' +
-                    '                                </button>\n' +
-                    '                                <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">\n' +
-                    '                                    <span class="visually-hidden">Toggle Dropdown</span>\n' +
-                    '                                </button>\n' +
-                    '                                <ul class="dropdown-menu dropdown-menu-dark">\n';
-                if (response.application.status.localeCompare("financials_uploaded") === 0) {
-                    html += '        <li><a class="dropdown-item btn-decline-application" application-id="' + response.application.id + '" href="#">Decline Application</a></li>\n';
-                    html += '        <li><a class="dropdown-item btn-accept-application" application-id="' + response.application.id + '" href="#">Accept Application</a></li>\n';
-                }
-
-                if (response.application.status.localeCompare("declined") === 0) {}
-
-                if (response.application.status.localeCompare("accepted") === 0) {
-                    html += '        <li><a class="dropdown-item btn-decline-application" application-id="' + response.application.id + '" href="#">Decline Application</a></li>\n';
-                }
-
-                if (response.application.status.localeCompare("lease_uploaded") === 0) {
-                    html += '        <li><a class="dropdown-item btn-decline-application" application-id="' + response.application.id + '" href="#">Decline Application</a></li>\n';
-                    html += '        <li><a class="dropdown-item btn-convert-application" application-id="' + response.application.id + '" href="#">Convert To Lease</a></li>\n';
-                }
-
-                if (response.applicant_bank_statement.length !== 0) {
-                    html += '                                      <li><a class="dropdown-item" target="_blank" href="/api/document/' + response.applicant_bank_statement + '">Bank Statement</a></li>\n';
-                }
-
-                if (response.applicant_payslip.length !== 0) {
-                    html += '                                      <li><a class="dropdown-item" target="_blank" href="/api/document/'+response.applicant_payslip+'">Payslip</a></li>\n';
-                }
-
-                if (response.co_applicant_bank_statement.length !== 0) {
-                    html += '                                      <li><a class="dropdown-item" target="_blank" href="/api/document/'+response.co_applicant_bank_statement+'">Co-Bank Statement</a></li>\n';
-                }
-
-                if (response.co_applicant_payslip.length !== 0) {
-                    html += '                                      <li><a class="dropdown-item" target="_blank" href="/api/document/'+response.co_applicant_payslip+'">Co-Payslip</a></li>\n';
-                }
-
-                if (response.signed_lease.length !== 0) {
-                    html += '                                      <li><a class="dropdown-item" target="_blank" href="/api/document/'+response.signed_lease+'">Lease</a></li>\n';
-                }
-
-                if (response.id_document.length !== 0) {
-                    html += '                                      <li><a class="dropdown-item" target="_blank" href="/api/document/'+response.id_document+'">ID Document</a></li>\n';
-                }
-
-                if (response.proof_of_payment.length !== 0) {
-                    html += '                                      <li><a class="dropdown-item" target="_blank" href="/api/document/'+response.proof_of_payment+'">Proof Of Deposit</a></li>\n';
-                }
-
-                html += '                                    </div></div>\n' +
-                    '                                </div>\n' +
-                    '                            </div>\n' +
-                    '                        </div>\n' +
-                    '                    </div>';
-
-
+                html += '<div class="application-card w-100">\n' +
+                '<div class="row align-items-center mt-1">\n' +
+                '  <div class="col-5 border-right">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-3 d-flex align-items-center">\n' +
+                '        <i class="fa-solid fa-hand-pointer application-details-button" application-guid="' + application.uid + '"></i>\n' +
+                '      </div>\n' +
+                '      <div class="col-9">\n' +
+                '        <p class="m-0">' + application.tenant.name + '</p>\n' +
+                '        <p class="m-0">' + application.unit.name + '</p>\n' +
+                '      </div>\n' +
+                '    </div>\n' +
+                    
+                '  </div>\n' +
+                '  <div class="col-3 border-right align-items-center">\n' +
+                '    <p class="orange-text">Documents Uploded</p>\n' +
+                '  </div>\n' +
+                '  <div class="col-4">\n' +
+                '    <div class="row align-items-center">\n' +
+                '     <div class="col-9">\n' +
+                '        <p class="m-0">R' + application.tenant.salary.toLocaleString() + '</p>\n' +
+                '        <p class="m-0 font-10">' + application.date.substring(0, application.date.indexOf("T")) + '</p>\n' +
+                '      </div>\n' +
+                '  </div>\n' +
+                '</div>\n' +
+                '</div>\n' +
+                '</div> ';
             });
 
             $("#applications-div").html(html);
 
-            $(".btn-accept-application").click(function (event) {
-                sessionStorage.setItem("application-id", event.target.getAttribute("application-id"));
-                $('#acceptApplicationModal').modal('toggle');
+            $(".application-details-button").click(function (event) {
+                openApplicationDetails(event.target.getAttribute("application-guid"));
             });
 
-            $(".btn-decline-application").click(function (event) {
-                sessionStorage.setItem("application-id", event.target.getAttribute("application-id"));
-                $('#confirmDeclineApplicationModal').modal('toggle');
-            });
-
-            $(".btn-convert-application").click(function (event) {
-                sessionStorage.setItem("application-id", event.target.getAttribute("application-id"));
-                $('#convertApplicationModal').modal('toggle');
-            });
         },
         error: function (xhr) {
 
@@ -171,7 +169,7 @@ let acceptApplication = () => {
 
     let url = "/api/application/accept";
     const data = {
-        id: sessionStorage.getItem("application-id"),
+        id: sessionStorage.getItem("application-guid"),
         start_date: startDate,
         end_date: endDate
     };
@@ -196,7 +194,7 @@ let convertApplication = () => {
 
     let url = "/api/application/convert_to_lease";
     const data = {
-        id: sessionStorage.getItem("application-id"),
+        id: sessionStorage.getItem("application-guid"),
         start_date: startDate,
         end_date: endDate
     };

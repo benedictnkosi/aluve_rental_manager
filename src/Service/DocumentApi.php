@@ -131,6 +131,29 @@ class DocumentApi extends AbstractController
         }
     }
 
+    public function getTenantDocuments($tenantId): array
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('id' => $tenantId));
+            if($tenant == null){
+                return array(
+                    'result_message' => "Error. Tenant not found",
+                    'result_code' => 1
+                );
+            }
+
+            return $this->em->getRepository(Document::class)->findBy(array('tenant' => $tenantId, 'status' => 'active'));
+        } catch (Exception $ex) {
+            $this->logger->error("Error " . print_r($responseArray, true));
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
+
     public function getDocumentNameByIdNumber($idNumber, $phoneNumber, $documentType): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);

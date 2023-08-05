@@ -69,7 +69,8 @@ function updateView(selectedDiv, header) {
     $("#navbarSupportedContent").removeClass("show");
     
     $("#main-content-header").html(header);
-
+    $("#page-header").html(header);
+    
     sessionStorage.setItem("current_page", selectedDiv);
     sessionStorage.setItem("current_page_header", header);
 

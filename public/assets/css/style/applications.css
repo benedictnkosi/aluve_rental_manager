@@ -1,0 +1,56 @@
+
+
+
+.application-card{
+    padding: 10px;
+    height: 70px;
+    background:transparent;
+    margin-top: 1em;
+    border-radius: 10px;
+    text-align: center;
+
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.application-card-details{
+    padding: 10px 25px 10px 10px;
+    background:transparent;
+    margin-top: 1em;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    height:fit-content;
+}
+
+.application-details p{
+    margin-bottom: 0.5em;
+}
+
+.application-details i:nth-child(2) {
+    margin-left:1em;
+  }
+
+  .border-right{
+      border-right: 1px solid #D9D9D9;
+      height: 34px;
+  }
+
+  .orange-text{
+      color: #FFA500;
+  }
+
+  i{
+    color:#5AB8B8;
+    font-size: 20px;
+  }
+
+  .red-icon{
+    color:#df6363 !important;
+    font-size: 20px;
+  }
+
+ .fa-circle-xmark {
+    float:right;
+    color:#df6363 !important;
+    margin-right: -18px;
+}

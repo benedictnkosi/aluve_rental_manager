@@ -8,7 +8,7 @@
     <link href="/assets/css/custom.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/assets/css/style/units.css">
     <link rel="stylesheet" href="/assets/css/style/leases.css">
-
+    <link rel="stylesheet" href="/assets/css/style/applications.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
@@ -610,19 +610,18 @@
                 id="desktop-menu"
                 class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary"
         >
-            <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow header-property-name"
-                    data-bs-theme="dark">
+            <header class="navbar sticky-topflex-md-nowrap p-0 shadow header-property-name">
                 <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white m-0" href="#" id="property_name"></a>
             </header>
 
             <div
-                    class="offcanvas-lg offcanvas-end bg-body-tertiary"
+                    class=""bg-body-tertiary"
                     tabindex="-1"
                     id="sidebarMenu"
                     aria-labelledby="sidebarMenuLabel"
             >
                 <div
-                        class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto"
+                        class="d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto"
                 >
                     <ul class="nav flex-column">
                         <li class="nav-item">
@@ -899,13 +898,15 @@
         </div>
 
         <!--        main window on the right-->
-        <main class="col-md-12 ms-xl-auto col-lg-10 px-md-4">
+        <main class="col-md-12 ms-xl-auto col-lg-10 px-md-4 d-flex flex-column align-items-center">
 
             <!--            alert message-------------------------------------------------------------------->
 
             <div class="mb-3">
                 <div class="display-none alert" role="alert" id="alert-unit"></div>
             </div>
+
+            <h1 id="page-header"></h1>
 
             <!--            dashboard div-------------------------------------------------------------------->
 
@@ -986,13 +987,14 @@
 
             <!--            units div-------------------------------------------------------------------->
             <div id="units-content-div" class="main-content display-none">
-                <div class="properties-container" id="div-units"></div>
+                
+                <div class="properties-container gap-3" id="div-units"></div>
 
-                <div class="properties-container mt-5">
+                <div class="properties-container  mt-5">
                     <p>
                         <button
                                 type="button"
-                                class="btn transparent-green-button w-100"
+                                class="btn transparent-green-button w-100 d-none"
                                 id="btn-create-new-unit"
                         >
                             Add New Unit
@@ -1236,7 +1238,7 @@
             </div>
 
             <!--            leases div-------------------------------------------------------------------->
-            <div id="leases-content-div" class="main-content display-none">
+            <div id="leases-content-div" class="main-content display-none gap-3">
                 <div
                         class="properties-container"
                         id="div-leases"
@@ -1245,7 +1247,7 @@
                     <p>
                         <button
                                 type="button"
-                                class="btn transparent-green-button w-100"
+                                class="btn transparent-green-button w-100 d-none"
                                 id="btn-new-lease"
                         >
                             New Lease
@@ -1465,7 +1467,7 @@
                             <div class="col-sm-4 mt-1">
                                 <button
                                 type="button"
-                                class="btn transparent-green-button rounded-0  w-100 btn-close-new-lease"
+                                class="btn transparent-red-button rounded-0  w-100 btn-close-new-lease"
                         >
                             Cancel Lease
                         </button></div>
@@ -1516,7 +1518,51 @@
 
             <!--            applications div -------------------------------------------------------------------->
             <div id="applications-content-div" class="main-content display-none">
-                <div class="row" id="applications-div"></div>
+                <div class="d-flex flex-column">
+                    <div class="font-12 align-items-center d-flex flex-column" id="applications-div">
+
+                    </div>
+    
+                    <div class="application-card-details d-none closable-div">
+                        <i class="fa-regular fa-circle-xmark application-details-close"></i>
+                        <div class="row p-sm-5">
+                            <p class="fw-bolder p-3">Applicant Details</p>
+                          <div class="col-8 text-start p-0" >
+                            <p><i class="fa-solid fa-user me-3 ms-0"></i><small id="applicant_name"></small></p>
+                            <p><i class="fa-solid fa-phone me-3 ms-0"></i><small id="applicant_phone"></small></p>
+                            <p><i class="fa-solid fa-envelope me-3 ms-0"></i> <small id="applicant_email"></small></p>
+                            <p><i class="fa-solid fa-id-badge me-3 ms-0"></i> <small id="applicant_id_number"></small></p>
+                          </div>
+                          <div class="col-4 text-start">
+                            <p><i class="fa-solid fa-id-badge me-3 ms-0"></i> <small id="applicant_occupation"></small></p>
+
+                            <p><i class="fa-solid fa-sack-dollar me-3 ms-0"></i> <small id="applicant_salary"></small></p>
+                            <p><i class="fa-solid fa-person me-3 ms-0"></i><small id="applicant_adults"></small></p>
+                            <p><i class="fa-solid fa-child-reaching me-3 ms-0"></i> <small id="applicant_children"></small></p>
+                            
+                          </div>
+                          <p class="fw-bolder p-3">Documents</p>
+                          <div class="col-12 text-start p-0" >
+                            
+                            <div id="application-documents"></div>
+                            
+                          </div>
+          
+            
+                            <div class="col-md-3 mt-1 ms-0" >
+                              <button type="button" class="btn transparent-green-button w-100 btn-accept-application">Accept</button>
+                            </div>
+                            <div class="col-md-3 mt-1 ms-0" >
+                              <button type="button" class="btn transparent-red-button w-100 btn-decline-application">Decline</button>
+                            </div>
+                            <div class="col-md-6 mt-1 ms-0" >
+                                <button type="button" class="btn transparent-green-button w-100 btn-convert-application">Convert To Lease</button>
+                              </div>
+                        </div>
+                      </div> 
+                </div>
+                
+
             </div>
 
             <!--            maintenance div -------------------------------------------------------------------->
