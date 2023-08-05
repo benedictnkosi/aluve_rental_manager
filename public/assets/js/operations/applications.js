@@ -30,6 +30,10 @@ $(document).ready(function () {
     $(".application-details-close").click(function () {
         $('.closable-div').addClass('d-none');
         $('#applications-div').removeClass('d-none');
+        //hide the buttons on open application window
+        $('.btn-decline-application').addClass('d-none');
+        $('.btn-convert-application').addClass('d-none');
+        $('.btn-accept-application').addClass('d-none');
     });
     
 });
@@ -67,6 +71,21 @@ let openApplicationDetails = (applicaitonGuid) => {
             $('#applications-div').addClass('d-none');
             $('.application-card-details').removeClass('d-none');
             
+            if (data.application.status.localeCompare("accepted") === 0) {
+                //accepted applications cant be converted to lease as the KYC docs are not uploaded
+                $('.btn-decline-application').removeClass('d-none');
+            }
+
+            if (data.application.status.localeCompare("lease uploaded") === 0) {
+                $('.btn-decline-application').removeClass('d-none');
+                $('.btn-convert-application').removeClass('d-none');
+            }
+
+            if (data.application.status.localeCompare("financials uploaded") === 0) {
+                $('.btn-decline-application').removeClass('d-none');
+                $('.btn-accept-application').removeClass('d-none');
+            }
+
         },
         error: function (xhr) {
 
@@ -120,13 +139,19 @@ let getApplications = () => {
                 }
             }
             data.forEach(function (application) {
+                let declinedClass = "orange-text"; 
+                if(application.status.localeCompare("declined") === 0){
+                    declinedClass = "red-text";
+                }else if(application.status.localeCompare("tenant") === 0){
+                    declinedClass = "green-text";
+                }
 
                 html += '<div class="application-card w-100">\n' +
                 '<div class="row align-items-center mt-1">\n' +
                 '  <div class="col-5 border-right">\n' +
                 '    <div class="row">\n' +
-                '      <div class="col-3 d-flex align-items-center">\n' +
-                '        <i class="fa-solid fa-hand-pointer application-details-button" application-guid="' + application.uid + '"></i>\n' +
+                '      <div class="col-3 d-flex align-items-cente application-guid="' + application.uid + '">\n' +
+                '        <i class="fa-solid fa-hand-pointer application-details-button me-5" style="z-index: 999;" role="button" application-guid="' + application.uid + '"></i>\n' +
                 '      </div>\n' +
                 '      <div class="col-9">\n' +
                 '        <p class="m-0">' + application.tenant.name + '</p>\n' +
@@ -136,7 +161,7 @@ let getApplications = () => {
                     
                 '  </div>\n' +
                 '  <div class="col-3 border-right align-items-center">\n' +
-                '    <p class="orange-text">Documents Uploded</p>\n' +
+                '    <p class="'+declinedClass+'">'+application.status+'</p>\n' +
                 '  </div>\n' +
                 '  <div class="col-4">\n' +
                 '    <div class="row align-items-center">\n' +
@@ -155,6 +180,15 @@ let getApplications = () => {
             $(".application-details-button").click(function (event) {
                 openApplicationDetails(event.target.getAttribute("application-guid"));
             });
+
+            //reset the buttons on open application window
+            $('.btn-decline-application').addClass('d-none');
+            $('.btn-convert-application').addClass('d-none');
+            $('#decline-application-button').addClass('d-none');
+
+            //close the application details window
+            $('.closable-div').addClass('d-none');
+            $('#applications-div').removeClass('d-none');
 
         },
         error: function (xhr) {

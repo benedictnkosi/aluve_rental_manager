@@ -22,8 +22,8 @@ $(document).ready(function () {
 
 
 let getExpenses = () => {
-    let id = getURLParameter("id");
-    let url = "/api/expenses/get/" + id
+    let guid = sessionStorage.getItem("property-guid");
+    let url = "/api/expenses/get/" + guid
     $.ajax({
         type: "GET",
         url: url,
@@ -36,34 +36,47 @@ let getExpenses = () => {
                 }
             }
             data.forEach(function (expense) {
-                const expenseDescription = expense.description === undefined ? "" : expense.description;
+                let colorClass = "";
+                if(expense.expense.name.localeCompare("Repairs & Maintenance") === 0){
+                    colorClass = "green-text";
+                }else if(expense.expense.name.localeCompare("Utilities") === 0){
+                    colorClass = "blue-text"
+                }else if(expense.expense.name.localeCompare("Insurance") === 0){
+                    colorClass = "red-text"
+                }else if(expense.expense.name.localeCompare("Mortgage Interest") === 0){
+                    colorClass = "orange-text"
+                }else if(expense.expense.name.localeCompare("Wages & Salaries") === 0){
+                    colorClass = "yellow-text"
+                }else if(expense.expense.name.localeCompare("Professional Services") === 0){
+                    colorClass = "purple-text"
+                }else if(expense.expense.name.localeCompare("Office Supplies") === 0){
+                    colorClass = "green-text"
+                }
 
-                html += '<div class="col-xl-3 col-md-6 mb-4">\n' +
-                    '                        <div class="card border-left-success shadow h-100 py-2"  style="background-image: url(\'/assets/images/house.jpg\');">\n' +
-                    '                            <div class="card-body">\n' +
-                    '                                <div class="row no-gutters align-items-center">\n' +
-                    '                                    <div class="col mr-2">\n' +
-                    '                                        <div class="text-xs font-weight-bold text-uppercase mb-1">\n' +
-                    '                                            '+expense.expense.name+'</div>\n' +
-                    '                                        <div class="text-xs text-gray-800 mb-1">\n' +
-                    '                                            '+expenseDescription+'</div>\n' +
-                    '                                        <div class="h5 mb-0 text-gray-800">R'+expense.amount.toLocaleString()+'</div>\n' +
-                    '                                        <div class="text-xs text-gray-800 mb-1">\n' +
-                    '                                            '+expense.date.substring(0, expense.date.indexOf("T")) +'</div>\n' +
-                    '                                    </div>\n' +
-                    '                                    <div class="col-auto">\n' +
-                    '                                        <i class="text-danger bi bi-trash-fill" expense-id="'+expense.guid+'"></i>\n' +
-                    '                                    </div>\n' +
-                    '                                </div>\n' +
-                    '                            </div>\n' +
-                    '                        </div>\n' +
-                    '                    </div>';
+                const expenseDescription = expense.description === undefined ? "" : expense.description;
+                html += '<div class="expenses-card d-flex w-100">\n' +
+                    '                <div class="col-1">\n' +
+                    '                  <i class="fa-solid fa-house '+colorClass+' expense-icon m-0"></i>\n' +
+                    '                </div>\n' +
+                    '                <div class="col-7">\n' +
+                    '                  <p class="m-0 fw-normal">'+expenseDescription+'</p>\n' +
+                    '                  <p class="m-0 '+colorClass+'">'+expense.expense.name+'</p>\n' +
+                    '                </div>\n' +
+                    '                <div class="col-3">\n' +
+                    '                  <p class="m-0 fw-normal">-R'+expense.amount.toLocaleString()+'</p>\n' +
+                    '                  <p class="m-0">'+expense.date.substring(0, expense.date.indexOf("T")) +'</p>\n' +
+                    '                </div>\n' +
+                    '                <div class="col-1" style="text-align: right;">\n' +
+                    '                  <i class="fa-solid fa-trash-can m-0 delete-expense-icon red-text" role="button" expense-guid="'+expense.guid+'"></i>\n' +
+                    '                </div>\n' +
+                    '            </div> ';
+
             });
 
             $("#expenses-div").html(html);
 
-            $('.bi-trash-fill').click(function (event) {
-                sessionStorage.setItem("expense-id", event.target.getAttribute("expense-id"));
+            $('.delete-expense-icon').click(function (event) {
+                sessionStorage.setItem("expense-guid", event.target.getAttribute("expense-guid"));
                 $('#confirmDeleteExpenseModal').modal('toggle');
             });
         },
@@ -112,7 +125,7 @@ let addExpense = () => {
         date: date,
         expense_id: expenseAccountId,
         description: summary,
-        property_id: sessionStorage.getItem("property-id")
+        property_guid: sessionStorage.getItem("property-id")
     };
 
     $.ajax({
@@ -130,7 +143,7 @@ let addExpense = () => {
 }
 
 let deleteExpense = () => {
-    let url = "/api/expenses/delete?guid=" + sessionStorage.getItem("expense-id");
+    let url = "/api/expenses/delete?guid=" + sessionStorage.getItem("expense-guid");
     $.ajax({
         url: url,
         type: "delete",

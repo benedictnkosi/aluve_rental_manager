@@ -229,7 +229,7 @@ let getAllUnits = () => {
           "\n" +
           '   <i class="fa-solid fa-shower ml-1"></i>  ' +
           unit.bathrooms +
-          ' <i class="fa-solid fa-link ml-1 btn-copy-listing-link" unit-id="' + unit.guid + '"></i>\n' +
+          ' <i class="fa-solid fa-link ml-1 btn-copy-listing-link" role="button" unit-id="' + unit.guid + '"></i>\n' +
           " </div>\n" +
           "</div>\n" +
           "</div> ";

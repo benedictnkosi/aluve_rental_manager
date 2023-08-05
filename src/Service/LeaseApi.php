@@ -825,7 +825,7 @@ class LeaseApi extends AbstractController
                 if ($allDocsUploaded) {
                     $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $applicationGuid));
                     if($application !== null){
-                        $application->setStatus("lease_uploaded");
+                        $application->setStatus("lease uploaded");
                         $this->em->persist($application);
                         $this->em->flush($application);
                     }else{

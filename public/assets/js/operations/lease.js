@@ -104,6 +104,13 @@ $(document).ready(function () {
     );
     $("#drop-id-doc-type-selected").html(event.target.innerText);
   });
+
+  $(".leases-details-close").click(function () {
+    $('.closable-div').addClass('display-none');
+    $('#leases-content-div').removeClass('display-none');
+});
+
+
 });
 
 function uploadSupportingDocuments(documentType, file_data) {
@@ -139,7 +146,7 @@ function uploadSupportingDocuments(documentType, file_data) {
       showToast(jsonObj.result_message);
       if (jsonObj.alldocs_uploaded === true) {
         // $(".tenant-div-toggle").addClass("display-none");
-        // $(".lease_uploaded").removeClass("display-none");
+        // $(".lease uploaded").removeClass("display-none");
       }
 
       if(documentType.localeCompare("Signed Lease") === 0){
@@ -369,6 +376,7 @@ let populateLeaseDetails = (leaseGuid) => {
       $("#lease-occupation").val(lease.occupation);
       $("#lease-salary").val(lease.salary);
       $("#application_id_number").val(lease.id_number);
+      $('#drop-id-doc-type-selected').html(lease.id_document_type);
 
       if (lease.signed_lease.length !== 0) {
         $("#signed-lease-pdf-icon").attr("href", "/api/document/" + lease.signed_lease);
@@ -383,6 +391,12 @@ let populateLeaseDetails = (leaseGuid) => {
     if (lease.proof_of_payment.length !== 0) {
         $("#pop-pdf-icon").attr("href", "/api/document/" + lease.proof_of_payment);
         $("#pop-pdf-icon").removeClass("display-none");
+    }
+
+    if (lease.inspection_exist === true) {
+      $('#existing_lease_link').attr("href", "/view/inspection/?guid=" + lease.guid);
+      $('#existing_lease_link').removeClass("display-none");
+      $('#existing_lease_link').text("View Existing Inspection");
     }
 
     $("#new-inspection-link").attr("href", "/inspection/?guid=" + lease.lease_guid);

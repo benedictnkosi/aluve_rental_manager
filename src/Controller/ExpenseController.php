@@ -32,7 +32,7 @@ class ExpenseController extends AbstractController
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $expenseApi->addExpense($request->get("expense_id"), $request->get("property_id"),  $request->get("amount"), $request->get("description"), $request->get("date"));
+        $response = $expenseApi->addExpense($request->get("expense_id"), $request->get("property_guid"),  $request->get("amount"), $request->get("description"), $request->get("date"));
         return new JsonResponse($response, 200, array());
     }
 

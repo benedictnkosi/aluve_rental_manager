@@ -127,7 +127,7 @@ function uploadSupportingDocuments(documentType, file_data) {
             showToast(jsonObj.result_message);
             if (jsonObj.alldocs_uploaded === true) {
                 $(".tenant-div-toggle").addClass("display-none");
-                $(".lease_uploaded").removeClass("display-none");
+                $(".lease uploaded").removeClass("display-none");
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {

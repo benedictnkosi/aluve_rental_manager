@@ -20,6 +20,7 @@
     text-align: center;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     height:fit-content;
+    max-width: 500px;
 }
 
 .application-details p{
@@ -39,6 +40,10 @@
       color: #FFA500;
   }
 
+  .red-text{
+    color: #df6363;
+}
+
   i{
     color:#5AB8B8;
     font-size: 20px;
@@ -48,9 +53,3 @@
     color:#df6363 !important;
     font-size: 20px;
   }
-
- .fa-circle-xmark {
-    float:right;
-    color:#df6363 !important;
-    margin-right: -18px;
-}

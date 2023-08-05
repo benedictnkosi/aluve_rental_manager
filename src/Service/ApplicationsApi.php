@@ -47,7 +47,7 @@ class ApplicationsApi extends AbstractController
 
             $applications = $this->em->getRepository("App\Entity\Application")->createQueryBuilder('a')
                 ->where('a.property = :property')
-                ->andWhere("a.status = 'financials_uploaded' or a.status = 'declined' or a.status = 'accepted' or a.status = 'lease_uploaded' or a.status = 'tenant'")
+                ->andWhere("a.status = 'financials uploaded' or a.status = 'declined' or a.status = 'accepted' or a.status = 'lease uploaded' or a.status = 'tenant'")
                 ->setParameter('property', $property->getId())
                 ->getQuery()
                 ->getResult();
@@ -144,7 +144,7 @@ class ApplicationsApi extends AbstractController
             return array(
                 'result_message' => "Successfully created application. Please upload documents",
                 'result_code' => 0,
-                'id' => $application->getId()
+                'id' => $application->getUid(),
             );
 
         } catch (Exception $ex) {
@@ -156,12 +156,12 @@ class ApplicationsApi extends AbstractController
         }
     }
 
-    public function addSupportingDoc($applicationId, $documentType, $fileName): array
+    public function addSupportingDoc($applicationGuid, $documentType, $fileName): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $applicationGuid));
             if ($application == null) {
                 return array(
                     'result_message' => "Failed to upload document. Application not found",
@@ -191,7 +191,7 @@ class ApplicationsApi extends AbstractController
             $allDocsUploaded = $bankStatementDocument["result_code"] == 0 && $PayslipDocument["result_code"] == 0;
 
             if ($allDocsUploaded) {
-                $application->setStatus("financials_uploaded");
+                $application->setStatus("financials uploaded");
             }
 
             $this->em->persist($application);
@@ -221,12 +221,12 @@ class ApplicationsApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function acceptApplication($applicationId): array
+    public function acceptApplication($applicationGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $applicationGuid));
             if ($application == null) {
                 return array(
                     'result_message' => "Application not found",
@@ -273,12 +273,12 @@ class ApplicationsApi extends AbstractController
 
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function convertApplicationToLease($applicationId, $startDate, $endDate): array
+    public function convertApplicationToLease($applicationGuid, $startDate, $endDate): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $applicationGuid));
             if ($application == null) {
                 return array(
                     'result_message' => "Application not found",
@@ -370,12 +370,12 @@ class ApplicationsApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function declineApplication($applicationId): array
+    public function declineApplication($applicationGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationGuid));
             if ($application == null) {
                 return array(
                     'result_message' => "Failed to decline application. Application not found",

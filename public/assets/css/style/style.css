@@ -53,7 +53,7 @@ body{
 }
 
 a{
-    color: #EEEEEE !important;
+    /* color: #EEEEEE !important; */
     text-decoration: none!important;
 }
 
@@ -183,4 +183,37 @@ li a{
     letter-spacing: 10px;
     font-weight: 100;
     font-family: monospace;
+    color: #6e6a6a;
+}
+
+
+.fa-circle-xmark {
+    float: right;
+    color: #9a9595b0 !important;
+    font-size: 3em;
+    /* margin-right: -13px; */
+}
+
+.orange-text{
+    color: #FFA500;
+}
+
+.red-text{
+  color: #df6363;
+}
+
+.blue-text{
+    color: #0763f9;
+}
+
+.yellow-text{
+    color: #ebd90a;
+}
+
+.purple-text{
+    color: #6171d9;
+}
+
+.grey-text{
+    color: #8b8c92;
 }
