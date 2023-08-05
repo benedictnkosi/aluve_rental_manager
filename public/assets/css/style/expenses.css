@@ -1,0 +1,10 @@
+.expenses-card{
+    padding: 10px;
+    background:transparent;
+    margin-top: 0.5em;
+    border-radius: 10px;
+    text-align: center;
+    text-align: left;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    align-items: center;
+}
