@@ -50,7 +50,7 @@ let getExpenses = () => {
                 }else if(expense.expense.name.localeCompare("Professional Services") === 0){
                     colorClass = "purple-text"
                 }else if(expense.expense.name.localeCompare("Office Supplies") === 0){
-                    colorClass = "green-text"
+                    colorClass = "grey-text"
                 }
 
                 const expenseDescription = expense.description === undefined ? "" : expense.description;
