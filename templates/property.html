@@ -170,7 +170,7 @@
     </div>
 </div>
 
-<!--modal for adding expense to lease-->
+<!--modal for adding expense to propery-->
 <div
         class="modal fade"
         id="propertyExpenseModal"
@@ -260,6 +260,65 @@
     </div>
 </div>
 
+
+<!--modal for acreating a new maintenance call-->
+<div
+        class="modal fade"
+        id="maintenanceModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="maintenanceModalLabel">
+                    New Maintenance Call
+                </h1>
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-log-maintenance">
+                    <div class="mb-3">
+                        <label for="maintenance-unit-name" class="col-form-label"
+                        >Unit Name:</label
+                        >
+                        <div class="dropdown" id="maintenance-unit-name">
+                            <button
+                                    class="btn dropdown-toggle"
+                                    id="maintenance-units-selected"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                            >
+                                Select unit
+                            </button>
+                            <ul class="dropdown-menu" id="maintenance-units"></ul>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <textarea
+                            class="form-control"
+                            id="call-summary"
+                            placeholder="Summary of the issue"
+                            rows="3"
+                            required
+                    ></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn transparent-green-button">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <!--confirm action delete modal-->
 <div
         class="modal fade"
@@ -1571,39 +1630,17 @@
 
             <!--            maintenance div -------------------------------------------------------------------->
             <div id="maintenance-content-div" class="main-content display-none">
-                <div class="form-group">
-                    <div class="mb-3">
-                        <label for="maintenance-unit-name" class="col-form-label"
-                        >Unit Name:</label
-                        >
-                        <div class="dropdown" id="maintenance-unit-name">
-                            <button
-                                    class="btn dropdown-toggle"
-                                    id="maintenance-unit-dropdown-selected"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                            >
-                                Select unit
-                            </button>
-                            <ul class="dropdown-menu" id="maintenance-ul-units"></ul>
-                        </div>
-                    </div>
-
-                    <textarea
-                            class="form-control"
-                            id="call-summary"
-                            placeholder="Summary of the issue"
-                            rows="3"
-                    ></textarea>
+                <p>
                     <button
-                            type="submit"
-                            id="btn-log-call"
-                            class="btn transparent-green-button mb-5 mt-2"
+                            type="button"
+                            class="btn transparent-green-button"
+                            id="btn-new-maintanance"
+                            data-bs-toggle="modal"
+                            data-bs-target="#maintenanceModal"
                     >
-                        Log A Call
+                    Log A Call
                     </button>
-                </div>
+                </p>
 
                 <div class="row" id="maintenance-div"></div>
             </div>

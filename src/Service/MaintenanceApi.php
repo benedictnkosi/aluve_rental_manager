@@ -186,7 +186,7 @@ class MaintenanceApi extends AbstractController
                 );
             }
 
-            $maintenanceCalls = $this->em->getRepository(Maintenance::class)->findBy(array('property' => $property->getID()), array('status' => 'DESC'));
+            $maintenanceCalls = $this->em->getRepository(Maintenance::class)->findBy(array('property' => $property->getID()), array('dateLogged' => 'DESC'));
 
             if (sizeof($maintenanceCalls) < 1) {
                 return array(
@@ -215,6 +215,7 @@ class MaintenanceApi extends AbstractController
                     "id" => $maintenanceCall->getId(),
                     "summary" => $maintenanceCall->getSummary(),
                     "status" => $maintenanceCall->getStatus(),
+                    "guid" => $maintenanceCall->getUid(),
                     "date" => $maintenanceCall->getDateLogged()->format("Y-m-d"),
                     "unit" => $unitName,
                     "tenant" => $tenantName,
@@ -303,12 +304,12 @@ class MaintenanceApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function closeMaintenanceCall($id): array
+    public function closeMaintenanceCall($guid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $maintenanceCall = $this->em->getRepository(Maintenance::class)->findOneBy(array('id' => $id));
+            $maintenanceCall = $this->em->getRepository(Maintenance::class)->findOneBy(array('uid' => $guid));
 
             if ($maintenanceCall == null) {
                 return array(

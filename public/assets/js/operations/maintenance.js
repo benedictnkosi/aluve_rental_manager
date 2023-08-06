@@ -5,10 +5,25 @@ $(document).ready(function () {
         event.preventDefault();
         logACall();
     });
+
     $("#btn-confirm-maintenance").click(function (event) {
         event.preventDefault();
         closeACall();
     });
+
+    populateUnitsDropdown("maintenance-units");
+
+    $("#form-log-maintenance").submit(function (event) {
+        event.preventDefault();
+    });
+
+    $("#form-log-maintenance").validate({
+        // Specify validation rules
+        rules: {}, submitHandler: function () {
+            logACall();
+        }
+    });
+
 });
 
 let getMaintenanceCalls = () => {
@@ -26,41 +41,53 @@ let getMaintenanceCalls = () => {
                 }
             }
             data.forEach(function (response) {
+                const callDate =  new Date(response.date);
+                const today = new Date();
+                // To calculate the time difference of two dates
+                const Difference_In_Time = today.getTime() - callDate.getTime() ;
+                // To calculate the no. of days between two dates
+                const Difference_In_Days = parseInt(Difference_In_Time / (1000 * 3600 * 24));
 
-                html += '<div class="col-xl-3 col-md-6 mb-4">\n' +
-                    '                        <div class="card border-left-success shadow h-100 py-2" style="background-image: url(\'/assets/images/house.jpg\');">\n' +
-                    '                            <div class="card-body">\n' +
-                    '                                <div class="row no-gutters align-items-center">\n' +
-                    '                                    <div class="col mr-2">\n' +
-                    '                                        <div class="text-xs text-gray-800 mb-1 text-uppercase mb-1">\n' +
-                    '                                            '+response.unit+'</div>\n'+
-                '                                        <div class="text-xs text-gray-800 mb-1">\n' +
-                '                                            '+response.date+'</div>\n';
+                let dateClass = "green-text";
+                let cardClass = "";
+                if(Difference_In_Days > 7){
+                    dateClass = "red-text";
+                    cardClass =  "border-left-red";
+                }
+
+                let numberOfDays = Difference_In_Days + " days ago";
+                if(Difference_In_Days === 0){
+                    numberOfDays = "Today";
+                }else if(Difference_In_Days === 1){
+                    numberOfDays = "Yesterday";
+                }
+                html += '<div class="maintenance-card d-flex w-100 mt-1 '+cardClass+'">\n' +
+                    '                <div class="col-1">\n' +
+                    '                  <i class="fa-solid fa-wrench green-text expense-icon m-0"></i>\n' +
+                    '                </div>\n' +
+                    '                <div class="col-7">\n' +
+                    '                  <p class="m-0 fw-normal">'+response.summary+'</p>\n' +
+                    '                  <p class="m-0 green-text">'+response.unit+'</p>\n' +
+                    '                </div>\n' +
+                    '                <div class="col-3">\n' +
+                    '                  <p class="m-0 fw-normal">'+response.status.toLocaleString()+'</p>\n' +
+                    '                  <p class="m-0 '+dateClass+'">'+numberOfDays +'</p>\n' +
+                    '                </div>\n';
                     if (response.status.localeCompare("new") === 0) {
-                        html +=   '                                        <div class="text-xs text-gray-800 mb-1">\n' +
-                            '                                            '+response.summary+'</div>\n' +
-                            '                                     <div class="text-xs text-gray-800 mb-1">\n' +
-                        '                                        <a data-bs-toggle="modal" data-bs-target="#confirmMaintenanceModal" role="button" maintenance-id="'+response.id+'" href="javascript:void(0)" class="btn-mark-as-done">Close Call</a>\n' +
-                        '                                    </div>\n';
-                    }else if(response.status.localeCompare("closed") === 0) {
-                        html +=   '                                        <div class="text-xs text-gray-800 mb-1">\n' +
-                            '                                            <s>'+response.summary+'</s></div>\n' +
-                            '<div class="col-auto">\n' +
-                            '                                        <i class="text-success bi bi-check2-circle"></i>\n' +
-                            '                                    </div>\n';
+                        html += '                <div class="col-1" style="text-align: right;">\n' +
+                        '                  <i class="fa-solid fa-xmark m-0 delete-maintenance-icon red-text"  role="button" maintenance-guid="'+response.guid+'"></i>\n' +
+                        '                </div>';
                     }
 
-                html +=
-                    '                                </div></div>\n' +
-                    '                            </div>\n' +
-                    '                        </div>\n' +
-                    '                    </div>';
+                html +=  '            </div> ';
+
             });
 
             $("#maintenance-div").html(html);
 
-            $(".btn-mark-as-done").click(function (event) {
-                sessionStorage.setItem("maintenance-id", event.target.getAttribute("maintenance-id"));
+            $(".delete-maintenance-icon").click(function (event) {
+                sessionStorage.setItem("maintenance-guid", event.target.getAttribute("maintenance-guid"));
+                $('#confirmMaintenanceModal').modal('toggle');
             });
 
         },
@@ -74,7 +101,7 @@ let logACall = () => {
     const summary = $("#call-summary").val().trim();
     let url = "/api/maintenance/new";
     const data = {
-        unit_guid: sessionStorage.getItem("lease-unit-id"),
+        unit_guid: sessionStorage.getItem("unit-guid"),
         property_guid: sessionStorage.getItem("property-id"),
         summary: summary,
     };
@@ -87,6 +114,9 @@ let logACall = () => {
             showToast(response.result_message)
             if (response.result_code === 0) {
                 getMaintenanceCalls();
+                $('#maintenanceModal').modal('toggle');
+                sessionStorage.setItem("unit-guid", "0");
+                $("#maintenance-units-selected").html("Select Unit");
             }
         }
     });
@@ -95,7 +125,7 @@ let logACall = () => {
 let closeACall = () => {
     let url = "/api/maintenance/close";
     const data = {
-        maintenance_id: sessionStorage.getItem("maintenance-id"),
+        maintenance_id: sessionStorage.getItem("maintenance-guid"),
     };
 
     $.ajax({
