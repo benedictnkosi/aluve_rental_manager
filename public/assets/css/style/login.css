@@ -1,0 +1,40 @@
+.login-container{
+    display: flex;
+    width: 100%;
+    margin: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
+    max-width: 680px !important;
+    align-items: center;
+}
+
+.login-card{
+    max-width: 480px;
+    margin-top: 5em;
+    padding: 1em;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    min-width: 300px;
+    color:#615b5b !important;
+}
+
+.login-app-header{
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    margin-bottom: 1em !important;
+    font-family: 'Victor Mono', monospace;
+    letter-spacing: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+.login-app-header-title {
+    font-size: 14px !important;
+    font-weight: 300 !important;
+    margin-bottom: 1em !important;
+    font-family: 'Victor Mono', monospace;
+    letter-spacing: 3px;
+    width: 100%;
+    text-align: center;
+}

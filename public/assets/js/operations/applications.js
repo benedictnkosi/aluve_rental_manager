@@ -53,6 +53,7 @@ let openApplicationDetails = (applicaitonGuid) => {
                 }
             }
 
+            $('#application_reference').html("AL-APP-" + data.application.id);
             $('#applicant_name').html(data.application.tenant.name);
             $('#applicant_email').html(data.application.tenant.email);
             $('#applicant_phone').html(data.application.tenant.phone);
@@ -151,7 +152,7 @@ let getApplications = () => {
                 '  <div class="col-5 border-right">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-3 d-flex align-items-cente application-guid="' + application.uid + '">\n' +
-                '        <i class="fa-solid fa-hand-pointer application-details-button me-5" style="z-index: 999;" role="button" application-guid="' + application.uid + '"></i>\n' +
+                '        <i class="fa-solid fa-hand-pointer application-details-button me-5 green-text" style="z-index: 999;" role="button" application-guid="' + application.uid + '"></i>\n' +
                 '      </div>\n' +
                 '      <div class="col-9">\n' +
                 '        <p class="m-0">' + application.tenant.name + '</p>\n' +

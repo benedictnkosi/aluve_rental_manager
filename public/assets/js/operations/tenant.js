@@ -1,12 +1,5 @@
 $(document).ready(function () {
-    $("#form-tenant-login").validate({
-        // Specify validation rules
-        rules: {}, submitHandler: function () {
-            sessionStorage.setItem("tenant_id_number", $('#id-number').val());
-            sessionStorage.setItem("tenant_phone_number", $('#phone-number').val());
-            authenticateTenant();
-        }
-    });
+    getTenantInfo();
 
     $("#form-tenant-login").submit(function (event) {
         event.preventDefault();
@@ -29,13 +22,12 @@ $(document).ready(function () {
     $('#onboarding_pop').change(function () {
         uploadSupportingDocuments("Proof OF Payment", $("#onboarding_pop").prop("files")[0]);
     });
-
 });
 
 
 let logACall = () => {
     const summary = $("#call-summary").val().trim();
-    let url = "/no_auth/maintenance/new";
+    let url = "/api/maintenance/new";
     const data = {
         id_number: sessionStorage.getItem("tenant_id_number"),
         phone_number: sessionStorage.getItem("tenant_phone_number"),
@@ -56,7 +48,7 @@ let logACall = () => {
 }
 
 let getMaintenanceCalls = () => {
-    let url = "/no_auth/maintenance/get/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    let url = "/api/maintenance/get/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
     $.ajax({
         type: "GET",
         url: url,
@@ -92,34 +84,54 @@ let getMaintenanceCalls = () => {
     });
 }
 
-let authenticateTenant = () => {
-    let url = "/no_auth/tenant/get/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+let getTenantInfo = () => {
+    let url = "/api/tenant/get";
     $.ajax({
         type: "GET",
         url: url,
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
-            if (data.result_code === 1) {
-                $("#logged-in-content").addClass("display-none");
-                $("#form-tenant-login").removeClass("display-none");
-                showToast("Error. Tenant verification failed");
-            } else {
-                $("#logged-in-content").removeClass("display-none");
-                $("#form-tenant-login").addClass("display-none");
-                sessionStorage.setItem("tenant_guid", data.tenant.guid);
-                sessionStorage.setItem("application_guid", data.application.uid);
+            if (data.application.result_code === 1 && data.lease.result_code === 1) {
+                return;
+            }
+            
+            if(data.application.application.status !== undefined){
+                sessionStorage.setItem("application_guid", data.application.application.uid);
+                $(".tenant-div-toggle").addClass("d-none");
+                $("." + data.application.application.status.replace(" ", "-")).removeClass("d-none");
 
-                $(".tenant-div-toggle").addClass("display-none");
-                $("." + data.application.status).removeClass("display-none");
-
-                if(data.application.status.localeCompare("accepted") === 0) {
+                if(data.application.application.status.localeCompare("accepted") === 0) {
                     getPropertyLeaseToSign();
-                }else if(data.application.status.localeCompare("tenant") === 0){
+                }else if(data.application.application.status.localeCompare("lease uploaded") === 0){
+                    let html = "";
+                    data.application.documents.forEach(function (document) {
+                        html += '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/api/document/' + document.name + '"><i class="fa-solid fa-file-pdf red-icon me-3"></i><small>'+document.document_type.name+'</small></a></p>\n';
+                    });
+                    $("#tenant-documents").html(html);
+                }else if(data.application.application.status.localeCompare("tenant") === 0){
                     getSignedLeaseLink();
                     getStatementLink();
                     getInspectionLink();
                 }
+
+                //load the unit details
+
+                const parking = data.application.application.unit.parking === true ? "1" : "0";
+            const children = data.application.application.unit.children_allowed === true ? "1" : "0";
+
+                $("#unit-name").html(data.application.application.unit.name);
+            $("#unit-address").html(data.application.application.property.address);
+            $("#unit-rent").html("R" + data.application.application.unit.rent.toFixed(2) );
+            $("#unit-beds").html(data.application.application.unit.bedrooms );
+            $("#unit-bathrooms").html(data.application.application.unit.bathrooms );
+            $("#unit-max-occupants").html(data.application.application.unit.max_occupants );
+            $("#unit-parking").html(parking);
+            $("#unit-children").html(children);
+            $(".unit-details").show();
             }
+
+            $('.tenant-container').show();
+        
         },
         error: function (xhr) {
 
@@ -128,7 +140,7 @@ let authenticateTenant = () => {
 }
 
 let getPropertyLeaseToSign = () => {
-    let url = "/no_auth/tenant/lease_to_sign/" + sessionStorage.getItem("application_guid");
+    let url = "/api/tenant/lease_to_sign/" + sessionStorage.getItem("application_guid");
     $.ajax({
         type: "GET",
         url: url,
@@ -138,8 +150,15 @@ let getPropertyLeaseToSign = () => {
                 showToast("Error. Property lease not found. Please contact agent.");
                 $("#btn-download-lease-agreement").removeAttr('href');
             } else {
-                $("#btn-download-lease-agreement").attr("href", "/public/lease_document/" + data.name);
+                const exisingDocuments = $('#tenant-documents').html();
+                if(exisingDocuments === undefined){
+                    html = '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/no_auth/lease_document/' + data.name + '"><i class="fa-solid fa-file-pdf red-icon me-3"></i><small>Property Lease (Download)</small></a></p>\n';
+                }else{
+                    html = exisingDocuments + '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/no_auth/lease_document/' + data.name + '"><i class="fa-solid fa-file-pdf red-icon me-3"></i><medium>Property Lease (Download)</medium></a></p>\n';
+                }
             }
+
+            $("#tenant-documents").html(html);
         },
         error: function (xhr) {
 
@@ -148,17 +167,23 @@ let getPropertyLeaseToSign = () => {
 }
 
 let getStatementLink = () => {
-    let url = "/no_auth/tenant/getlease/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    let url = "/api/tenant/get";
     $.ajax({
         type: "GET",
         url: url,
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
-            if (data.guid === undefined) {
+            if (data.lease.guid === undefined) {
                 showToast("Error: Statement link not found. Please contact agent.");
                 $("#btn-view-statement").removeAttr('href');
             } else {
-                $("#btn-view-statement").attr("href", "/statement/?guid=" + data.guid);
+                const exisingDocuments = $('#tenant-documents').html();
+                if(exisingDocuments === undefined){
+                    html =  '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/statement/?guid=' + data.lease.guid + '"><i class="fa-solid fa-link  red-icon me-3"></i><medium>View Statement</medium></a></p>\n';
+                }else{
+                    html = exisingDocuments + '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/statement/?guid=' + data.lease.guid + '"><i class="fa-solid fa-link  red-icon me-3"></i><medium>View Statement</medium></a></p>\n';
+                }
+                $('#tenant-documents').html(html);
             }
 
         },
@@ -169,7 +194,7 @@ let getStatementLink = () => {
 }
 
 let getSignedLeaseLink = () => {
-    let url = "/no_auth/tenant/getleaseDocumentName/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    let url = "/api/tenant/getleaseDocumentName" ;
     $.ajax({
         type: "GET",
         url: url,
@@ -179,7 +204,13 @@ let getSignedLeaseLink = () => {
                 showToast("Error: Signed lease not found. Please contact agent.");
                 $("#btn-download-lease").removeAttr('href');
             } else {
-                $("#btn-download-lease").attr("href", "/public/lease_document/" + data.name);
+                const exisingDocuments = $('#tenant-documents').html();
+                if(exisingDocuments === undefined){
+                    html = '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/api/document/' + data.name + '"><i class="fa-solid fa-file-pdf red-icon me-3"></i><medium>Signed Lease</medium></a></p>\n';
+                }else{
+                    html = exisingDocuments + '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/api/document/' + data.name + '"><i class="fa-solid fa-file-pdf red-icon me-3"></i><medium>Signed Lease</medium></a></p>\n';
+                }
+                $('#tenant-documents').html(html);
             }
         },
         error: function (xhr) {
@@ -189,17 +220,22 @@ let getSignedLeaseLink = () => {
 }
 
 let getInspectionLink = () => {
-    let url = "/no_auth/tenant/getlease/" + sessionStorage.getItem("tenant_id_number") + "/" + sessionStorage.getItem("tenant_phone_number");
+    let url = "/api/tenant/get";
     $.ajax({
         type: "GET",
         url: url,
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
-            if (data.guid === undefined) {
+            if (data.lease.guid === undefined) {
                 $("#btn-view-Inspection").removeAttr('href');
             } else {
-
-                $("#btn-view-Inspection").attr("href", "/view/inspection/?guid=" + data.guid);
+                const exisingDocuments = $('#tenant-documents').html();
+                if(exisingDocuments === undefined){
+                    html =  '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/view/inspection/?guid=' + data.lease.guid + '"><i class="fa-solid fa-link  red-icon me-3"></i><medium>View Inspection</medium></a></p>\n';
+                }else{
+                    html = exisingDocuments + '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/view/inspection/?guid=' + data.lease.guid + '"><i class="fa-solid fa-link  red-icon me-3"></i><medium>View Inspection</medium></a></p>\n';
+                }
+                $('#tenant-documents').html(html);
             }
         },
         error: function (xhr) {
@@ -222,12 +258,11 @@ let showToast = (message) => {
 }
 
 function uploadSupportingDocuments(documentType, file_data) {
-    let url = "/no_auth/tenant/upload/lease";
+    let url = "/api/tenant/upload/lease";
     const uid = sessionStorage.getItem("application_guid");
     const form_data = new FormData();
     form_data.append("file", file_data);
     form_data.append("application_guid", uid);
-    form_data.append("tenant_guid", sessionStorage.getItem("tenant_guid"));
     form_data.append("document_type", documentType);
 
     if (file_data === undefined) {
@@ -254,8 +289,8 @@ function uploadSupportingDocuments(documentType, file_data) {
             const jsonObj = JSON.parse(response);
             showToast(jsonObj.result_message);
             if(jsonObj.alldocs_uploaded === true){
-                $(".tenant-div-toggle").addClass("display-none");
-                $(".lease uploaded").removeClass("display-none");
+                $(".tenant-div-toggle").addClass("d-none");
+                $(".lease-uploaded").removeClass("d-none");
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {

@@ -5,18 +5,18 @@ $(document).ready(function () {
     if (sessionStorage.getItem("current_page") === null) {
         updateView('dashboard-content-div', "Dashboard");
     } else {
-        if(sessionStorage.getItem("current_page").localeCompare("new-unit-content-div") === 0){
+        if (sessionStorage.getItem("current_page").localeCompare("new-unit-content-div") === 0) {
             updateView("units-content-div", "Units");
-        }else if(sessionStorage.getItem("current_page").localeCompare("new-lease-content-div") === 0){
+        } else if (sessionStorage.getItem("current_page").localeCompare("new-lease-content-div") === 0) {
             updateView("leases-content-div", "Leases");
-        }else{
+        } else {
             updateView(sessionStorage.getItem("current_page"), sessionStorage.getItem("current_page_header"));
         }
-    
+
     }
 
     $(".nav-link").click(function (event) {
-        if(!$(event.target).hasClass(("settings-nav-link"))){
+        if (!$(event.target).hasClass(("settings-nav-link"))) {
             updateView(event.target.getAttribute("main-content"), event.target.getAttribute("header"));
         }
     });
@@ -26,23 +26,6 @@ $(document).ready(function () {
         updateSettingsView(event.target.getAttribute("form-to-show"));
         $(event.target).addClass("active");
     });
-
-
-    $(document).ajaxSend(function(){
-        $("div.spanner").addClass("show");
-        $("div.overlay").addClass("show");
-    });
-
-    $(document).ajaxComplete(function(event,xhr,options){
-        $("div.spanner").removeClass("show");
-        $("div.overlay").removeClass("show");
-
-        if(xhr.status === 302){
-            console.log("location " + xhr.getResponseHeader('location'));
-            window.location.href = "/logout";
-        }
-    });
-
 
     $('.nav-links').unbind('click')
     $(".nav-links").click(function (event) {
@@ -67,10 +50,10 @@ function updateView(selectedDiv, header) {
     $("#" + selectedDiv).removeClass("display-none");
     //hide mobile menu
     $("#navbarSupportedContent").removeClass("show");
-    
+
     $("#main-content-header").html(header);
     $("#page-header").html(header);
-    
+
     sessionStorage.setItem("current_page", selectedDiv);
     sessionStorage.setItem("current_page_header", header);
 
@@ -88,6 +71,7 @@ function updateView(selectedDiv, header) {
             getApplications();
             break;
         case "expenses-content-div":
+            getExpenseAccounts();
             getExpenses();
             break;
         case "maintenance-content-div":
@@ -101,15 +85,15 @@ function updateView(selectedDiv, header) {
     }
 }
 
-let showToast = (message) =>{
+let showToast = (message) => {
     const liveToast = document.getElementById('liveToast')
     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(liveToast)
-    if(message.toLowerCase().includes("success")){
-        $('#toast-message').html('<div class="alert alert-success" role="alert">'+message+'</div>');
-    }else if(message.toLowerCase().includes("fail") || message.toLowerCase().includes("error")){
-        $('#toast-message').html('<div class="alert alert-danger" role="alert">'+message+'</div>');
-    }else{
-        $('#toast-message').html('<div class="alert alert-dark" role="alert">'+message+'</div>');
+    if (message.toLowerCase().includes("success")) {
+        $('#toast-message').html('<div class="alert alert-success" role="alert">' + message + '</div>');
+    } else if (message.toLowerCase().includes("fail") || message.toLowerCase().includes("error")) {
+        $('#toast-message').html('<div class="alert alert-danger" role="alert">' + message + '</div>');
+    } else {
+        $('#toast-message').html('<div class="alert alert-dark" role="alert">' + message + '</div>');
     }
     toastBootstrap.show();
 }
@@ -124,13 +108,3 @@ function myFunction() {
     }
 }
 
-function isUserLoggedIn() {
-    let url =  "/no_auth/me";
-
-    $.get(url, function(data){
-        console.log(data[0].authenticated);
-        if (!data[0].authenticated) {
-            window.location.href = "/logout";
-        }
-    });
-}

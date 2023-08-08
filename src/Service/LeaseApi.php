@@ -304,7 +304,10 @@ class LeaseApi extends AbstractController
                 'occupation' => $tenant->getOccupation(),
                 'due' => number_format(intval($due["result_message"]), 2, '.', ''),
                 'statement_date' => $now->format("Y-M-d"),
-                'property' => $lease->getUnit()->getProperty()->getName() . ", " . $lease->getUnit()->getProperty()->getAddress(),
+                'property_address' => $lease->getUnit()->getProperty()->getAddress(),
+                'property_email' => $lease->getUnit()->getProperty()->getEmail(),
+                'property_phone' => $lease->getUnit()->getProperty()->getPhone(),
+                'property_name' => $lease->getUnit()->getProperty()->getName(),
                 'payment_rules' => $lease->getPaymentRules(),
                 'alldocs_uploaded' => $allDocsUploaded,
                 'bedrooms' => $lease->getUnit()->getBedrooms(),
@@ -324,22 +327,17 @@ class LeaseApi extends AbstractController
     }
 
 
-    public function getLeaseByIdNumber($idNumber, $phoneNumber)
+    public function getLeaseByLoggedInTenant()
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('idNumber' => $idNumber));
+
+            $emailAddress = $this->getUser()->getUserIdentifier();
+            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('email' => $emailAddress));
             if ($tenant == null) {
                 return array(
-                    'result_message' => "Error. Tenant not found for ID number",
-                    'result_code' => 1
-                );
-            }
-
-            if (strcmp($tenant->getPhone(), $phoneNumber) !== 0) {
-                return array(
-                    'result_message' => "Error. Tenant authentication failed",
+                    'result_message' => "Doesn't look like you are a tenant yet",
                     'result_code' => 1
                 );
             }
@@ -347,7 +345,7 @@ class LeaseApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId()));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Error. Lease not found for ID number",
+                    'result_message' => "Doesnt look like you have any active leases",
                     'result_code' => 1
                 );
             }
@@ -795,13 +793,14 @@ class LeaseApi extends AbstractController
         }
     }
 
-    public function addLeaseDoc($tenantGuid, $documentType, $fileName, $applicationGuid = null): array
+    public function addLeaseDoc($documentType, $fileName, $applicationGuid = null): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
+            $emailAddress = $this->getUser()->getUserIdentifier();
             $documentApi = new DocumentApi($this->em, $this->logger);
-            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('guid' => $tenantGuid));
+            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('email' => $emailAddress));
             if ($tenant == null) {
                 return array(
                     'result_message' => "Failed to upload document. Tenant not found",

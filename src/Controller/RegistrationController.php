@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Tenant;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -28,35 +29,43 @@ class RegistrationController extends AbstractController
 
         try {
             if (strlen($request->get("_password")) < 1 || strlen($request->get("_username")) < 1) {
-                return $this->render('signup.html', [
-                    'error' => "Username and password is mandatory",
-                ]);
+
+                $response = array(
+                    "result_message" =>"Error: Username and password is mandatory",
+                    "result_code" => 1
+                );
+                return new JsonResponse($response , 200, array());
             }
 
             $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
 
             if (!preg_match($pattern, $request->get("_username"))) {
-                return $this->render('signup.html', [
-                    'error' => "Username must be a valid email address",
-                ]);
+                $response = array(
+                    "result_message" =>"Error: Username must be a valid email address",
+                    "result_code" => 1
+                );
+                return new JsonResponse($response , 200, array());
             }
 
 
             if (strcmp($request->get("_password"), $request->get("_confirm_password")) !== 0) {
-                return $this->render('signup.html', [
-                    'error' => "Passwords are not the same",
-                ]);
+                $response = array(
+                    "result_message" =>"Error: Passwords are not the same",
+                    "result_code" => 1
+                );
+                return new JsonResponse($response , 200, array());
             }
 
 
-//            $passwordErrors = $this->validatePassword($request->get("_password"));
-//            $logger->info("Size of errors: " . sizeof($passwordErrors));
-//            if (sizeof($passwordErrors) > 0) {
-//                return $this->render('signup.html', [
-//                    'error' => $passwordErrors[0],
-//                ]);
-//            }
-
+            //check if user does exist
+            $user = $entityManager->getRepository(User::class)->findOneBy(array('email' => $request->get("_username")));
+            if($user !== null){
+                $response = array(
+                    "result_message" =>"Error: Email is already registered",
+                    "result_code" => 1
+                );
+                return new JsonResponse($response , 200, array());
+            }
             $user = new User();
 
             $user->setPassword(
@@ -68,51 +77,30 @@ class RegistrationController extends AbstractController
 
             $user->setEmail($request->get("_username"));
             $user->setRoles(["ROLE_ADMIN"]);
-            $logger->info("debug 1");
             try {
                 $entityManager->persist($user);
                 $entityManager->flush();
-                $logger->info("debug 2");
             } catch (Exception $exception) {
                 $logger->error($exception->getTraceAsString());
-                return $this->render('signup.html', [
-                    'error' => "Failed to register the user. please contact administrator. " . $exception->getMessage(),
-                ]);
+                $response = array(
+                    "result_message" =>"Error: Registration failed",
+                    "result_code" => 1
+                );
+                return new JsonResponse($response , 200, array());
             }
 
-            return $this->render('signup.html', [
-                'error' => "Successfully registered, Please sign in",
-            ]);
+            $response = array(
+                "result_message" =>"Successfully registered, Please sign in",
+                "result_code" => 0
+            );
+            return new JsonResponse($response , 200, array());
         } catch (\Exception $exception) {
             $logger->info($exception->getMessage());
-            return $this->render('signup.html', [
-                'error' => $exception->getMessage(),
-            ]);
+            $response = array(
+                "result_message" =>"Error: Registration failed",
+                "result_code" => 1
+            );
+            return new JsonResponse($response , 200, array());
         }
-    }
-
-
-    public function validatePassword($pass): array
-    {
-        $errors = array();
-        if (strlen($pass) < 8 || strlen($pass) > 16) {
-            $errors[] = "Password should be min 8 characters and max 16 characters";
-        }
-        if (!preg_match("/\d/", $pass)) {
-            $errors[] = "Password should contain at least one digit";
-        }
-        if (!preg_match("/[A-Z]/", $pass)) {
-            $errors[] = "Password should contain at least one Capital Letter";
-        }
-        if (!preg_match("/[a-z]/", $pass)) {
-            $errors[] = "Password should contain at least one small Letter";
-        }
-        if (!preg_match("/\W/", $pass)) {
-            $errors[] = "Password should contain at least one special character";
-        }
-        if (preg_match("/\s/", $pass)) {
-            $errors[] = "Password should not contain any white space";
-        }
-        return $errors;
     }
 }

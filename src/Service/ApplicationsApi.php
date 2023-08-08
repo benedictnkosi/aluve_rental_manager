@@ -70,6 +70,49 @@ class ApplicationsApi extends AbstractController
     }
 
 
+    public function getApplicationByTenant(): array
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        try {
+            $emailAddress = $this->getUser()->getUserIdentifier();
+            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('email' => $emailAddress));
+            if ($tenant == null) {
+                return array(
+                );
+            }
+
+            $applications = $this->em->getRepository("App\Entity\Application")->createQueryBuilder('a')
+                ->where('a.tenant = :tenant')
+                ->setParameter('tenant', $tenant->getId())
+                ->getQuery()
+                ->getResult();
+
+            if (sizeof($applications)<1) {
+                return array(
+                    'result_message' => "Error. Application not found",
+                    'result_code' => 1
+                );
+            }
+
+            //get documents
+            $documentApi = new DocumentApi($this->em, $this->logger);
+
+            $documents = $documentApi->getTenantDocuments($applications[0]->getTenant()->getId());
+
+            return array(
+                "application" => $applications[0],
+                "documents" => $documents
+            );
+        } catch (Exception $ex) {
+            $this->logger->error("Error " . $ex->getMessage() . $ex->getTraceAsString());
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
+
+
     public function getApplication($appicationGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);

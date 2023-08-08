@@ -313,5 +313,51 @@ class Properties
         $this->guid = $guid;
     }
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="phone", type="string", length=20, nullable=true)
+     */
+    private $phone;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="email", type="string", length=45, nullable=true)
+     */
+    private $email;
+
+    /**
+     * @return string|null
+     */
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param string|null $phone
+     */
+    public function setPhone(?string $phone): void
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string|null $email
+     */
+    public function setEmail(?string $email): void
+    {
+        $this->email = $email;
+    }
+
 
 }

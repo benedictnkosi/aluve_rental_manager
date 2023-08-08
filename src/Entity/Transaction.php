@@ -155,5 +155,28 @@ class Transaction
         $this->emailId = $emailId;
     }
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="guid", type="string", length=45, nullable=true)
+     */
+    private $guid;
+
+    /**
+     * @return string|null
+     */
+    public function getGuid(): ?string
+    {
+        return $this->guid;
+    }
+
+    /**
+     * @param string|null $guid
+     */
+    public function setGuid(?string $guid): void
+    {
+        $this->guid = $guid;
+    }
+
 
 }

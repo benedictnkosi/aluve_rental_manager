@@ -1,0 +1,84 @@
+.transaction-card{
+    margin-bottom: 1em;
+    text-align: left !important;
+    padding-right :10px;
+}
+
+.transaction-card p{
+    font-size: 10px;
+}
+
+.transactions-table{
+    max-width: 600px;
+}
+
+
+.statement-card-details{
+    padding: 10px 25px 10px 10px;
+    height: 70px;
+    background:transparent;
+    margin-top: 1em;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    height:fit-content;
+    max-width: 500px;
+    
+}
+
+.statement-details p{
+    margin-bottom: 0.5em;
+}
+
+.statement-details i:nth-child(2) {
+    margin-left:1em;
+  }
+
+  .border-right{
+      border-right: 1px solid #D9D9D9;
+      height: 34px;
+  }
+
+  .orange-text{
+      color: #FFA500;
+  }
+
+  i{
+    color:#5AB8B8;
+    font-size: 20px;
+  }
+
+  .red-icon{
+    color:#df6363 !important;
+    font-size: 20px;
+  }
+
+ .fa-circle-xmark {
+    float:right;
+    color:#df6363 !important;
+    margin-right: -18px;
+}
+
+.statement-entity p{
+    padding-top: 10px;
+}
+
+.statement-entity :nth-child(1) {
+    margin-left:1em;
+  }
+
+  .left-border-green{
+    border-left: 5px solid #5AB8B8;
+  }
+
+  .border-bottom-green{
+    border-bottom: 1px solid #5AB8B8;
+  }
+
+  .table-header p{
+    font-weight: bold;
+  }
+
+.fa-trash-can, .fa-money-bill-transfer{
+    font-size: 12px;
+}

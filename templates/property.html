@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/assets/css/style/leases.css">
     <link rel="stylesheet" href="/assets/css/style/applications.css">
     <link rel="stylesheet" href="/assets/css/style/expenses.css">
+    <link rel="stylesheet" href="/assets/css/style/statement.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
@@ -29,6 +30,34 @@
 <script src="/assets/js/operations/dashboard.js"></script>
 </head>
 <body>
+
+<div class="overlay" style="display: none"></div>
+<div class="spinner-border text-info" role="status" style="display: none">
+    <span class="sr-only">Loading...</span>
+</div>
+
+
+<!--confirm action delete transaction modal-->
+<div class="modal fade" id="confirmDeleteTransactionModal" tabindex="-1" aria-labelledby="confirmModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteTransactionLabel">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete transaction?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btn-confirm-delete-transaction">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!--modal for adding payment to lease-->
 <div
         class="modal fade"
@@ -303,12 +332,12 @@
                     </div>
                     <div class="mb-3">
                         <textarea
-                            class="form-control"
-                            id="call-summary"
-                            placeholder="Summary of the issue"
-                            rows="3"
-                            required
-                    ></textarea>
+                                class="form-control"
+                                id="call-summary"
+                                placeholder="Summary of the issue"
+                                rows="3"
+                                required
+                        ></textarea>
                     </div>
 
                     <div class="modal-footer">
@@ -675,653 +704,720 @@
             </header>
 
             <div
-                    class=""bg-body-tertiary"
-                    tabindex="-1"
-                    id="sidebarMenu"
-                    aria-labelledby="sidebarMenuLabel"
+                    class="" bg-body-tertiary
+            "
+            tabindex="-1"
+            id="sidebarMenu"
+            aria-labelledby="sidebarMenuLabel"
             >
-                <div
-                        class="d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto"
-                >
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content="dashboard-content-div"
-                                    header="Dashboard"
-                                    href="javascript:void(0)"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#graph-up"/>
-                                </svg>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content="units-content-div"
-                                    header="Rental units"
-                                    href="javascript:void(0)"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#cart"/>
-                                </svg>
-                                Rental units
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content="leases-content-div"
-                                    header="Leases"
-                                    href="javascript:void(0)"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#file-earmark"/>
-                                </svg>
-                                Leases
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content="applications-content-div"
-                                    header="Applications"
-                                    href="javascript:void(0)"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#file-earmark"/>
-                                </svg>
-                                Applications
-                            </a>
-                        </li>
+            <div
+                    class="d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto"
+            >
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content="dashboard-content-div"
+                                header="Dashboard"
+                                href="javascript:void(0)"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#graph-up"/>
+                            </svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content="units-content-div"
+                                header="Rental units"
+                                href="javascript:void(0)"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#cart"/>
+                            </svg>
+                            Rental units
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content="leases-content-div"
+                                header="Leases"
+                                href="javascript:void(0)"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#file-earmark"/>
+                            </svg>
+                            Leases
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content="applications-content-div"
+                                header="Applications"
+                                href="javascript:void(0)"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#file-earmark"/>
+                            </svg>
+                            Applications
+                        </a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content="maintenance-content-div"
-                                    header="Maintenance"
-                                    href="javascript:void(0)"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#gear-wide-connected"/>
-                                </svg>
-                                Maintenance
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content="maintenance-content-div"
+                                header="Maintenance"
+                                href="javascript:void(0)"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#gear-wide-connected"/>
+                            </svg>
+                            Maintenance
+                        </a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content="expenses-content-div"
-                                    href="javascript:void(0)"
-                                    header="Expenses"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#puzzle"/>
-                                </svg>
-                                Expenses
-                            </a>
-                        </li>
-                    </ul>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content="expenses-content-div"
+                                href="javascript:void(0)"
+                                header="Expenses"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#puzzle"/>
+                            </svg>
+                            Expenses
+                        </a>
+                    </li>
+                </ul>
 
-                    <hr class="my-3"/>
+                <hr class="my-3"/>
 
-                    <ul class="nav flex-column mb-auto">
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content="settings-content-div"
-                                    header="Settings"
-                                    href="javascript:void(0)"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#gear-wide-connected"/>
-                                </svg>
-                                Settings
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content=""
-                                    href="/properties"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#house-fill"/>
-                                </svg>
-                                Properties
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content=""
-                                    href="/logout"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#door-closed"/>
-                                </svg>
-                                Sign out
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                <ul class="nav flex-column mb-auto">
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content="settings-content-div"
+                                header="Settings"
+                                href="javascript:void(0)"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#gear-wide-connected"/>
+                            </svg>
+                            Settings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content=""
+                                href="/properties"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#house-fill"/>
+                            </svg>
+                            Properties
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content=""
+                                href="/logout"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#door-closed"/>
+                            </svg>
+                            Sign out
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
+    </div>
 
-        <!--        mobile menu-->
+    <!--        mobile menu-->
 
 
-        <div class="aluve-nav">
-            <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="navbar-brand" href="#" id="main-content-header"></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    <div class="aluve-nav">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand" href="#" id="main-content-header"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
 
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    data-bs-dismiss="offcanvas"
-                                    main-content="dashboard-content-div"
-                                    header="Dashboard"
-                                    href="javascript:void(0)"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#graph-up"/>
-                                </svg>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    data-bs-dismiss="offcanvas"
-                                    main-content="units-content-div"
-                                    header="Rental units"
-                                    href="javascript:void(0)"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#cart"/>
-                                </svg>
-                                Rental units
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content="leases-content-div"
-                                    header="Leases"
-                                    href="javascript:void(0)"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#file-earmark"/>
-                                </svg>
-                                Leases
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content="applications-content-div"
-                                    header="Applications"
-                                    href="javascript:void(0)"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#file-earmark"/>
-                                </svg>
-                                Applications
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content="maintenance-content-div"
-                                    header="Maintenance"
-                                    href="javascript:void(0)"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#gear-wide-connected"/>
-                                </svg>
-                                Maintenance
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content="expenses-content-div"
-                                    href="javascript:void(0)"
-                                    header="Expenses"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#puzzle"/>
-                                </svg>
-                                Expenses
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content="settings-content-div"
-                                    header="Settings"
-                                    href="javascript:void(0)"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#gear-wide-connected"/>
-                                </svg>
-                                Settings
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content=""
-                                    href="/properties"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#house-fill"/>
-                                </svg>
-                                Properties
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                    class="nav-link d-flex align-items-center gap-2"
-                                    main-content=""
-                                    href="/logout"
-                            >
-                                <svg class="bi">
-                                    <use xlink:href="#door-closed"/>
-                                </svg>
-                                Sign out
-                            </a>
-                        </li>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                data-bs-dismiss="offcanvas"
+                                main-content="dashboard-content-div"
+                                header="Dashboard"
+                                href="javascript:void(0)"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#graph-up"/>
+                            </svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                data-bs-dismiss="offcanvas"
+                                main-content="units-content-div"
+                                header="Rental units"
+                                href="javascript:void(0)"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#cart"/>
+                            </svg>
+                            Rental units
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content="leases-content-div"
+                                header="Leases"
+                                href="javascript:void(0)"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#file-earmark"/>
+                            </svg>
+                            Leases
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content="applications-content-div"
+                                header="Applications"
+                                href="javascript:void(0)"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#file-earmark"/>
+                            </svg>
+                            Applications
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content="maintenance-content-div"
+                                header="Maintenance"
+                                href="javascript:void(0)"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#gear-wide-connected"/>
+                            </svg>
+                            Maintenance
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content="expenses-content-div"
+                                href="javascript:void(0)"
+                                header="Expenses"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#puzzle"/>
+                            </svg>
+                            Expenses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content="settings-content-div"
+                                header="Settings"
+                                href="javascript:void(0)"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#gear-wide-connected"/>
+                            </svg>
+                            Settings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content=""
+                                href="/properties"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#house-fill"/>
+                            </svg>
+                            Properties
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link d-flex align-items-center gap-2"
+                                main-content=""
+                                href="/logout"
+                        >
+                            <svg class="bi">
+                                <use xlink:href="#door-closed"/>
+                            </svg>
+                            Sign out
+                        </a>
+                    </li>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+
+    <!--        main window on the right-->
+    <main class="col-md-12 ms-xl-auto col-lg-10 px-md-4 d-flex flex-column align-items-center">
+
+        <!--            alert message-------------------------------------------------------------------->
+
+        <div class="mb-3">
+            <div class="display-none alert" role="alert" id="alert-unit"></div>
         </div>
 
+        <h1 id="page-header"></h1>
 
-        <div class="overlay"></div>
-        <div class="spanner">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
+        <!--            dashboard div-------------------------------------------------------------------->
 
-        <!--        main window on the right-->
-        <main class="col-md-12 ms-xl-auto col-lg-10 px-md-4 d-flex flex-column align-items-center">
-
-            <!--            alert message-------------------------------------------------------------------->
-
-            <div class="mb-3">
-                <div class="display-none alert" role="alert" id="alert-unit"></div>
-            </div>
-
-            <h1 id="page-header"></h1>
-
-            <!--            dashboard div-------------------------------------------------------------------->
-
-            <div id="dashboard-content-div" class="main-content display-none">
-                <div class="container">
-                    <div class="row max">
-                        <div class="col">
-                            <canvas id="pieChartProfit" class="display-none"></canvas>
-                        </div>
-                        <div class="col">
-                            <canvas id="pieChartExpenses" class="display-none"></canvas>
-                        </div>
+        <div id="dashboard-content-div" class="main-content display-none">
+            <div class="container">
+                <div class="row max">
+                    <div class="col">
+                        <canvas id="pieChartProfit" class="display-none"></canvas>
                     </div>
+                    <div class="col">
+                        <canvas id="pieChartExpenses" class="display-none"></canvas>
+                    </div>
+                </div>
 
-                    <div class="row mt-5">
-                        <div class="col">
-                            <div class="card card-stats mb-4 mb-xl-0">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <h5 class="card-title text-uppercase text-muted mb-0">
-                                                Unpaid Invoices
-                                            </h5>
-                                            <span
-                                                    class="h2 font-weight-bold mb-0"
-                                                    id="invoice-due-stat"
-                                            ></span>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div
-                                                    class="icon icon-shape bg-danger text-white rounded-circle shadow"
-                                            >
-                                                <i class="fas fa-chart-bar"></i>
-                                            </div>
+                <div class="row mt-5">
+                    <div class="col">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">
+                                            Unpaid Invoices
+                                        </h5>
+                                        <span
+                                                class="h2 font-weight-bold mb-0"
+                                                id="invoice-due-stat"
+                                        ></span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div
+                                                class="icon icon-shape bg-danger text-white rounded-circle shadow"
+                                        >
+                                            <i class="fas fa-chart-bar"></i>
                                         </div>
                                     </div>
-                                    <p class="mt-3 mb-0 text-muted text-sm">
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-sm">
                         <span class="text-nowrap"
                         >Since you opened your account</span
                         >
-                                    </p>
-                                </div>
+                                </p>
                             </div>
+                        </div>
 
-                            <table class="table display-none" id="profit-loss-table">
-                                <thead>
-                                <tr>
-                                    <th>Profit For Past 12 Month</th>
-                                    <th>Amount</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>Income</td>
-                                    <td id="td-income"></td>
-                                </tr>
-                                <tr>
-                                    <td>Exepenses</td>
-                                    <td id="td-expenses"></td>
-                                </tr>
-                                <tr>
-                                    <td>Profit</td>
-                                    <td id="td-profit"></td>
-                                </tr>
-                                <!-- Add more rows here if needed -->
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col">
-                            <canvas
-                                    id="lineChartExpensesByMonth"
-                                    class="display-none"
-                            ></canvas>
-                        </div>
+                        <table class="table display-none" id="profit-loss-table">
+                            <thead>
+                            <tr>
+                                <th>Profit For Past 12 Month</th>
+                                <th>Amount</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Income</td>
+                                <td id="td-income"></td>
+                            </tr>
+                            <tr>
+                                <td>Exepenses</td>
+                                <td id="td-expenses"></td>
+                            </tr>
+                            <tr>
+                                <td>Profit</td>
+                                <td id="td-profit"></td>
+                            </tr>
+                            <!-- Add more rows here if needed -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <canvas
+                                id="lineChartExpensesByMonth"
+                                class="display-none"
+                        ></canvas>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!--            units div-------------------------------------------------------------------->
-            <div id="units-content-div" class="main-content display-none">
-                
-                <div class="properties-container gap-2" id="div-units"></div>
+        <!--            units div-------------------------------------------------------------------->
+        <div id="units-content-div" class="main-content display-none">
 
-                <div class="properties-container  mt-5">
-                    <p>
-                        <button
-                                type="button"
-                                class="btn transparent-green-button w-100 d-none"
-                                id="btn-create-new-unit"
-                        >
-                            Add New Unit
-                        </button>
-                    </p>
-                </div>
+            <div class="properties-container gap-2" id="div-units"></div>
+
+            <div class="properties-container  mt-5">
+                <p>
+                    <button
+                            type="button"
+                            class="btn transparent-green-button w-100 d-none"
+                            id="btn-create-new-unit"
+                    >
+                        Add New Unit
+                    </button>
+                </p>
             </div>
+        </div>
 
-            <!--            new unit div-------------------------------------------------------------------->
-            <div id="new-unit-content-div" class="main-content display-none">
-                <div class="container">
-                    <main>
+        <!--            new unit div-------------------------------------------------------------------->
+        <div id="new-unit-content-div" class="main-content display-none border-shadow">
+            <div class="container">
+                <main>
 
-                        <div class="py-5 text-center">
-                            <p class="lead" id="unit-name-header"></p>
-                        </div>
+                    <!-- <div class="py-5 text-center">
+                        <p class="lead" id="unit-name-header"></p>
+                    </div> -->
 
- 
-                        <div class="row g-5 justify-content-center">
 
-                            <div class="col-md-7 col-lg-8">
-                                <form class="needs-validation" id="form-create-unit" novalidate>
-                                    <div class="row g-3">
+                    <div class="row g-5 justify-content-center">
 
-                                        <div class="col-sm-12 new-unit-fields">
-                                            <input
-                                                    class="form-check-input"
-                                                    type="checkbox"
-                                                    value=""
-                                                    id="checkBulkCreateUnits"
-                                            />
-                                            <label class="form-check-label" for="checkBulkCreateUnits">
-                                                Bulk Create Units?
-                                            </label>
-                                            <div class="invalid-feedback">
-                                                Please enter a valid email address for shipping updates.
-                                            </div>
+                        <div class="col-md-7 col-lg-8">
+                            <form class="needs-validation" id="form-create-unit" novalidate>
+                                <div class="row g-3">
+
+                                    <div class="col-sm-12 new-unit-fields">
+                                        <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                value=""
+                                                id="checkBulkCreateUnits"
+                                        />
+                                        <label class="form-check-label" for="checkBulkCreateUnits">
+                                            Bulk Create Units?
+                                        </label>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid email address for shipping updates.
                                         </div>
-
-                                        <div class="col-sm-12 new-unit-fields">
-                                            <label for="number-of-units" class="col-form-label"
-                                            >Number Of Units To Create:</label
-                                            >
-                                            <input
-                                                    type="number"
-                                                    class="form-control"
-                                                    name="number-of-units"
-                                                    id="number-of-units"
-                                                    value="1"
-                                                    required
-                                            />
-                                            <div class="invalid-feedback">
-                                                Please enter a valid email address for shipping updates.
-                                            </div>
-                                        </div>
-
-                                        <hr class="my-4 new-unit-fields">
-
-                                        <div class="col-sm-6">
-                                            <label
-                                                    for="unit-name"
-                                                    class="col-form-label"
-                                                    id="unit-name-label"
-                                            >Unit Name</label
-                                            >
-                                            <input
-                                                    type="text"
-                                                    class="form-control"
-                                                    name="unit-name"
-                                                    id="unit-name"
-                                                    required
-                                            />
-                                            <div class="invalid-feedback">
-                                                Your username is required.
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <label for="unit-rent" class="col-form-label"
-                                            >Unit Rent:</label
-                                            >
-                                            <input
-                                                    type="number"
-                                                    class="form-control"
-                                                    name="unit-rent"
-                                                    id="unit-rent"
-                                                    required
-                                            />
-                                            <div class="invalid-feedback">
-                                                Your username is required.
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <label for="unit-bedrooms" class="col-form-label"
-                                            >Number Of Bedrooms:</label
-                                            >
-                                            <input
-                                                    type="number"
-                                                    class="form-control"
-                                                    name="bedrooms"
-                                                    id="unit-bedrooms"
-                                                    required
-                                            />
-                                            <div class="invalid-feedback">
-                                                Your username is required.
-                                            </div>
-                                        </div>
-
-
-                                        <div class="col-sm-6">
-                                            <label for="unit-bathrooms" class="col-form-label"
-                                            >Number Of Bathrooms:</label
-                                            >
-                                            <input
-                                                    type="number"
-                                                    class="form-control"
-                                                    name="bathrooms"
-                                                    id="unit-bathrooms"
-                                                    required
-                                            />
-                                            <div class="invalid-feedback">
-                                                Your username is required.
-                                            </div>
-                                        </div>
-
-
-                                        <div class="col-sm-6">
-                                            <label for="unit-name" class="col-form-label"
-                                            >Min Gross Salary:</label
-                                            >
-                                            <input
-                                                    type="number"
-                                                    class="form-control"
-                                                    name="min-gross-salary"
-                                                    id="min-gross-salary"
-                                                    required
-                                            />
-                                            <div class="invalid-feedback">
-                                                Your username is required.
-                                            </div>
-                                        </div>
-
-
-                                        <div class="col-sm-6">
-                                            <label for="unit-meter" class="col-form-label"
-                                            >Meter Number:</label
-                                            >
-                                            <input
-                                                    type="number"
-                                                    class="form-control"
-                                                    name="unit-meter"
-                                                    id="unit-meter"
-                                                
-                                            />
-                                            <div class="invalid-feedback">
-                                                Your username is required.
-                                            </div>
-                                        </div>
-
-
-                                        <div class="col-sm-6">
-                                            <label for="max-occupants" class="col-form-label"
-                                            >Max Occupants:</label
-                                            >
-                                            <input
-                                                    type="number"
-                                                    class="form-control"
-                                                    name="max-occupants"
-                                                    id="max-occupants"
-                                                    required
-                                            />
-                                            <div class="invalid-feedback">
-                                                Your username is required.
-                                            </div>
-                                        </div>
-
-
                                     </div>
 
-                                    <hr class="my-4">
-
-                                    <div class="form-check">
+                                    <div class="col-sm-12 new-unit-fields">
+                                        <label for="number-of-units" class="col-form-label"
+                                        >Number Of Units To Create:</label
+                                        >
                                         <input
-                                          class="form-check-input"
-                                          type="checkbox"
-                                          value=""
-                                          id="checkParking"
+                                                type="number"
+                                                class="form-control"
+                                                name="number-of-units"
+                                                id="number-of-units"
+                                                value="1"
+                                                required
                                         />
-                                        <label class="form-check-label" for="checkParking">
-                                          Parking Provided
-                                        </label>
-                                      </div>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid email address for shipping updates.
+                                        </div>
+                                    </div>
 
+                                    <hr class="my-4 new-unit-fields">
 
-                                    <div class="form-check">
+                                    <div class="col-sm-6">
+                                        <label
+                                                for="unit-name"
+                                                class="col-form-label"
+                                                id="unit-name-label"
+                                        >Unit Name</label
+                                        >
                                         <input
-                                          class="form-check-input"
-                                          type="checkbox"
-                                          value=""
-                                          id="checkChildrenAllowed"
+                                                type="text"
+                                                class="form-control"
+                                                name="unit-name"
+                                                id="unit-name"
+                                                required
                                         />
-                                        <label class="form-check-label" for="checkChildrenAllowed">
-                                          Children Allowed
-                                        </label>
-                                      </div>
+                                        <div class="invalid-feedback">
+                                            Your username is required.
+                                        </div>
+                                    </div>
 
-                                      <div class="form-check">
+                                    <div class="col-sm-6">
+                                        <label for="unit-rent" class="col-form-label"
+                                        >Unit Rent:</label
+                                        >
                                         <input
-                                          class="form-check-input"
-                                          type="checkbox"
-                                          value=""
-                                          id="checkListed"
+                                                type="number"
+                                                class="form-control"
+                                                name="unit-rent"
+                                                id="unit-rent"
+                                                required
                                         />
-                                        <label class="form-check-label" for="checkListed">
-                                          Listed
-                                        </label>
-                                      </div>
+                                        <div class="invalid-feedback">
+                                            Your username is required.
+                                        </div>
+                                    </div>
 
-                                
+                                    <div class="col-sm-6">
+                                        <label for="unit-bedrooms" class="col-form-label"
+                                        >Number Of Bedrooms:</label
+                                        >
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                name="bedrooms"
+                                                id="unit-bedrooms"
+                                                required
+                                        />
+                                        <div class="invalid-feedback">
+                                            Your username is required.
+                                        </div>
+                                    </div>
 
-<div class="d-flex gap-2 mb-2">
-    
-    <div class="col-6">
-        <button type="submit" class="btn green-button w-100">
-            Submit
-        </button>
-    </div>
-    <div class="col-6"><button
-        type="button"
-        class="btn btn-danger  rounded-0 w-100 btn-delete-unit display-none"
->
-    Delete
-</button></div>
-</div>
-                                </form>
+
+                                    <div class="col-sm-6">
+                                        <label for="unit-bathrooms" class="col-form-label"
+                                        >Number Of Bathrooms:</label
+                                        >
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                name="bathrooms"
+                                                id="unit-bathrooms"
+                                                required
+                                        />
+                                        <div class="invalid-feedback">
+                                            Your username is required.
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-6">
+                                        <label for="unit-name" class="col-form-label"
+                                        >Min Gross Salary:</label
+                                        >
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                name="min-gross-salary"
+                                                id="min-gross-salary"
+                                                required
+                                        />
+                                        <div class="invalid-feedback">
+                                            Your username is required.
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-6">
+                                        <label for="unit-meter" class="col-form-label"
+                                        >Meter Number:</label
+                                        >
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                name="unit-meter"
+                                                id="unit-meter"
+
+                                        />
+                                        <div class="invalid-feedback">
+                                            Your username is required.
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-6">
+                                        <label for="max-occupants" class="col-form-label"
+                                        >Max Occupants:</label
+                                        >
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                name="max-occupants"
+                                                id="max-occupants"
+                                                required
+                                        />
+                                        <div class="invalid-feedback">
+                                            Your username is required.
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <hr class="my-4">
+
+                                <div class="form-check">
+                                    <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            value=""
+                                            id="checkParking"
+                                    />
+                                    <label class="form-check-label" for="checkParking">
+                                        Parking Provided
+                                    </label>
+                                </div>
+
+
+                                <div class="form-check">
+                                    <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            value=""
+                                            id="checkChildrenAllowed"
+                                    />
+                                    <label class="form-check-label" for="checkChildrenAllowed">
+                                        Children Allowed
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            value=""
+                                            id="checkListed"
+                                    />
+                                    <label class="form-check-label" for="checkListed">
+                                        Listed
+                                    </label>
+                                </div>
+
+
+                                <div class="d-flex gap-2 mb-2">
+
+                                    <div class="col-6">
+                                        <button type="submit" class="btn green-button w-100">
+                                            Submit
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button
+                                                type="button"
+                                                class="btn btn-danger  rounded-0 w-100 btn-delete-unit display-none"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!--            leases div-------------------------------------------------------------------->
+        <div id="leases-content-div" class="main-content display-none">
+            <div
+                    class="properties-container gap-2"
+                    id="div-leases"
+            ></div>
+            <div class="row g-4 py-5 ">
+                <p>
+                    <button
+                            type="button"
+                            class="btn transparent-green-button w-100 d-none"
+                            id="btn-new-lease"
+                    >
+                        New Lease
+                    </button>
+                </p>
+            </div>
+
+            <div class="statement-card-details closable-div" style="display: none">
+                <i class="fa-regular fa-circle-xmark statement-close" role="button"></i>
+                <!-- <i class="fa-regular fa-circle-xmark"></i> -->
+
+
+                <div class="row p-2">
+
+                    <div class="col-sm-6  text-start statement-entity mt-3 left-border-green">
+                        <p class="m-0 fw-normal fs-6" id="statement-property-name"></p>
+                        <p class="m-0" id="statement-property-email"></p>
+                        <p class="m-0" id="statement-property-phone"></p>
+                        <p class="m-0" id="statement-property-address"></p>
+                    </div>
+
+                    <div class="col-sm-6 text-start statement-entity  mt-3">
+                        <p class="m-0 fw-normal fs-6" id="statement-tenant-name"></p>
+                        <p class="m-0" id="statement-tenant-email"></p>
+                        <p class="m-0" id="statement-tenant-phone"></p>
+                        <p class="m-0" id="statement-tenant-address"></p>
+                        <p class="m-0 fw-bold border-bottom-green statement-due PT-3 "></p>
+                    </div>
+
+
+                    <div class="mt-5 transactions-table">
+                        <div class="transaction-card d-flex w-100 ">
+                            <div class="col-7 col-md-9">
+
                             </div>
                         </div>
-                    </main>
-                </div>
-            </div>
 
-            <!--            leases div-------------------------------------------------------------------->
-            <div id="leases-content-div" class="main-content display-none">
-                <div
-                        class="properties-container gap-2"
-                        id="div-leases"
-                ></div>
-                <div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
-                    <p>
-                        <button
-                                type="button"
-                                class="btn transparent-green-button w-100 d-none"
-                                id="btn-new-lease"
-                        >
-                            New Lease
-                        </button>
-                    </p>
-                </div>
-            </div>
+                        <div class="transaction-card d-flex w-100 table-header border-bottom-green mb-3">
+                            <div class="col-1">
 
-            <!--            new lease div -------------------------------------------------------------------->
-            <div id="new-lease-content-div" class="main-content display-none container closable-div">
-                <i class="fa-regular fa-circle-xmark leases-details-close"></i>
-                <div class="w-auto">
-                    <form id="form-create-lease">
-                        <div class="row g-3">
+                            </div>
+                            <div class="col-6">
+                                <p class="m-0">Description</p>
+                            </div>
+                            <div class="col-2">
+                                <p class="m-0">Amount</p>
+                            </div>
+                            <div class="col-2">
+                                <p class="m-0  ps-3" style="text-align: right;">Balance</p>
+                            </div>
+                            <div class="col-1">
+
+                            </div>
+                        </div>
+
+                        <div id="transaction-rows"></div>
+                    </div>
+
+
+                        <div class="col-6  text-start statement-entity mt-3 left-border-green">
+                            <p class="m-0 fw-normal">Bank</p>
+                            <p class="m-0" >Account Number</p>
+                            <p class="m-0" >Account Type</p>
+                            <p class="m-0" >Branch</p>
+                        </div>
+
+                        <div class="col-6 text-start statement-entity  mt-3">
+                            <p class="m-0 fw-normal" id="statement-bank-name">FNB</p>
+                            <p class="m-0" id="statement-bank-account">6309873921</p>
+                            <p class="m-0" id="statement-bank-account-type">Cheque</p>
+                            <p class="m-0" id="statement-bank-branch">250050</p>
+                        </div>
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <!--            new lease div -------------------------------------------------------------------->
+        <div id="new-lease-content-div" class="main-content border-shadow display-none  closable-div">
+            <i class="fa-regular fa-circle-xmark leases-details-close" role="button"></i>
+            <div class="w-auto">
+                <form id="form-create-lease">
+                    <div class="row g-3">
                         <div class="mb-3">
                             <label for="lease-unit-name" class="col-form-label"
                             >Unit Name:</label
@@ -1529,290 +1625,306 @@
 
                             <div class="col-sm-4 mt-1">
                                 <button
-                                type="button"
-                                class="btn transparent-red-button rounded-0  w-100 btn-close-new-lease"
-                        >
-                            Cancel Lease
-                        </button></div>
-                            
+                                        type="button"
+                                        class="btn transparent-red-button rounded-0  w-100 btn-close-new-lease"
+                                >
+                                    Cancel Lease
+                                </button>
+                            </div>
+
                             <div class="col-sm-5 mt-1">
-                                <a id="new-inspection-link" class="btn transparent-green-button rounded-0 w-100 " role="button"  target="_blank" href="">new Inspection</a>
+                                <a id="new-inspection-link" class="btn transparent-green-button rounded-0 w-100 display-none"
+                                   role="button" target="_blank" href="">new Inspection</a>
                             </div>
                         </div>
-                        
 
-                    </form>
 
-                    <form id="regForm" class="m-5 display-none">
-                        <h3 class="mt-2">Lease Documents</h3>
-                        <div class="mb-3 mt-3">
-                            <label for="onboarding_lease" class="form-label"
-                            >Signed Lease</label
-                            >
-                            <a id="signed-lease-pdf-icon" target="_blank" role="button" class="display-none"><i class="fa-solid fa-file-pdf" style="color: #ca535f;" ></i></a>
-                            <input
-                                    type="file"
-                                    class="form-control"
-                                    id="onboarding_lease"
-                            />
-                        </div>
-                        <div class="mb-3">
-                            <label for="onboarding_iddoc" class="form-label"
-                            >ID\Passport Document</label
-                            >
-                            <a id="id-ducument-pdf-icon" target="_blank" role="button" class="display-none"><i class="fa-solid fa-file-pdf" style="color: #ca535f;" ></i></a>
-                            <input
-                                    type="file"
-                                    class="form-control"
-                                    id="onboarding_iddoc"
-                            />
-                        </div>
-                        <div class="mb-3">
-                            <label for="onboarding_pop" class="form-label"
-                            >Deposit Proof Of Payment</label
-                            >
-                            <a  id="pop-pdf-icon"  target="_blank" role="button" class="display-none"><i class="fa-solid fa-file-pdf" style="color: #ca535f;"></i></a>
-                            <input type="file" class="form-control" id="onboarding_pop"/>
-                        </div>
-                    </div>
-                    </form>
-                </div>
-            </div>
-
-            <!--            applications div -------------------------------------------------------------------->
-            <div id="applications-content-div" class="main-content display-none">
-                <div class="d-flex flex-column">
-                    <div class="font-12 align-items-center d-flex flex-column" id="applications-div">
-
-                    </div>
-    
-                    <div class="application-card-details d-none closable-div">
-                        <i class="fa-regular fa-circle-xmark application-details-close"></i>
-                        <div class="row p-sm-5">
-                            <p class="fw-bolder p-3">Applicant Details</p>
-                          <div class="col-8 text-start p-0" >
-                            <p><i class="fa-solid fa-user me-3 ms-0"></i><small id="applicant_name"></small></p>
-                            <p><i class="fa-solid fa-phone me-3 ms-0"></i><small id="applicant_phone"></small></p>
-                            <p><i class="fa-solid fa-envelope me-3 ms-0"></i> <small id="applicant_email"></small></p>
-                            <p><i class="fa-solid fa-id-badge me-3 ms-0"></i> <small id="applicant_id_number"></small></p>
-                          </div>
-                          <div class="col-4 text-start">
-                            <p><i class="fa-solid fa-id-badge me-3 ms-0"></i> <small id="applicant_occupation"></small></p>
-
-                            <p><i class="fa-solid fa-sack-dollar me-3 ms-0"></i> <small id="applicant_salary"></small></p>
-                            <p><i class="fa-solid fa-person me-3 ms-0"></i><small id="applicant_adults"></small></p>
-                            <p><i class="fa-solid fa-child-reaching me-3 ms-0"></i> <small id="applicant_children"></small></p>
-                            
-                          </div>
-                          <p class="fw-bolder p-3">Documents</p>
-                          <div class="col-12 text-start p-0" >
-                            
-                            <div id="application-documents"></div>
-                            
-                          </div>
-          
-            
-                            <div class="col-md-6 mt-1 ms-0 btn-accept-application d-none" >
-                              <button type="button" class="btn transparent-green-button w-100 btn-accept-application d-none">Accept</button>
-                            </div>
-                            <div class="col-md-6 mt-1 ms-0 btn-decline-application d-none" >
-                              <button type="button" class="btn transparent-red-button w-100 btn-decline-application d-none">Decline</button>
-                            </div>
-                            <div class="col-md-6 mt-1 ms-0 btn-convert-application d-none" >
-                                <button type="button" class="btn transparent-green-button w-100 btn-convert-application d-none">Convert To Lease</button>
-                              </div>
-                        </div>
-                      </div> 
-                </div>
-                
-
-            </div>
-
-            <!--            maintenance div -------------------------------------------------------------------->
-            <div id="maintenance-content-div" class="main-content display-none">
-                <p>
-                    <button
-                            type="button"
-                            class="btn transparent-green-button"
-                            id="btn-new-maintanance"
-                            data-bs-toggle="modal"
-                            data-bs-target="#maintenanceModal"
-                    >
-                    Log A Call
-                    </button>
-                </p>
-
-                <div class="row" id="maintenance-div"></div>
-            </div>
-
-            <!--            expenses div-------------------------------------------------------------------->
-            <div id="expenses-content-div" class="main-content display-none w-100">
-                <p>
-                    <button
-                            type="button"
-                            class="btn transparent-green-button"
-                            id="btn-new-expense"
-                            data-bs-toggle="modal"
-                            data-bs-target="#propertyExpenseModal"
-                    >
-                        Add Expense
-                    </button>
-                </p>
-                <div id="expenses-div"></div>
-            </div>
-
-            <!--            settings DIV -------------------------------------------------------------------->
-            <div id="settings-content-div" class="main-content display-none w-75">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a
-                                class="nav-link active settings-nav-link"
-                                form-to-show="settings-form-fees"
-                                aria-current="page"
-                                href="javascript:void(0)"
-                        >General</a
-                        >
-                    </li>
-                    <!--                    <li class="nav-item">-->
-                    <!--                        <a class="nav-link settings-nav-link" form-to-show="settings-form-security"-->
-                    <!--                           href="javascript:void(0)">Security</a>-->
-                    <!--                    </li>-->
-                </ul>
-
-                <!--                <form id="settings-form-security" class="mt-5 display-none settings-form">-->
-                <!--                    <h3>Security</h3>-->
-
-                <!--                    <h2>Item List</h2>-->
-
-                <!--                    <button class="btn transparent-green-button mt-3" id="addItemBtn">Add Item</button>-->
-
-                <!--                    <div class="mb-3">-->
-                <!--                        <label for="settings-email" class="form-label">Email address</label>-->
-                <!--                        <input type="email" class="form-control property-value" id="settings-email" field-name="email"-->
-                <!--                               aria-describedby="emailHelp">-->
-                <!--                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
-                <!--                    </div>-->
-                <!--                    <div class="mb-3">-->
-                <!--                        <label for="settings-password" field-name="password" class="form-label">Password</label>-->
-                <!--                        <input type="password" class="form-control property-value" id="settings-password">-->
-                <!--                    </div>-->
-                <!--                </form>-->
-
-                <form class="mt-5 settings-form" id="settings-form-fees">
-                    <h3>Fees</h3>
-                    <div class="mb-3">
-                        <label for="late-fee" class="form-label"
-                        >Late Fee Amount (zero for no late fee)</label
-                        >
-                        <input
-                                type="number"
-                                class="form-control property-value"
-                                field-name="lateFee"
-                                id="late-fee"
-                                placeholder="e.g. 500"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="rent-due-day" class="form-label"
-                        >Rent Due (Day Of Month)</label
-                        >
-                        <input
-                                type="number"
-                                class="form-control property-value"
-                                field-name="rent-due-day"
-                                id="rent-due-day"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="late-fee-day" class="form-label"
-                        >Auto-Late Fee (Day Of Month)</label
-                        >
-                        <input
-                                type="number"
-                                class="form-control property-value"
-                                field-name="late-fee-day"
-                                id="late-fee-day"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="accountNumber" class="form-label"
-                        >Last 4 Digits Of Account Number On Payment
-                            Notifications</label
-                        >
-                        <input
-                                type="number"
-                                class="form-control property-value"
-                                field-name="accountNumber"
-                                id="accountNumber"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="applicationFee" class="form-label"
-                        >Application Fee</label
-                        >
-                        <input
-                                type="number"
-                                class="form-control property-value"
-                                field-name="applicationFee"
-                                id="applicationFee"
-                                value="0"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="depositPercent" class="form-label"
-                        >Required Deposit Percentage</label
-                        >
-                        <input
-                                type="number"
-                                class="form-control property-value"
-                                field-name="depositPercent"
-                                id="depositPercent"
-                                value="0"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <div class="mb-3">
-                            <label for="property_lease" class="form-label"
-                            >Property Lease</label
-                            >
-                            <a
-                                    href="#"
-                                    target="_blank"
-                                    id="view_uploaded_property_lease"
-                                    class="display-none"
-                            >View Uploaded Lease</a
-                            >
-                            <input type="file" class="form-control" id="property_lease"/>
-                        </div>
-                    </div>
                 </form>
-            </div>
 
-            <!--            toast for messages-------------------------------------------------------------------->
-            <div class="toast-container position-fixed top-0 end-0 p-3">
-                <div
-                        id="liveToast"
-                        class="toast"
-                        role="alert"
-                        aria-live="assertive"
-                        aria-atomic="true"
-                >
-                    <div class="toast-header">
-                        <strong class="me-auto">Notification</strong>
-                        <button
-                                type="button"
-                                class="btn-close"
-                                data-bs-dismiss="toast"
-                                aria-label="Close"
-                        ></button>
+                <form id="regForm" class="m-5 display-none">
+                    <h3 class="mt-2">Lease Documents</h3>
+                    <div class="mb-3 mt-3">
+                        <label for="onboarding_lease" class="form-label"
+                        >Signed Lease</label
+                        >
+                        <a id="signed-lease-pdf-icon" target="_blank" role="button" class="display-none"><i
+                                class="fa-solid fa-file-pdf" style="color: #ca535f;"></i></a>
+                        <input
+                                type="file"
+                                class="form-control"
+                                id="onboarding_lease"
+                        />
                     </div>
-                    <div class="toast-body" id="toast-message">
-                        Hello, world! This is a toast message.
+                    <div class="mb-3">
+                        <label for="onboarding_iddoc" class="form-label"
+                        >ID\Passport Document</label
+                        >
+                        <a id="id-ducument-pdf-icon" target="_blank" role="button" class="display-none"><i
+                                class="fa-solid fa-file-pdf" style="color: #ca535f;"></i></a>
+                        <input
+                                type="file"
+                                class="form-control"
+                                id="onboarding_iddoc"
+                        />
                     </div>
+                    <div class="mb-3">
+                        <label for="onboarding_pop" class="form-label"
+                        >Deposit Proof Of Payment</label
+                        >
+                        <a id="pop-pdf-icon" target="_blank" role="button" class="display-none"><i
+                                class="fa-solid fa-file-pdf" style="color: #ca535f;"></i></a>
+                        <input type="file" class="form-control" id="onboarding_pop"/>
+                    </div>
+            </div>
+            </form>
+        </div>
+
+
+<!--            applications div -------------------------------------------------------------------->
+<div id="applications-content-div" class="main-content display-none">
+    <div class="d-flex flex-column">
+        <div class="font-12 align-items-center d-flex flex-column" id="applications-div">
+
+        </div>
+
+        <div class="application-card-details d-none closable-div">
+            <i class="fa-regular fa-circle-xmark application-details-close" role="button"></i>
+            <div class="row p-sm-5">
+                <p class="fw-bolder p-3" id="application_reference"></p>
+                <div class="col-8 text-start p-0">
+                    <p><i class="fa-solid fa-user me-3 ms-0 green-text"></i><small id="applicant_name"></small></p>
+                    <p><i class="fa-solid fa-phone me-3 ms-0 green-text"></i><small id="applicant_phone"></small></p>
+                    <p><i class="fa-solid fa-envelope me-3 ms-0 green-text"></i> <small id="applicant_email"></small>
+                    </p>
+                    <p><i class="fa-solid fa-id-badge me-3 ms-0 green-text"></i> <small
+                            id="applicant_id_number"></small></p>
+                </div>
+                <div class="col-4 text-start">
+                    <p><i class="fa-solid fa-id-badge me-3 ms-0 green-text"></i> <small
+                            id="applicant_occupation"></small></p>
+
+                    <p><i class="fa-solid fa-sack-dollar me-3 ms-0 green-text"></i> <small
+                            id="applicant_salary"></small></p>
+                    <p><i class="fa-solid fa-person me-3 ms-0 green-text"></i><small id="applicant_adults"></small></p>
+                    <p><i class="fa-solid fa-child-reaching me-3 ms-0 green-text"></i> <small
+                            id="applicant_children"></small></p>
+
+                </div>
+                <p class="fw-bolder p-3">Documents</p>
+                <div class="col-12 text-start p-0">
+
+                    <div id="application-documents"></div>
+
+                </div>
+
+
+                <div class="col-md-4 mt-1 ms-0 btn-accept-application d-none">
+                    <button type="button" class="btn transparent-green-button w-100 btn-accept-application d-none">
+                        Accept
+                    </button>
+                </div>
+                <div class="col-md-4 mt-1 ms-0 btn-decline-application d-none">
+                    <button type="button" class="btn transparent-red-button w-100 btn-decline-application d-none">
+                        Decline
+                    </button>
+                </div>
+                <div class="col-md-8 mt-1 ms-0 btn-convert-application d-none">
+                    <button type="button" class="btn transparent-green-button w-100 btn-convert-application d-none">
+                        Convert To Lease
+                    </button>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
+
+
+</div>
+
+<!--            maintenance div -------------------------------------------------------------------->
+<div id="maintenance-content-div" class="main-content display-none">
+    <p>
+        <button
+                type="button"
+                class="btn transparent-green-button"
+                id="btn-new-maintanance"
+                data-bs-toggle="modal"
+                data-bs-target="#maintenanceModal"
+        >
+            Log A Call
+        </button>
+    </p>
+
+    <div class="row" id="maintenance-div"></div>
+</div>
+
+<!--            expenses div-------------------------------------------------------------------->
+<div id="expenses-content-div" class="main-content display-none w-100">
+    <p>
+        <button
+                type="button"
+                class="btn transparent-green-button"
+                id="btn-new-expense"
+                data-bs-toggle="modal"
+                data-bs-target="#propertyExpenseModal"
+        >
+            Add Expense
+        </button>
+    </p>
+    <div id="expenses-div"></div>
+</div>
+
+<!--            settings DIV -------------------------------------------------------------------->
+<div id="settings-content-div" class="main-content display-none w-75">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a
+                    class="nav-link active settings-nav-link"
+                    form-to-show="settings-form-fees"
+                    aria-current="page"
+                    href="javascript:void(0)"
+            >General</a
+            >
+        </li>
+        <!--                    <li class="nav-item">-->
+        <!--                        <a class="nav-link settings-nav-link" form-to-show="settings-form-security"-->
+        <!--                           href="javascript:void(0)">Security</a>-->
+        <!--                    </li>-->
+    </ul>
+
+    <!--                <form id="settings-form-security" class="mt-5 display-none settings-form">-->
+    <!--                    <h3>Security</h3>-->
+
+    <!--                    <h2>Item List</h2>-->
+
+    <!--                    <button class="btn transparent-green-button mt-3" id="addItemBtn">Add Item</button>-->
+
+    <!--                    <div class="mb-3">-->
+    <!--                        <label for="settings-email" class="form-label">Email address</label>-->
+    <!--                        <input type="email" class="form-control property-value" id="settings-email" field-name="email"-->
+    <!--                               aria-describedby="emailHelp">-->
+    <!--                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
+    <!--                    </div>-->
+    <!--                    <div class="mb-3">-->
+    <!--                        <label for="settings-password" field-name="password" class="form-label">Password</label>-->
+    <!--                        <input type="password" class="form-control property-value" id="settings-password">-->
+    <!--                    </div>-->
+    <!--                </form>-->
+
+    <form class="mt-5 settings-form" id="settings-form-fees">
+        <h3>Fees</h3>
+        <div class="mb-3">
+            <label for="late-fee" class="form-label"
+            >Late Fee Amount (zero for no late fee)</label
+            >
+            <input
+                    type="number"
+                    class="form-control property-value"
+                    field-name="lateFee"
+                    id="late-fee"
+                    placeholder="e.g. 500"
+            />
+        </div>
+        <div class="mb-3">
+            <label for="rent-due-day" class="form-label"
+            >Rent Due (Day Of Month)</label
+            >
+            <input
+                    type="number"
+                    class="form-control property-value"
+                    field-name="rent-due-day"
+                    id="rent-due-day"
+            />
+        </div>
+        <div class="mb-3">
+            <label for="late-fee-day" class="form-label"
+            >Auto-Late Fee (Day Of Month)</label
+            >
+            <input
+                    type="number"
+                    class="form-control property-value"
+                    field-name="late-fee-day"
+                    id="late-fee-day"
+            />
+        </div>
+        <div class="mb-3">
+            <label for="accountNumber" class="form-label"
+            >Last 4 Digits Of Account Number On Payment
+                Notifications</label
+            >
+            <input
+                    type="number"
+                    class="form-control property-value"
+                    field-name="accountNumber"
+                    id="accountNumber"
+            />
+        </div>
+        <div class="mb-3">
+            <label for="applicationFee" class="form-label"
+            >Application Fee</label
+            >
+            <input
+                    type="number"
+                    class="form-control property-value"
+                    field-name="applicationFee"
+                    id="applicationFee"
+                    value="0"
+            />
+        </div>
+        <div class="mb-3">
+            <label for="depositPercent" class="form-label"
+            >Required Deposit Percentage</label
+            >
+            <input
+                    type="number"
+                    class="form-control property-value"
+                    field-name="depositPercent"
+                    id="depositPercent"
+                    value="0"
+            />
+        </div>
+        <div class="mb-3">
+            <div class="mb-3">
+                <label for="property_lease" class="form-label"
+                >Property Lease</label
+                >
+                <a
+                        href="#"
+                        target="_blank"
+                        id="view_uploaded_property_lease"
+                        class="display-none"
+                >View Uploaded Lease</a
+                >
+                <input type="file" class="form-control" id="property_lease"/>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--            toast for messages-------------------------------------------------------------------->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div
+            id="liveToast"
+            class="toast"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+    >
+        <div class="toast-header">
+            <strong class="me-auto">Notification</strong>
+            <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="toast"
+                    aria-label="Close"
+            ></button>
+        </div>
+        <div class="toast-body" id="toast-message">
+            Hello, world! This is a toast message.
+        </div>
+    </div>
+</div>
+</main>
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1822,7 +1934,7 @@
         integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG"
         crossorigin="anonymous"
 ></script>
-
+<script src="/assets/js/loader.js"></script>
 <script src="/assets/js/dashboard.js"></script>
 <script src="/assets/js/operations/units.js"></script>
 <script src="/assets/js/operations/lease.js"></script>
@@ -1832,5 +1944,6 @@
 <script src="/assets/js/operations/maintenance.js"></script>
 <script src="/assets/js/operations/main-content.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+
 </body>
 </html>

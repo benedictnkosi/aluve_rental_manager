@@ -57,10 +57,10 @@ class AuthApi  extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function isAuthorisedToChangeLease($leaseId): array
+    public function isAuthorisedToChangeLease($leaseGuid): array
     {
         //get lease
-        $lease = $this->em->getRepository(Leases::class)->findOneBy(array('id' => $leaseId));
+        $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseGuid));
         if($lease == null){
             return array(
                 'result_message' => "Error. Lease not found",

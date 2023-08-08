@@ -1,6 +1,3 @@
-
-
-
 .application-card{
     padding: 10px;
     height: 70px;
@@ -36,20 +33,3 @@
       height: 34px;
   }
 
-  .orange-text{
-      color: #FFA500;
-  }
-
-  .red-text{
-    color: #df6363;
-}
-
-  i{
-    color:#5AB8B8;
-    font-size: 20px;
-  }
-
-  .red-icon{
-    color:#df6363 !important;
-    font-size: 20px;
-  }

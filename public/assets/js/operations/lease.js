@@ -40,6 +40,14 @@ $(document).ready(function () {
     updateView("leases-content-div", "Lease");
   });
 
+  $(".statement-close").click(function (event) {
+    $("#div-leases").removeClass("display-none");
+    $('#btn-new-lease').removeClass('display-none');
+    $(".statement-card-details").hide();
+    updateView("leases-content-div", "Lease");
+  });
+
+  
   $("#form-lease-add-payment").validate({
     // Specify validation rules
     rules: {},
@@ -106,11 +114,13 @@ $(document).ready(function () {
   });
 
   $(".leases-details-close").click(function () {
-    $('.closable-div').addClass('display-none');
-    $('#leases-content-div').removeClass('display-none');
+    $(".closable-div").addClass("display-none");
+    $("#leases-content-div").removeClass("display-none");
+  });
+
+  $('#btn-confirm-delete-transaction').click(function () {
+    deleteTransaction();
 });
-
-
 });
 
 function uploadSupportingDocuments(documentType, file_data) {
@@ -149,20 +159,29 @@ function uploadSupportingDocuments(documentType, file_data) {
         // $(".lease uploaded").removeClass("display-none");
       }
 
-      if(documentType.localeCompare("Signed Lease") === 0){
-        $("#signed-lease-pdf-icon").attr("href", "/api/document/" + jsonObj.document_name);
+      if (documentType.localeCompare("Signed Lease") === 0) {
+        $("#signed-lease-pdf-icon").attr(
+          "href",
+          "/api/document/" + jsonObj.document_name
+        );
         $("#signed-lease-pdf-icon").removeClass("display-none");
       }
 
-        if(documentType.localeCompare("ID Document") === 0){
-            $("#id-ducument-pdf-icon").attr("href", "/api/document/" + jsonObj.document_guid);
-            $("#id-ducument-pdf-icon").removeClass("display-none");
-        }
+      if (documentType.localeCompare("ID Document") === 0) {
+        $("#id-ducument-pdf-icon").attr(
+          "href",
+          "/api/document/" + jsonObj.document_guid
+        );
+        $("#id-ducument-pdf-icon").removeClass("display-none");
+      }
 
-        if(documentType.localeCompare("Proof OF Payment") === 0){
-            $("#pop-pdf-icon").attr("href", "/api/document/" + jsonObj.document_name);
-            $("#pop-pdf-icon").removeClass("display-none");
-        }
+      if (documentType.localeCompare("Proof OF Payment") === 0) {
+        $("#pop-pdf-icon").attr(
+          "href",
+          "/api/document/" + jsonObj.document_name
+        );
+        $("#pop-pdf-icon").removeClass("display-none");
+      }
     },
     error: function (jqXHR, textStatus, errorThrown) {
       showToast(errorThrown);
@@ -254,7 +273,8 @@ let getAllLeases = () => {
       }
 
       data.forEach(function (lease) {
-        const dueClass = lease.due.localeCompare("R0.00") !== 0 ? "border-left-red" : "";
+        const dueClass =
+          lease.due.localeCompare("R0.00") !== 0 ? "border-left-red" : "";
 
         html +=
           '<div class="lease-card">\n' +
@@ -286,11 +306,12 @@ let getAllLeases = () => {
           lease.rent +
           ".00</p>\n" +
           "    </div>\n" +
-          '    <a class="dropdown-item" target="_blank" href="/statement/?guid=' + lease.guid + '"><div class="lease-due-div ' +
+          '    <a class="dropdown-item view-statement-button" lease-guid="' + lease.guid +
+          '"  href="javascript:void(0)"><div lease-guid="' + lease.guid +'" class="lease-due-div ' +
           dueClass +
           '">\n' +
-          "      <p>Due</p>\n" +
-          "      <p>" +
+          '      <p lease-guid="' + lease.guid +'">Due</p>\n' +
+          '      <p lease-guid="' + lease.guid +'">' +
           lease.due +
           "</p>\n" +
           "    </div></a>\n" +
@@ -315,10 +336,19 @@ let getAllLeases = () => {
 
       $("#div-leases").html(html);
 
+      $(".view-statement-button").click(function (event) {
+        populateStatement(event.target.getAttribute("lease-guid"));
+        getTransactions(event.target.getAttribute("lease-guid"));
+        $("#div-leases").addClass("display-none");
+        $('#btn-new-lease').addClass('display-none');
+        
+      });
+
       $(".update-lease-dpr-button").click(function (event) {
         populateLeaseDetails(event.target.getAttribute("lease-guid"));
         updateView("new-lease-content-div", "Lease");
         $("#regForm").removeClass("display-none");
+        $('#new-inspection-link').removeClass("display-none");
       });
 
       $(".add-payment-button").click(function (event) {
@@ -343,7 +373,10 @@ let getAllLeases = () => {
         $("#confirmModal").modal("toggle");
       });
 
-      $('#btn-new-lease').removeClass('d-none');
+      $("#btn-new-lease").removeClass("d-none");
+
+      $("#div-leases").removeClass("display-none");
+      $('#btn-new-lease').removeClass('display-none');
     },
     error: function (xhr) {},
   });
@@ -365,7 +398,7 @@ let populateLeaseDetails = (leaseGuid) => {
 
       sessionStorage.setItem("lease-guid", lease.lease_guid);
       sessionStorage.setItem("tenant_guid", lease.tenant_guid);
-      
+
       $("#ul-lease-units-selected").html(lease.unit_name);
       $("#lease-tenant-name").val(lease.tenant_name);
       $("#lease-tenant-phone").val(lease.phone_number);
@@ -376,33 +409,153 @@ let populateLeaseDetails = (leaseGuid) => {
       $("#lease-occupation").val(lease.occupation);
       $("#lease-salary").val(lease.salary);
       $("#application_id_number").val(lease.id_number);
-      $('#drop-id-doc-type-selected').html(lease.id_document_type);
+      $("#drop-id-doc-type-selected").html(lease.id_document_type);
 
       if (lease.signed_lease.length !== 0) {
-        $("#signed-lease-pdf-icon").attr("href", "/api/document/" + lease.signed_lease);
+        $("#signed-lease-pdf-icon").attr(
+          "href",
+          "/api/document/" + lease.signed_lease
+        );
         $("#signed-lease-pdf-icon").removeClass("display-none");
-    }
+      }
 
-    if (lease.id_document.length !== 0) {
-        $("#id-ducument-pdf-icon").attr("href", "/api/document/" + lease.id_document);
+      if (lease.id_document.length !== 0) {
+        $("#id-ducument-pdf-icon").attr(
+          "href",
+          "/api/document/" + lease.id_document
+        );
         $("#id-ducument-pdf-icon").removeClass("display-none");
-    }
+      }
 
-    if (lease.proof_of_payment.length !== 0) {
-        $("#pop-pdf-icon").attr("href", "/api/document/" + lease.proof_of_payment);
+      if (lease.proof_of_payment.length !== 0) {
+        $("#pop-pdf-icon").attr(
+          "href",
+          "/api/document/" + lease.proof_of_payment
+        );
         $("#pop-pdf-icon").removeClass("display-none");
-    }
+      }
 
-    if (lease.inspection_exist === true) {
-      $('#existing_lease_link').attr("href", "/view/inspection/?guid=" + lease.guid);
-      $('#existing_lease_link').removeClass("display-none");
-      $('#existing_lease_link').text("View Existing Inspection");
-    }
+      if (lease.inspection_exist === true) {
+        $("#existing_lease_link").attr(
+          "href",
+          "/view/inspection/?guid=" + lease.guid
+        );
+        $("#existing_lease_link").removeClass("display-none");
+        $("#existing_lease_link").text("View Existing Inspection");
+      }
 
-    $("#new-inspection-link").attr("href", "/inspection/?guid=" + lease.lease_guid);
+      $("#new-inspection-link").attr(
+        "href",
+        "/inspection/?guid=" + lease.lease_guid
+      );
 
       sessionStorage.setItem("document-type", lease.id_document_type);
       sessionStorage.setItem("tenant_guid", lease.tenant_guid);
+    },
+    error: function (xhr) {},
+  });
+};
+
+let populateStatement = (leaseGuid) => {
+  let id = getURLParameter("id");
+  let url = "/no_auth/lease/" + leaseGuid;
+  $.ajax({
+    type: "GET",
+    url: url,
+    contentType: "application/json; charset=UTF-8",
+    success: function (lease) {
+      if (lease.result_code !== undefined) {
+        if (lease.result_code === 1) {
+          return;
+        }
+      }
+
+      sessionStorage.setItem("lease-guid", lease.lease_guid);
+      sessionStorage.setItem("tenant_guid", lease.tenant_guid);
+
+      $("#statement-property-name").html(lease.property_name);
+      $("#statement-property-email").html(lease.property_email);
+      $("#statement-property-phone").html(lease.property_phone);
+      $("#statement-property-address").html(lease.property_address);
+
+      $("#statement-tenant-name").html(lease.tenant_name);
+      $("#statement-tenant-email").html(lease.email);
+      $("#statement-tenant-phone").html(lease.phone_number);
+      $("#statement-tenant-address").html(
+        lease.property_address + ", " + lease.unit_name
+      );
+
+      $("#lease-end-date").html("Lease End Date: " + lease.lease_end);
+      $("#lease-start-date").html("Lease Start Date: " + lease.lease_start);
+      $(".statement-due").html("Due: R" + lease.due);
+
+      
+    },
+    error: function (xhr) {},
+  });
+};
+
+let getTransactions = (leaseGuid) => {
+
+  let url = "/no_auth/lease/transactions/" + leaseGuid;
+  $.ajax({
+    type: "GET",
+    url: url,
+    contentType: "application/json; charset=UTF-8",
+    success: function (data) {
+      let html = "";
+      if (data.result_code !== undefined) {
+        if (data.result_code === 1) {
+          $("#transaction-rows").html("");
+          $(".statement-due").html("Due: R0.00");
+          return;
+        }
+      }
+      data.forEach(function (transaction) {
+        const delete_button = transaction.isLandlord === true
+            ? '<div class="col-1"><i class="fa-solid fa-trash-can red-text delete-transaction-button" role="button" transaction-id="' +
+              transaction.guid +
+              '"></i></div>'
+            : "";
+        html +=
+          '<div class="transaction-card d-flex w-100 gap-2">\n' +
+          '                                <div class="col-1">\n' +
+          '                                    <i class="fa-solid fa-money-bill-transfer ms-0"></i>\n' +
+          "                                </div>\n" +
+          '                                <div class="col-6">\n' +
+          '                                    <p class="m-0">' +
+          transaction.description +
+          "</p>\n" +
+          '                                    <p class="m-0 fw-light"><small>' +
+          transaction.date +
+          "</small></p>\n" +
+          "                                </div>\n" +
+          '                                <div class="col-2">\n' +
+          '                                    <p class="m-0 fw-normal">' +
+          transaction.amount +
+          "</p>\n" +
+          "\n" +
+          "                                </div>\n" +
+          '                                <div class="col-2">\n' +
+          '                                    <p class="m-0 fw-normal">' +
+          transaction.balance +
+          "</p>\n" +
+          "                                </div>\n" 
+          + delete_button +
+          "                            </div></div>";
+      });
+
+      $("#transaction-rows").html(html);
+      $(".statement-card-details").show();
+      $(".delete-transaction-button").click(function (event) {
+        sessionStorage.setItem(
+          "transaction-id",
+          event.target.getAttribute("transaction-id")
+        );
+        $("#confirmDeleteTransactionModal").modal("toggle");
+      });
+
+      
     },
     error: function (xhr) {},
   });
@@ -459,3 +612,19 @@ let billTheTenant = () => {
     },
   });
 };
+
+
+let deleteTransaction = () => {
+  let url = "/api/delete/transaction/?id=" + sessionStorage.getItem("transaction-id");
+  $.ajax({
+      url: url,
+      type: "delete",
+      success: function (response) {
+          showToast(response.result_message);
+          if (response.result_code === 0) {1
+              getTransactions(sessionStorage.getItem("lease-guid"));
+          }
+          $('#confirmDeleteTransactionModal').modal('toggle');
+      }
+  });
+}

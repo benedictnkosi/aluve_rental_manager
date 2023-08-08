@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\ApplicationsApi;
 use App\Service\DocumentApi;
 use App\Service\FileUploaderApi;
 use App\Service\LeaseApi;
@@ -20,7 +21,7 @@ class TenantController extends AbstractController
 {
 
     /**
-     * @Route("no_auth/tenant/get/{guid}")
+     * @Route("api/tenant/get/{guid}")
      */
     public function getTenant($guid, TenantApi $tenantApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -35,7 +36,7 @@ class TenantController extends AbstractController
     }
 
     /**
-     * @Route("no_auth/tenant/get/{id}/{phone}")
+     * @Route("api/tenant/get/{id}/{phone}")
      */
     public function getTenantById($id, $phone, TenantApi $tenantApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -50,7 +51,7 @@ class TenantController extends AbstractController
     }
 
     /**
-     * @Route("no_auth/tenant/lease_to_sign/{applicationGuid}")
+     * @Route("api/tenant/lease_to_sign/{applicationGuid}")
      */
     public function getLeaseToSign($applicationGuid, TenantApi $tenantApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -65,37 +66,38 @@ class TenantController extends AbstractController
     }
 
     /**
-     * @Route("no_auth/tenant/getlease/{idNumber}/{phoneNumber}")
+     * @Route("api/tenant/get")
      */
-    public function getLeaseByTenantId($idNumber,$phoneNumber, LeaseApi $leaseApi, Request $request, LoggerInterface $logger): Response{
+    public function getTenantInfo(LeaseApi $leaseApi, ApplicationsApi $applicationsApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('get')) {
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $leaseApi->getLeaseByIdNumber($idNumber, $phoneNumber);
+        $response["lease"] = $leaseApi->getLeaseByLoggedInTenant();
+        $response["application"] = $applicationsApi->getApplicationByTenant();
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);
     }
 
     /**
-     * @Route("no_auth/tenant/getleaseDocumentName/{idNumber}/{phoneNumber}")
+     * @Route("api/tenant/getleaseDocumentName")
      */
-    public function getLeaseDocumentNameByIdNumber($idNumber, $phoneNumber, DocumentApi $documentApi, Request $request, LoggerInterface $logger): Response{
+    public function getLeaseDocumentNameByIdNumber(DocumentApi $documentApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('get')) {
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $documentApi->getDocumentNameByIdNumber($idNumber, $phoneNumber,"Signed Lease");
+        $response = $documentApi->getDocumentByTenant("Signed Lease");
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);
     }
 
     /**
-     * @Route("no_auth/tenant/upload/lease")
+     * @Route("api/tenant/upload/lease")
      * @throws \Exception
      */
     public function uploadLeaseDocuments( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, LeaseApi $leaseApi, TenantApi $tenantApi): Response
@@ -129,9 +131,9 @@ class TenantController extends AbstractController
 
         //write to DB
         if(is_null($request->get("application_guid"))){
-            $response = $leaseApi->addLeaseDoc($request->get("tenant_guid"), $request->get("document_type"), $response["file_name"]);
+            $response = $leaseApi->addLeaseDoc($request->get("document_type"), $response["file_name"]);
         }else{
-            $response = $leaseApi->addLeaseDoc($request->get("tenant_guid"), $request->get("document_type"), $response["file_name"], $request->get("application_guid"));
+            $response = $leaseApi->addLeaseDoc($request->get("document_type"), $response["file_name"], $request->get("application_guid"));
         }
 
 

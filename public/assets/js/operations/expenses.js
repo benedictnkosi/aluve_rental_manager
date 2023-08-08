@@ -1,6 +1,6 @@
 $(document).ready(function () {
     sessionStorage.removeItem("expense-account-id");
-    getExpenseAccounts();
+    //getExpenseAccounts();
     //getExpenses();
 
     $("#form-add-expense").submit(function (event) {

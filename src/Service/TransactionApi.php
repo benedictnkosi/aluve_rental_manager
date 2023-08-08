@@ -45,7 +45,7 @@ class TransactionApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('id' => $leaseId));
+            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseId));
             if ($lease == null) {
                 return array(
                     'result_message' => "Error. Lease not found",
@@ -92,6 +92,7 @@ class TransactionApi extends AbstractController
             $transaction->setDescription($description);
             $transaction->setLease($lease);
             $transaction->setEmailId($emailID);
+            $transaction->setGuid($this->generateGuid());
 
             $this->em->persist($transaction);
             $this->em->flush($transaction);
@@ -131,14 +132,14 @@ class TransactionApi extends AbstractController
         }
     }
 
-    public function getTransactions($guid): array
+    public function getTransactions($guid, $isLandlord): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $guid));
 
-            $transactions = $this->em->getRepository(Transaction::class)->findBy(array('lease' => $lease), array('date' => 'ASC'));
+            $transactions = $this->em->getRepository(Transaction::class)->findBy(array('lease' => $lease), array('date' => 'DESC'));
             if (sizeof($transactions) < 1) {
                 return array(
                     'result_message' => "0",
@@ -155,7 +156,9 @@ class TransactionApi extends AbstractController
                     'amount' => "R" . number_format($transaction->getAmount(), 2, '.', ''),
                     'balance' => "R" . number_format($balance, 2, '.', ''),
                     'logged_in' => $isLoggedIn,
-                    'id' => $transaction->getId()
+                    'id' => $transaction->getId(),
+                    'guid' => $transaction->getGuid(),
+                    'isLandlord' => $isLandlord
                 );
             }
 
@@ -170,12 +173,12 @@ class TransactionApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function deleteTransaction($id): array
+    public function deleteTransaction($guid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $transaction = $this->em->getRepository(Transaction::class)->findOneBy(array('id' => $id));
+            $transaction = $this->em->getRepository(Transaction::class)->findOneBy(array('guid' => $guid));
 
             if ($transaction == null) {
                 return array(
@@ -184,7 +187,7 @@ class TransactionApi extends AbstractController
                 );
             }
 
-            $auth = $this->authApi->isAuthorisedToChangeLease($transaction->getLease()->getId());
+            $auth = $this->authApi->isAuthorisedToChangeLease($transaction->getLease()->getGuid());
             if($auth["result_code"] == 1){return $auth;}
 
             $this->em->remove($transaction);
@@ -355,5 +358,14 @@ class TransactionApi extends AbstractController
         }
 
         return $responseArray;
+    }
+
+    function generateGuid(): string
+    {
+        if (function_exists('com_create_guid') === true) {
+            return trim(com_create_guid(), '{}');
+        }
+
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
 }

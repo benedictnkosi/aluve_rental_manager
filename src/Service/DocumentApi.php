@@ -154,22 +154,16 @@ class DocumentApi extends AbstractController
         }
     }
 
-    public function getDocumentNameByIdNumber($idNumber, $phoneNumber, $documentType): array
+    public function getDocumentByTenant($documentType): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('idNumber' => $idNumber));
+            $emailAddress = $this->getUser()->getUserIdentifier();
+            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('email' => $emailAddress));
             if($tenant == null){
                 return array(
                     'result_message' => "Error. Tenant not found",
-                    'result_code' => 1
-                );
-            }
-
-            if(strcmp($tenant->getPhone(), $phoneNumber) !== 0){
-                return array(
-                    'result_message' => "Error. Tenant authentication failed",
                     'result_code' => 1
                 );
             }

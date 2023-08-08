@@ -1,6 +1,5 @@
 $(document).ready(function () {
-    showTab(currentTab);
-
+    sessionStorage.removeItem("application_reference");
     $("#regForm").validate({
         rules: {
             application_name: {
@@ -25,18 +24,8 @@ $(document).ready(function () {
             application_occupation: {
                 maxlength: 100
             }
-        }, submitHandler: function (event) {
-            if (currentTab === 0) {
-                submitApplication();
-            } else {
-                if($("#nextBtn").text().localeCompare("Finish")===0){
-                    $(".thanks-message").show();
-                    $("#text-message-no-listed").hide();
-                    $(".tab").hide();
-                    $("#nextBtn").hide();
-                    document.getElementsByClassName("step")[currentTab].className = "step finish";
-                }
-            }
+        }, submitHandler: function () {
+            submitApplication();
         }
     });
 
@@ -70,6 +59,19 @@ $(document).ready(function () {
         $('#drop-id-doc-type-selected').html(event.target.innerText);
     });
 
+    $("#finishButton").click(function () {
+        if(sessionStorage.getItem("application_reference") !== null){
+            $('#applicationreferences').html("Your application reference is <large><b>" + sessionStorage.getItem("application_reference") + "</b></large>");
+            $('#text-message').show();
+            $('#text-message').removeClass("d-none");
+            $('#supporting-docs-div').hide();
+        }else{
+            showToast("Error: Please upload all supporting documents");
+        }
+    });
+
+    
+
     getUnit();
 });
 
@@ -94,22 +96,28 @@ let getUnit = () => {
         success: function (data) {
 
             if(data.listed === false){
+                $("#text-message-no-listed").removeClass("d-none");
                 $(".thanks-message").hide();
-                $("#text-message-no-listed").show();
-                $(".tab").hide();
-                $("#nextBtn").hide();
-                document.getElementsByClassName("step")[currentTab].className = "step finish";
+                $("#applicant-details-div").hide();
+                $("#supporting-docs-div").hide();
+            }else{
+                $("#applicant-details-div").removeClass("d-none");
+                $("#supporting-docs-div").hide();
+                $("#text-message-no-listed").hide();
+                $(".thanks-message").hide();
             }
-            const parking = data.parking === true ? "Provided" : "Not Provided";
-            const children = data.children_allowed === true ? "Allowed" : "Not Allowed";
+            const parking = data.parking === true ? "1" : "0";
+            const children = data.children_allowed === true ? "1" : "0";
 
-            $("#property_details").html(data.property.name + ", " +  data.property.address + ", " + data.name  );
-            $("#unit_max_occupation").html(data.max_occupants );
-            $("#unit_children").html(children );
-            $("#unit_parking").html(parking);
-            $("#unit_min_salary").html("R" + data.min_gross_salary.toFixed(2));
-            $("#unit_rent").html("R" + data.rent.toFixed(2));
-
+            $("#unit-name").html(data.name);
+            $("#unit-address").html(data.property.address);
+            $("#unit-rent").html("R" + data.rent.toFixed(2) );
+            $("#unit-beds").html(data.bedrooms );
+            $("#unit-bathrooms").html(data.bathrooms );
+            $("#unit-max-occupants").html(data.max_occupants );
+            $("#unit-parking").html(parking);
+            $("#unit-children").html(children);
+            $(".unit-details-card").removeClass("d-none");
         },
         error: function (xhr) {
 
@@ -150,11 +158,10 @@ let submitApplication = () => {
         success: function (response) {
             showToast(response.result_message)
             if (response.result_code === 0) {
-                document.getElementsByClassName("step")[currentTab].className += " finish";
-                nextPrev(1);
-                sessionStorage.setItem("application_id", response.id);
-                $('#nextBtn').html("Finish");
-                $('#nextBtn').attr("disabled", true);
+                sessionStorage.setItem("application_guid", response.id);
+                $("#applicant-details-div").hide();
+                $("#supporting-docs-div").removeClass("d-none");
+                $("#supporting-docs-div").show();
             }
         }
     });
@@ -177,7 +184,7 @@ function uploadSupportingDocuments(documentType, file_data) {
     let url = "/no_auth/application/upload/";
     const form_data = new FormData();
     form_data.append("file", file_data);
-    form_data.append("application_id", sessionStorage.getItem("application_id"));
+    form_data.append("application_id", sessionStorage.getItem("application_guid"));
     form_data.append("document_type", documentType);
 
     if (file_data === undefined) {
@@ -204,8 +211,7 @@ function uploadSupportingDocuments(documentType, file_data) {
             const jsonObj = JSON.parse(response);
             showToast(jsonObj.result_message);
             if(jsonObj.alldocs_uploaded === true){
-                $('#nextBtn').attr("disabled", false);
-                $('#applicationreferences').text("Your application reference is " + jsonObj.application_id);
+                sessionStorage.setItem("application_reference", jsonObj.application_id);
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {

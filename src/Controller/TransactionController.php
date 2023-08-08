@@ -94,8 +94,13 @@ class TransactionController extends AbstractController
         if (!$request->isMethod('get')) {
             return new JsonResponse("Method Not Allowed", 405, array());
         }
+        $isLandlord = true;
+        $userRole = $this->getUser()->getRoles()[0];
+        if(strpos($userRole, "tenant") > -1){
+            $isLandlord = false;
+        };
 
-        $response = $transactionApi->getTransactions($guid);
+        $response = $transactionApi->getTransactions($guid, $isLandlord);
         return new JsonResponse($response, 200, array());
     }
 

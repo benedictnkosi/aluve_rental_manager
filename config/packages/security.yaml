@@ -18,7 +18,7 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
-                default_target_path: app_properties
+                default_target_path: home
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 2592000
@@ -38,10 +38,12 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/properties, roles: ROLE_ADMIN }
+        - { path: ^/tenant, roles: ROLE_TENANT }
         - { path: ^/api, roles: ROLE_USER }
         - { path: ^/admin_api, roles: ROLE_ADMIN }
         - { path: ^/, roles: PUBLIC_ACCESS }
         - { path: ^/no_auth, roles: PUBLIC_ACCESS }
+        
 
 when@test:
     security:

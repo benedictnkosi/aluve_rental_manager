@@ -72,9 +72,10 @@ class LoginController extends AbstractController
         if (!$request->isMethod('get')) {
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
-        $responseArray[] = array(
+        $responseArray = array(
             'authenticated' => $this->getUser() !== null,
-            'result_code' => 0
+            'result_code' => 0,
+            'roles' => $this->getUser()->getRoles()
         );
 
         return new JsonResponse($responseArray);
