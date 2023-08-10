@@ -77,6 +77,10 @@ let getMaintenanceCalls = () => {
                         html += '                <div class="col-1" style="text-align: right;">\n' +
                         '                  <i class="fa-solid fa-xmark m-0 delete-maintenance-icon red-text"  role="button" maintenance-guid="'+response.guid+'"></i>\n' +
                         '                </div>';
+                    }else{
+                        html += '                <div class="col-1" style="text-align: right;">\n' +
+                            '                  <i class="fa-solid fa-check green-text"></i>\n' +
+                            '                </div>';
                     }
 
                 html +=  '            </div> ';

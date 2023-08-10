@@ -23,7 +23,96 @@
     <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>
       </div>
-      
+
+
+    <!--modal for acreating a new maintenance call-->
+    <div
+            class="modal fade"
+            id="maintenanceModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="maintenanceModalLabel">
+                        New Maintenance Call
+                    </h1>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-log-maintenance">
+
+                        <div class="mb-3">
+                        <textarea
+                                class="form-control"
+                                id="call-summary"
+                                placeholder="Summary of the issue"
+                                rows="3"
+                                required
+                        ></textarea>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" id="btn-log-call" class="btn transparent-green-button">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--confirm action delete modal-->
+    <div
+            class="modal fade"
+            id="confirmMaintenanceModal"
+            tabindex="-1"
+            aria-labelledby="confirmModalLabel"
+            aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmMaintenanceModalLabel">
+                        Confirmation
+                    </h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to close this maintenance call?</p>
+                </div>
+                <div class="modal-footer">
+                    <button
+                            type="button"
+                            class="btn transparent-green-button"
+                            data-bs-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                            type="button"
+                            class="btn transparent-green-button"
+                            id="btn-confirm-maintenance"
+                    >
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <div class="container">
     <div class="aluve-nav">
         <nav class="navbar navbar-expand-lg navbar-light">
@@ -48,11 +137,12 @@
 
 </div>
 
-<div class="tenant-container container" style="display: none;">
+<div class="tenant-container container display-none">
     
     <div class="tenant-unit-card">
         <img src="/assets/images/unit1.jpg" id="unit-image" alt="landing-image" border="0">
-        <div class="unit-details"  style="display: none;">
+        <div class="unit-details display-none">
+            <p id="lease-dates-p"><i class="fa-solid fa-calendar p-2"></i><medium id="lease-dates"></medium></p>
             <p><i class="fa-solid fa-house p-2"></i><medium id="unit-name"></medium></p>
             <p><i class="fa-solid fa-sack-dollar p-2"></i><medium id="unit-rent"></medium></p>
             <p><i class="fa-solid fa-location-dot p-2"></i><medium id="unit-address"></medium></p>
@@ -64,9 +154,11 @@
               <i class="fa-solid fa-people-roof p-2"></i> <medium id="unit-max-occupants"></medium>
               <i class="fa-solid fa-child-reaching p-2"></i> <medium id="unit-children"></medium>
           </div>
+        </div>
+
+            <p class="fw-bolder fs-6 mt-5">Your Documents</p>
 
         <div class="tenant-documents-container">
-            <p class="fw-bolder p-3">Documents</p>
             <div class="col-12 text-start p-0" >
                 <div id="tenant-documents"></div>
             </div>
@@ -92,37 +184,47 @@
             </form>
         </div>
 
-        <div class="maintenance-container tenant-div-toggle">
-            <p class="fw-bolder p-3">Maintenance</p>
-            <div class="col-12 text-start p-0" >
-                <div id="maintenance-div"></div>
-            </div>
+        <div class="maintenance-container tenant tenant-div-toggle">
+            <p class="fw-bolder fs-6 mt-5">Maintenance</p>
+            <p>
+                <button
+                        type="button"
+                        class="btn transparent-white-button"
+                        id="btn-new-maintanance"
+                        data-bs-toggle="modal"
+                        data-bs-target="#maintenanceModal"
+                >
+                    Log A Call
+                </button>
+            </p>
+
+            <div class="row m-1" id="maintenance-div"></div>
         </div>
     
         <div id="messages-div">
             <!--    documents pending verification-->
-            <div class="container py-5 h-100 lease-uploaded d-none tenant-div-toggle">
+            <div class="container py-5 h-100 lease-uploaded display-none tenant-div-toggle">
                 <div class=" text-center mt-5">
                     <h3>Thanks for uploading your documents!</h3> <span>Your documents have been sent to our team for verification! We will contact you shortly!</span>
                 </div>
             </div>
     
             <!--    application pending decision-->
-            <div class="container py-5 h-100 financials-uploaded d-none tenant-div-toggle">
+            <div class="container py-5 h-100 financials-uploaded display-none tenant-div-toggle">
                 <div class=" text-center mt-5">
                     <h3>We got your application!</h3> <span>We will contact you shortly!</span>
                 </div>
             </div>
     
             <!--    application declined-->
-            <div class="container py-5 h-100 declined-d-none tenant-div-toggle">
+            <div class="container py-5 h-100 declined-display-none tenant-div-toggle">
                 <div class=" text-center mt-5">
                     <h3>Application Declined!</h3> <span>Thank you for your interest in our accommodation!</span>
                 </div>
             </div>
     
             <!--    application invalid-->
-            <div class="container py-5 h-100 new d-none tenant-div-toggle">
+            <div class="container py-5 h-100 new display-none tenant-div-toggle">
                 <div class=" text-center mt-5">
                     <h3>Application Invalid!</h3> <span>You did not upload documents for this application!</span>
                 </div>
@@ -133,11 +235,8 @@
 
     
 
-    
+    </div>
 </div>
-
-
-
 
 <div class="toast-container position-fixed top-0 end-0 p-3">
     <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -153,6 +252,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/operations/tenant.js"></script>
 <script src="/assets/js/loader.js"></script>
+    <script src="/assets/js/operations/commons.js"></script>
 
 </body>
 </html>

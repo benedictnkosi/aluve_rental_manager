@@ -76,7 +76,17 @@ class RegistrationController extends AbstractController
             );
 
             $user->setEmail($request->get("_username"));
-            $user->setRoles(["ROLE_ADMIN"]);
+            if(strcmp($request->get("_user_type"), "Tenant")==0){
+                $user->setRoles(["ROLE_TENANT"]);
+            }else if(strcmp($request->get("_user_type"), "Landlord")==0){
+                $user->setRoles(["ROLE_LANDLORD"]);
+            }else{
+                $response = array(
+                    "result_message" =>"Error: User type is not recognised",
+                    "result_code" => 1
+                );
+                return new JsonResponse($response , 200, array());
+            }
             try {
                 $entityManager->persist($user);
                 $entityManager->flush();

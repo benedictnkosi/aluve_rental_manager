@@ -39,7 +39,7 @@
       <p class="pt-5 login-app-header">Aluve App</p>
       <p class="p-2 login-app-header-title">Sign-up</p>
       <form id="register-form">
-        <div class="col-sm-12">
+        <div class="col-12">
           <label for="email" class="col-form-label"
           >Email</label
           >
@@ -51,7 +51,7 @@
                   required
           />
         </div>
-        <div class="col-sm-12">
+        <div class="col-12">
           <label for="password" class="col-form-label"
           >Password</label
           >
@@ -64,8 +64,8 @@
           />
         </div>
 
-        <div class="col-sm-12">
-          <label for="password" class="col-form-label"
+        <div class="col-12">
+          <label for="_confirm_password" class="col-form-label"
           >Confirm Password</label
           >
           <input
@@ -76,8 +76,21 @@
                   required
           />
         </div>
+        <div class="col-12 mt-1">
+          <div class="dropdown" id="_user_type">
+            <button class="btn dropdown-toggle w-100" id="drop-user-type-selected"
+                    type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+              User Type
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item user-type" user-type="landlord" href="javascript:void(0)">Landlord</a></li>
+              <li><a class="dropdown-item user-type"  user-type="tenant" href="javascript:void(0)">Tenant</a></li>
+            </ul>
+          </div>
+        </div>
         <div class="col-sm-12 mt-3">
-          <button type="submit" w-100 class="btn green-button w-100 " role="button"  href="">Sign-up</button>
+          <button type="submit"  class="btn green-button w-100 " role="button"  href="">Sign-up</button>
         </div>
         <div class="col-sm-12 mt-3">
           Already registered? <a href="/login">Sign-in</a>

@@ -1077,7 +1077,7 @@
                 <p>
                     <button
                             type="button"
-                            class="btn transparent-green-button w-100 d-none"
+                            class="btn transparent-green-button w-100 display-none"
                             id="btn-create-new-unit"
                     >
                         Add New Unit
@@ -1331,7 +1331,7 @@
                 <p>
                     <button
                             type="button"
-                            class="btn transparent-green-button w-100 d-none"
+                            class="btn transparent-green-button w-100 display-none"
                             id="btn-new-lease"
                     >
                         New Lease
@@ -1339,7 +1339,7 @@
                 </p>
             </div>
 
-            <div class="statement-card-details closable-div" style="display: none">
+            <div class="statement-card-details closable-div display-none">
                 <i class="fa-regular fa-circle-xmark statement-close" role="button"></i>
                 <!-- <i class="fa-regular fa-circle-xmark"></i> -->
 
@@ -1391,19 +1391,19 @@
                     </div>
 
 
-                        <div class="col-6  text-start statement-entity mt-3 left-border-green">
-                            <p class="m-0 fw-normal">Bank</p>
-                            <p class="m-0" >Account Number</p>
-                            <p class="m-0" >Account Type</p>
-                            <p class="m-0" >Branch</p>
-                        </div>
+                    <div class="col-6  text-start statement-entity mt-3 left-border-green">
+                        <p class="m-0 fw-normal">Bank</p>
+                        <p class="m-0">Account Number</p>
+                        <p class="m-0">Account Type</p>
+                        <p class="m-0">Branch</p>
+                    </div>
 
-                        <div class="col-6 text-start statement-entity  mt-3">
-                            <p class="m-0 fw-normal" id="statement-bank-name">FNB</p>
-                            <p class="m-0" id="statement-bank-account">6309873921</p>
-                            <p class="m-0" id="statement-bank-account-type">Cheque</p>
-                            <p class="m-0" id="statement-bank-branch">250050</p>
-                        </div>
+                    <div class="col-6 text-start statement-entity  mt-3">
+                        <p class="m-0 fw-normal" id="statement-bank-name">FNB</p>
+                        <p class="m-0" id="statement-bank-account">6309873921</p>
+                        <p class="m-0" id="statement-bank-account-type">Cheque</p>
+                        <p class="m-0" id="statement-bank-branch">250050</p>
+                    </div>
 
 
                 </div>
@@ -1633,14 +1633,13 @@
                             </div>
 
                             <div class="col-sm-5 mt-1">
-                                <a id="new-inspection-link" class="btn transparent-green-button rounded-0 w-100 display-none"
+                                <a id="new-inspection-link"
+                                   class="btn transparent-green-button rounded-0 w-100 display-none"
                                    role="button" target="_blank" href="">new Inspection</a>
                             </div>
                         </div>
-
-
+                    </div>
                 </form>
-
                 <form id="regForm" class="m-5 display-none">
                     <h3 class="mt-2">Lease Documents</h3>
                     <div class="mb-3 mt-3">
@@ -1675,9 +1674,9 @@
                                 class="fa-solid fa-file-pdf" style="color: #ca535f;"></i></a>
                         <input type="file" class="form-control" id="onboarding_pop"/>
                     </div>
+                </form>
             </div>
-            </form>
-        </div>
+</div>
 
 
 <!--            applications div -------------------------------------------------------------------->
@@ -1687,7 +1686,7 @@
 
         </div>
 
-        <div class="application-card-details d-none closable-div">
+        <div class="application-card-details display-none closable-div">
             <i class="fa-regular fa-circle-xmark application-details-close" role="button"></i>
             <div class="row p-sm-5">
                 <p class="fw-bolder p-3" id="application_reference"></p>
@@ -1718,18 +1717,18 @@
                 </div>
 
 
-                <div class="col-md-4 mt-1 ms-0 btn-accept-application d-none">
-                    <button type="button" class="btn transparent-green-button w-100 btn-accept-application d-none">
+                <div class="col-md-6 mt-1 ms-0 btn-accept-application display-none">
+                    <button type="button" class="btn transparent-green-button w-100 btn-accept-application display-none">
                         Accept
                     </button>
                 </div>
-                <div class="col-md-4 mt-1 ms-0 btn-decline-application d-none">
-                    <button type="button" class="btn transparent-red-button w-100 btn-decline-application d-none">
+                <div class="col-md-6 mt-1 ms-0 btn-decline-application display-none">
+                    <button type="button" class="btn transparent-red-button w-100 btn-decline-application display-none">
                         Decline
                     </button>
                 </div>
-                <div class="col-md-8 mt-1 ms-0 btn-convert-application d-none">
-                    <button type="button" class="btn transparent-green-button w-100 btn-convert-application d-none">
+                <div class="col-md-6 mt-1 ms-0 btn-convert-application display-none p-0">
+                    <button type="button" class="btn transparent-green-button w-100 btn-convert-application display-none">
                         Convert To Lease
                     </button>
                 </div>

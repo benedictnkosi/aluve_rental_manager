@@ -28,7 +28,7 @@ $(document).ready(function () {
     sessionStorage.setItem("unit-id", "0");
     $("#checkBulkCreateUnits").prop("checked", false);
     updateView("new-unit-content-div", "Unit");
-    $(".new-unit-fields").show();
+    $(".new-unit-fields").removeClass("display-none");
 
     $("#unit-name-header").html("");
     $("#unit-name").val("");
@@ -298,7 +298,7 @@ let getAllUnits = () => {
         }
 
         updateView("new-unit-content-div", unitName);
-        $(".new-unit-fields").hide();
+        $(".new-unit-fields").addClass("display-none");
         $("#unit-name-label").text("Unit Name:");
       });
 
@@ -316,7 +316,7 @@ let getAllUnits = () => {
         $("#maintenance-unit-dropdown-selected").html(event.target.innerText);
       });
 
-      $('#btn-create-new-unit').removeClass('d-none');
+      $('#btn-create-new-unit').removeClass('display-none');
     },
     error: function (xhr) {},
   });
@@ -343,7 +343,7 @@ let populateUnitsDropdown = (elementId) => {
 
       let unitsDropDownHtml = "";
       data.forEach(function (unit) {
-    
+
         unitsDropDownHtml +=
           '<li><a class="dropdown-item unit-dropdown" unit-guid="' +
           unit.guid +
@@ -352,11 +352,11 @@ let populateUnitsDropdown = (elementId) => {
           unit.unit_name +
           "</a></li>";
 
-      
+
       });
 
       $("#" + elementId).html(unitsDropDownHtml);
-  
+
       $(".unit-dropdown").click(function (event) {
         sessionStorage.setItem(
           "unit-guid",

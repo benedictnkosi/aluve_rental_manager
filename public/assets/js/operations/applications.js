@@ -28,12 +28,12 @@ $(document).ready(function () {
     });
 
     $(".application-details-close").click(function () {
-        $('.closable-div').addClass('d-none');
-        $('#applications-div').removeClass('d-none');
+        $('.closable-div').addClass('display-none');
+        $('#applications-div').removeClass('display-none');
         //hide the buttons on open application window
-        $('.btn-decline-application').addClass('d-none');
-        $('.btn-convert-application').addClass('d-none');
-        $('.btn-accept-application').addClass('d-none');
+        $('.btn-decline-application').addClass('display-none');
+        $('.btn-convert-application').addClass('display-none');
+        $('.btn-accept-application').addClass('display-none');
     });
     
 });
@@ -69,22 +69,22 @@ let openApplicationDetails = (applicaitonGuid) => {
 
             $("#application-documents").html(html);
 
-            $('#applications-div').addClass('d-none');
-            $('.application-card-details').removeClass('d-none');
+            $('#applications-div').addClass('display-none');
+            $('.application-card-details').removeClass('display-none');
             
             if (data.application.status.localeCompare("accepted") === 0) {
                 //accepted applications cant be converted to lease as the KYC docs are not uploaded
-                $('.btn-decline-application').removeClass('d-none');
+                $('.btn-decline-application').removeClass('display-none');
             }
 
             if (data.application.status.localeCompare("lease uploaded") === 0) {
-                $('.btn-decline-application').removeClass('d-none');
-                $('.btn-convert-application').removeClass('d-none');
+                $('.btn-decline-application').removeClass('display-none');
+                $('.btn-convert-application').removeClass('display-none');
             }
 
             if (data.application.status.localeCompare("financials uploaded") === 0) {
-                $('.btn-decline-application').removeClass('d-none');
-                $('.btn-accept-application').removeClass('d-none');
+                $('.btn-decline-application').removeClass('display-none');
+                $('.btn-accept-application').removeClass('display-none');
             }
 
         },
@@ -183,13 +183,13 @@ let getApplications = () => {
             });
 
             //reset the buttons on open application window
-            $('.btn-decline-application').addClass('d-none');
-            $('.btn-convert-application').addClass('d-none');
-            $('#decline-application-button').addClass('d-none');
+            $('.btn-decline-application').addClass('display-none');
+            $('.btn-convert-application').addClass('display-none');
+            $('#decline-application-button').addClass('display-none');
 
             //close the application details window
-            $('.closable-div').addClass('d-none');
-            $('#applications-div').removeClass('d-none');
+            $('.closable-div').addClass('display-none');
+            $('#applications-div').removeClass('display-none');
 
         },
         error: function (xhr) {

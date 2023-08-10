@@ -32,7 +32,7 @@
 
 
 <div class="application-container container">
-    <div class="unit-details-card d-none">
+    <div class="unit-details-card display-none">
         <img src="/assets/images/unit1.jpg" alt="landing-image" border="0">
         <div class="unit-details">
           <p><i class="fa-solid fa-house p-2"></i><small id="unit-name"></small></p>
@@ -55,13 +55,13 @@
     <div class="row d-flex justify-content-center align-items-center p2">
         
             <form id="regForm">
-                <div class="tab row p-2 d-none" id="applicant-details-div">
+                <div class="tab row p-2 display-none" id="applicant-details-div">
 
                     <div class="mb-3">
                         <label for="application_name" class="form-label">Full Name</label>
                         <input type="text" class="form-control" name="application_name"
                                id="application_name"
-                               required value="benedict Nkosi">
+                               required value="">
                     </div>
                     <div class="col-sm-6">
                         <label for="application_id_doc_type" class="form-label">ID Document Type</label>
@@ -80,37 +80,37 @@
                     <div class="col-sm-6">
                         <label for="application_id_number" class="form-label">ID\Passport Number</label>
                         <input type="text" class="form-control" name="application_id_number"
-                               id="application_id_number" required value="passport">
+                               id="application_id_number" required>
                     </div>
                     <div class="col-sm-6 mt-3">
                         <label for="application_phone" class="form-label">Phone Number</label>
                         <input type="number" class="form-control" name="application_phone"
-                               id="application_phone" required value="0837917430">
+                               id="application_phone" required >
                     </div>
                     <div class="col-sm-6  mt-3">
                         <label for="application_email" class="form-label">Email</label>
                         <input type="email" class="form-control" name="application_email"
-                               id="application_email"  required value="asas@asas.com">
+                               id="application_email"  required >
                     </div>
                     <div class="col-sm-6  mt-3">
                         <label for="adult_count" class="form-label">Number Of Adults</label>
                         <input type="number" class="form-control" name="adult_count"
-                               id="adult_count"  required value="2">
+                               id="adult_count"  required >
                     </div>
                     <div class="col-sm-6  mt-3">
                         <label for="child_count" class="form-label">Number Of Children</label>
                         <input type="number" class="form-control" name="child_count"
-                               id="child_count" required value="3">
+                               id="child_count" required >
                     </div>
                     <div class="col-sm-6  mt-3">
                         <label for="application_occupation" class="form-label">Occupation</label>
                         <input type="text" class="form-control" name="application_occupation"
-                               id="application_occupation" required value="Tester">
+                               id="application_occupation" required >
                     </div>
                     <div class="col-sm-6  mt-3">
                         <label for="application_salary" class="form-label">Combined Gross Salary</label>
                         <input type="number" class="form-control" name="application_salary"
-                               id="application_salary" required value="40000">
+                               id="application_salary" required>
                     </div>
 
                     <div class="col-sm-6 mt-3 ">
@@ -121,7 +121,7 @@
 
                    
                 </div>
-                <div class="row d-none p-2" id="supporting-docs-div">
+                <div class="row display-none p-2" id="supporting-docs-div">
                     <p class="mt-2 fs-5">Please upload supporting documents</p>
                     <div class="mb-3">
                         <label for="bank_statement" class="form-label">Bank Statement</label>
@@ -146,12 +146,12 @@
                     </div>
                 </div>
 
-                <div class="thanks-message text-center application-message-div d-none" id="text-message">
+                <div class="thanks-message text-center application-message-div display-none" id="text-message">
                     <h3 class="green-text">Thanks for your Application!</h3> <span>Your application has been sent to our team. We will contact you shortly!</span>
                     <span id="applicationreferences" class="d-block"></span>
                 </div>
 
-                <div class="thanks-message text-center application-message-div d-none" id="text-message-no-listed">
+                <div class="thanks-message text-center application-message-div display-none" id="text-message-no-listed">
                     <h3 class="green-text">Thanks for your Interest!</h3> <span>This rental unit is not open for applications</span>
                 </div>
             </form>

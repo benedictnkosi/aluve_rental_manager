@@ -23,6 +23,11 @@ $(document).ready(function () {
     event.preventDefault();
   });
 
+
+  $(".user-type").click(function (event) {
+    $("#drop-user-type-selected").html(event.target.innerText);
+  });
+
 });
 
 let authenticateUser = () => {
@@ -63,12 +68,19 @@ let authenticateUser = () => {
   });
 };
 
-
 let registerUser = () => {
+
+  const selectedType = $("#drop-user-type-selected").html();
+  if(selectedType.includes("User Type")){
+    showToast("Error: Please select user type");
+    return;
+  }
+
   let data = {
     _username: $("#email").val(),
     _password: $("#password").val(),
     _confirm_password: $("#_confirm_password").val(),
+    _user_type: selectedType,
   };
 
   let url = "/register";
@@ -111,3 +123,5 @@ let showToast = (message) => {
   }
   toastBootstrap.show();
 };
+
+

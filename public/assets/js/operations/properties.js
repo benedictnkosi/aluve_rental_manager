@@ -129,9 +129,9 @@ let getAllProperties = () => {
                         modalPropertyName.value = propertyName
                         modalPropertyAddress.value = propertyAddress
 
-                        $("#btn-delete-property").removeClass("d-none");
+                        $("#btn-delete-property").removeClass("display-none");
                     }else{
-                        $("#btn-delete-property").addClass("d-none");
+                        $("#btn-delete-property").addClass("display-none");
                     }
                 })
             }

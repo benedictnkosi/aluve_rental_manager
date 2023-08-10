@@ -105,8 +105,8 @@ function uploadInspectionImage(file_data) {
             const jsonObj = JSON.parse(response);
             showToast(jsonObj.result_message);
             if(jsonObj.alldocs_uploaded === true){
-                $('#text-message').show();
-                $('#regForm').hide();
+                $('#text-message').removeClass("display-none");
+                $('#regForm').addClass("display-none");
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {

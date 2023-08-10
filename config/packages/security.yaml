@@ -38,6 +38,7 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/properties, roles: ROLE_ADMIN }
+        - { path: ^/properties, roles: ROLE_LANDLORD }
         - { path: ^/tenant, roles: ROLE_TENANT }
         - { path: ^/api, roles: ROLE_USER }
         - { path: ^/admin_api, roles: ROLE_ADMIN }

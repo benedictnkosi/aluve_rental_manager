@@ -62,9 +62,9 @@ $(document).ready(function () {
     $("#finishButton").click(function () {
         if(sessionStorage.getItem("application_reference") !== null){
             $('#applicationreferences').html("Your application reference is <large><b>" + sessionStorage.getItem("application_reference") + "</b></large>");
-            $('#text-message').show();
-            $('#text-message').removeClass("d-none");
-            $('#supporting-docs-div').hide();
+            $('#text-message').removeClass("display-none");
+            $('#text-message').removeClass("display-none");
+            $('#supporting-docs-div').addClass("display-none");
         }else{
             showToast("Error: Please upload all supporting documents");
         }
@@ -96,15 +96,15 @@ let getUnit = () => {
         success: function (data) {
 
             if(data.listed === false){
-                $("#text-message-no-listed").removeClass("d-none");
-                $(".thanks-message").hide();
-                $("#applicant-details-div").hide();
-                $("#supporting-docs-div").hide();
+                $("#text-message-no-listed").removeClass("display-none");
+                $(".thanks-message").addClass("display-none");
+                $("#applicant-details-div").addClass("display-none");
+                $("#supporting-docs-div").addClass("display-none");
             }else{
-                $("#applicant-details-div").removeClass("d-none");
-                $("#supporting-docs-div").hide();
-                $("#text-message-no-listed").hide();
-                $(".thanks-message").hide();
+                $("#applicant-details-div").removeClass("display-none");
+                $("#supporting-docs-div").addClass("display-none");
+                $("#text-message-no-listed").addClass("display-none");
+                $(".thanks-message").addClass("display-none");
             }
             const parking = data.parking === true ? "1" : "0";
             const children = data.children_allowed === true ? "1" : "0";
@@ -117,7 +117,7 @@ let getUnit = () => {
             $("#unit-max-occupants").html(data.max_occupants );
             $("#unit-parking").html(parking);
             $("#unit-children").html(children);
-            $(".unit-details-card").removeClass("d-none");
+            $(".unit-details-card").removeClass("display-none");
         },
         error: function (xhr) {
 
@@ -159,9 +159,9 @@ let submitApplication = () => {
             showToast(response.result_message)
             if (response.result_code === 0) {
                 sessionStorage.setItem("application_guid", response.id);
-                $("#applicant-details-div").hide();
-                $("#supporting-docs-div").removeClass("d-none");
-                $("#supporting-docs-div").show();
+                $("#applicant-details-div").addClass("display-none");
+                $("#supporting-docs-div").removeClass("display-none");
+                $("#supporting-docs-div").removeClass("display-none");
             }
         }
     });

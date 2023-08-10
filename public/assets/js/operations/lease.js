@@ -43,7 +43,7 @@ $(document).ready(function () {
   $(".statement-close").click(function (event) {
     $("#div-leases").removeClass("display-none");
     $('#btn-new-lease').removeClass('display-none');
-    $(".statement-card-details").hide();
+    $(".statement-card-details").addClass("display-none");
     updateView("leases-content-div", "Lease");
   });
 
@@ -75,7 +75,6 @@ $(document).ready(function () {
   $("#btn-new-lease").click(function (event) {
     event.preventDefault();
     sessionStorage.setItem("lease-id", "0");
-    populateUnitsDropdown("ul-lease-units");
     $("#unit-dropdown-selected").html("Select Unit");
     $("#lease-tenant-name").val("");
     $("#lease-tenant-phone").val("");
@@ -258,6 +257,7 @@ let deleteLease = () => {
 };
 
 let getAllLeases = () => {
+  populateUnitsDropdown("ul-lease-units");
   let id = getURLParameter("id");
   let url = "/api/leasessummary/get/" + id;
   $.ajax({
@@ -373,7 +373,7 @@ let getAllLeases = () => {
         $("#confirmModal").modal("toggle");
       });
 
-      $("#btn-new-lease").removeClass("d-none");
+      $("#btn-new-lease").removeClass("display-none");
 
       $("#div-leases").removeClass("display-none");
       $('#btn-new-lease').removeClass('display-none');
@@ -546,7 +546,7 @@ let getTransactions = (leaseGuid) => {
       });
 
       $("#transaction-rows").html(html);
-      $(".statement-card-details").show();
+      $(".statement-card-details").removeClass("display-none");
       $(".delete-transaction-button").click(function (event) {
         sessionStorage.setItem(
           "transaction-id",

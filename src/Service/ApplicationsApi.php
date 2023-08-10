@@ -286,6 +286,8 @@ class ApplicationsApi extends AbstractController
             $this->em->persist($application);
             $this->em->flush($application);
 
+            //create user for tenant
+
             //send sms to applicant
             $smsApi = new SMSApi($this->em, $this->logger);
             $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
@@ -313,7 +315,6 @@ class ApplicationsApi extends AbstractController
             );
         }
     }
-
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
     public function convertApplicationToLease($applicationGuid, $startDate, $endDate): array

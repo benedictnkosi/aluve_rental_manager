@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MaintenanceController extends AbstractController
 {
     /**
-     * @Route("no_auth/maintenance/new")
+     * @Route("api/tenant/maintenance/new")
      */
     public function createMaintenance(Request $request, LoggerInterface $logger, MaintenanceApi $maintenanceApi): Response
     {
@@ -44,7 +44,7 @@ class MaintenanceController extends AbstractController
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $maintenanceApi->logMaintenance($request->get("summary"), $request->get("unit_guid"), $request->get("property_guid"));
+        $response = $maintenanceApi->logMaintenanceByTenant($request->get("summary"));
         return new JsonResponse($response, 200, array());
     }
 
@@ -64,16 +64,16 @@ class MaintenanceController extends AbstractController
 
 
     /**
-     * @Route("no_auth/maintenance/get/{idNumber}/{phoneNumber}")
+     * @Route("api/tenant/maintenance/get")
      */
-    public function getMaintenanceCalls($idNumber, $phoneNumber, Request $request, LoggerInterface $logger,  MaintenanceApi $maintenanceApi): Response
+    public function getMaintenanceCalls(Request $request, LoggerInterface $logger,  MaintenanceApi $maintenanceApi): Response
     {
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('get')) {
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $maintenanceApi->getMaintenanceCallsByIDNumber($idNumber, $phoneNumber);
+        $response = $maintenanceApi->getMaintenanceCallsByTenant();
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);
