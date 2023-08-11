@@ -42,18 +42,18 @@ class CommunicationApi extends AbstractController
 //            );
 //        }
 
-       // $number = "+27" . substr($number, 1, strlen($number) -1 );
+        // $number = "+27" . substr($number, 1, strlen($number) -1 );
 
         $sid = "";
         $token = "";
-        try{
+        try {
             $twilio = new Client($sid, $token);
 
             $message = $twilio->messages
                 ->create("whatsapp:" . $number, // to
                     array(
                         "from" => "whatsapp:+14155238886",
-                        "body" =>$messageString
+                        "body" => $messageString
                     )
                 );
 
@@ -64,7 +64,7 @@ class CommunicationApi extends AbstractController
                 'result_code' => 0,
                 'sid' => $message->sid
             );
-        }catch (Exception $exception){
+        } catch (Exception $exception) {
             return array(
                 'result_message' => $exception->getMessage(),
                 'result_code' => 1
@@ -79,37 +79,32 @@ class CommunicationApi extends AbstractController
     {
         $this->logger->info("Starting Method: " . __METHOD__);
         $responseArray = array();
+
+
+        $this->logger->info("Connection to mail worked");
+
+        $message = "testing";
+
         try {
-
-            $this->logger->info("Connection to mail worked");
-
-            $message = "testing";
-
-            try {
             imap_mail(
                 "payments@hotelrunner.co.za",
                 "Alert: Manual Export of Records Required",
                 wordwrap($message, 70),
                 $this->createHeaders()
             );
-                $responseArray[] = "   ---> Admin notified via email!\n";
-                $this->logger->info("   ---> Admin notified via email!\n");
+            $responseArray[] = "   ---> Admin notified via email!\n";
+            $this->logger->info("   ---> Admin notified via email!\n");
+        } catch (Exception $e) {
+            $this->logger->info($e->getMessage());
+            $responseArray[] = $e->getMessage();
         }
-        catch (Exception $e) {
-                $this->logger->info($e->getMessage());
-                $responseArray[] = $e->getMessage();
-                throw new Exception("Error in notifyAdminForCompleteSet()");
-            }
 
-        } catch (Exception $exception) {
-            $this->logger->error($exception->getMessage());
-            return new JsonResponse($exception->getMessage(), 200, array());
-        }
 
         return $responseArray;
     }
 
-    private function createHeaders() {
+    private function createHeaders()
+    {
         return "MIME-Version: 1.0" . "\r\n" .
             "Content-type: text/html; charset=iso-8859-1" . "\r\n" .
             "From: " . "payments@hotelrunner.co.za" . "\r\n";
