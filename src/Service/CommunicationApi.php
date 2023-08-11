@@ -87,7 +87,7 @@ class CommunicationApi extends AbstractController
 
             try {
             imap_mail(
-                "nkosi.benedict@gmail.com",
+                "payments@hotelrunner.co.za",
                 "Alert: Manual Export of Records Required",
                 wordwrap($message, 70),
                 $this->createHeaders()
