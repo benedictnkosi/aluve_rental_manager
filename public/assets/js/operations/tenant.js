@@ -28,7 +28,7 @@ $(document).ready(function () {
 
     $(".view-statement-button").click(function () {
         populateStatement(sessionStorage.getItem("lease-guid"));
-        getTransactions(sessionStorage.getItem("lease-guid"));
+        getTransactions(sessionStorage.getItem("lease-guid"), "tenant");
     });
 });
 

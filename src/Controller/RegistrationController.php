@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Tenant;
 use App\Entity\User;
+use App\Service\CommunicationApi;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, LoggerInterface $logger, CommunicationApi $communicationApi): Response
     {
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('post')) {
@@ -103,6 +104,13 @@ class RegistrationController extends AbstractController
                 "result_message" =>"Successfully registered, Please sign in",
                 "result_code" => 0
             );
+
+            $message = "Welcome to Aluve App. We hope you enjoy your experience with us.";
+            $subject = "Aluve App - New Registration";
+            $link = "https://rentals.hotelrunner.co.za/login";
+            $linkText = "LOGIN";
+            $template = "generic";
+            $communicationApi->sendEmail($request->get("_username"), "",$subject , $message, $link, $linkText, $template);
             return new JsonResponse($response , 200, array());
         } catch (\Exception $exception) {
             $logger->info($exception->getMessage());

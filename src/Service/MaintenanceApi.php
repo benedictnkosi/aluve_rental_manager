@@ -159,6 +159,16 @@ class MaintenanceApi extends AbstractController
             $this->em->persist($maintenance);
             $this->em->flush($maintenance);
 
+            //send email
+            $message = "New maintenance call created for ".$lease->getUnit()->getProperty()->getName(). " - " . $lease->getUnit()->getName() ;
+            $subject = "Aluve App - New Maintenance Call";
+
+            $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/landlord";
+            $linkText = "View Maintenance";
+            $template = "generic";
+            $communicationApi = new CommunicationApi($this->em, $this->logger);
+            $communicationApi->sendEmail($lease->getUnit()->getProperty()->getEmail(), $lease->getUnit()->getProperty()->getName(),$subject , $message, $link, $linkText, $template);
+
             return array(
                 'result_message' => "Successfully logged maintenance call",
                 'result_code' => 0
@@ -300,6 +310,23 @@ class MaintenanceApi extends AbstractController
             $maintenanceCall->setStatus("closed");
             $this->em->persist($maintenanceCall);
             $this->em->flush($maintenanceCall);
+
+            //send email
+            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('unit' => $maintenanceCall->getUnit()->getId()));
+            if($lease == null){
+                return array(
+                    'result_message' => "Successfully closed maintenance call",
+                    'result_code' => 0
+                );
+            }
+            $message = "One of your maintenance calls has been closed. Please login to your tenant portal to view more details";
+            $subject = "Aluve App - Maintenance Call Closed";
+
+            $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+            $linkText = "View Maintenance";
+            $template = "generic";
+            $communicationApi = new CommunicationApi($this->em, $this->logger);
+            $communicationApi->sendEmail($lease->getTenant()->getEmail(), $lease->getTenant()->getName(),$subject , $message, $link, $linkText, $template);
 
             return array(
                 'result_message' => "Successfully closed maintenance call",

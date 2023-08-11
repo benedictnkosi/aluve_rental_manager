@@ -77,8 +77,7 @@ class ApplicationsApi extends AbstractController
             $emailAddress = $this->getUser()->getUserIdentifier();
             $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('email' => $emailAddress));
             if ($tenant == null) {
-                return array(
-                );
+                return array();
             }
 
             $applications = $this->em->getRepository("App\Entity\Application")->createQueryBuilder('a')
@@ -87,7 +86,7 @@ class ApplicationsApi extends AbstractController
                 ->getQuery()
                 ->getResult();
 
-            if (sizeof($applications)<1) {
+            if (sizeof($applications) < 1) {
                 return array(
                     'result_message' => "Error. Application not found",
                     'result_code' => 1
@@ -184,6 +183,17 @@ class ApplicationsApi extends AbstractController
             $this->em->persist($application);
             $this->em->flush($application);
 
+            //send email
+            $message = "New application received for " . $unit->getProperty()->getName() . " - " . $unit->getName();
+            $subject = "Aluve App - New Application";
+
+            $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/landlord";
+            $linkText = "View Application";
+            $template = "generic";
+            $communicationApi = new CommunicationApi($this->em, $this->logger);
+            $communicationApi->sendEmail($unit->getProperty()->getEmail(), $unit->getProperty()->getName(), $subject, $message, $link, $linkText, $template);
+
+
             return array(
                 'result_message' => "Successfully created application. Please upload documents",
                 'result_code' => 0,
@@ -235,6 +245,16 @@ class ApplicationsApi extends AbstractController
 
             if ($allDocsUploaded) {
                 $application->setStatus("financials uploaded");
+                //send email
+                $message = "All supporting documents uploaded for  " . $tenant->getName() . " - " . $application->getUnit()->getProperty()->getName() . ", " . $application->getUnit()->getName();
+                $subject = "Aluve App - Financial Uploaded";
+
+                $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/landlord";
+                $linkText = "View Application";
+                $template = "generic";
+                $communicationApi = new CommunicationApi($this->em, $this->logger);
+                $communicationApi->sendEmail($application->getUnit()->getProperty()->getEmail(), $application->getUnit()->getProperty()->getName(), $subject, $message, $link, $linkText, $template);
+
             }
 
             $this->em->persist($application);
@@ -286,26 +306,20 @@ class ApplicationsApi extends AbstractController
             $this->em->persist($application);
             $this->em->flush($application);
 
-            //create user for tenant
+            //send email
+            $message = "Application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has been accepted. Please sign lease and upload your ID document";
+            $subject = "Aluve App - Financial Uploaded";
 
-            //send sms to applicant
-            $smsApi = new SMSApi($this->em, $this->logger);
-            $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
-            $message = "Application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has been accepted. Please sign  lease " . $tenantPortalURL;
-            $isSMSSent = $smsApi->sendMessage("+27" . substr($application->getTenant()->getPhone(), 0, 9), $message);
+            $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+            $linkText = "Sign Lease";
+            $template = "generic";
+            $communicationApi = new CommunicationApi($this->em, $this->logger);
+            $communicationApi->sendEmail($application->getUnit()->getProperty()->getEmail(), $application->getUnit()->getProperty()->getName(), $subject, $message, $link, $linkText, $template);
 
-            if ($isSMSSent) {
-                return array(
-                    'result_message' => "Successfully accepted application.",
-                    'result_code' => 0
-                );
-            } else {
-                return array(
-                    'result_message' => "Error. Accepted the application. SMS to Applicant failed",
-                    'result_code' => 1
-                );
-            }
-
+            return array(
+                'result_message' => "Successfully accepted application.",
+                'result_code' => 0
+            );
 
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
@@ -385,24 +399,20 @@ class ApplicationsApi extends AbstractController
             $unitApi = new UnitApi($this->em, $this->logger);
             $unitApi->updateUnit("listed", false, $application->getUnit()->getGuid());
 
-            //send sms to applicant
-            $smsApi = new SMSApi($this->em, $this->logger);
-            $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
-            $message = "Application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has bee converted to a lease. Congratulations. " . $tenantPortalURL;
-            $isSMSSent = $smsApi->sendMessage("+27" . substr($application->getTenant()->getPhone(), 0, 9), $message);
+            //send email
+            $message = "Application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has bee converted to a lease. Congratulations you are officially a tenant!!!";
+            $subject = "Aluve App - Official Tenant";
 
-            if ($isSMSSent) {
-                return array(
-                    'result_message' => "Successfully created lease from the application.",
-                    'result_code' => 0
-                );
-            } else {
-                return array(
-                    'result_message' => "Error. Created lease from the application. SMS to Applicant failed",
-                    'result_code' => 1
-                );
-            }
+            $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+            $linkText = "View Tenant Portal";
+            $template = "generic";
+            $communicationApi = new CommunicationApi($this->em, $this->logger);
+            $communicationApi->sendEmail($tenant->getEmail(), $tenant->getName(), $subject, $message, $link, $linkText, $template);
 
+            return array(
+                'result_message' => "Successfully created lease from the application.",
+                'result_code' => 0
+            );
 
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
@@ -436,23 +446,22 @@ class ApplicationsApi extends AbstractController
             $this->em->persist($application);
             $this->em->flush($application);
 
-            //send sms to applicant
-            $smsApi = new SMSApi($this->em, $this->logger);
-            $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
-            $message = "Unfortunately your application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has been declined.";
-            $isSMSSent = $smsApi->sendMessage("+27" . substr($application->getTenant()->getPhone(), 0, 9), $message);
+            //send email
+            $message = "Unfortunately, your application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has been declined. Thank you very much for your interest.";
+            $subject = "Aluve App - Application Declined";
 
-            if ($isSMSSent) {
-                return array(
-                    'result_message' => "Successfully declined the application",
-                    'result_code' => 0
-                );
-            } else {
-                return array(
-                    'result_message' => "Error. Declined the application. SMS to Applicant failed",
-                    'result_code' => 1
-                );
-            }
+            $link = "https://property24.com";
+            $linkText = "Search For Property";
+            $template = "generic";
+            $communicationApi = new CommunicationApi($this->em, $this->logger);
+            $communicationApi->sendEmail($application->getTenant()->getEmail(), $application->getTenant()->getName(), $subject, $message, $link, $linkText, $template);
+
+
+            return array(
+                'result_message' => "Successfully declined the application",
+                'result_code' => 0
+            );
+
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
             return array(

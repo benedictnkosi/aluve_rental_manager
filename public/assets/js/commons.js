@@ -93,7 +93,7 @@ let populateStatement = (leaseGuid) => {
     });
 };
 
-let getTransactions = (leaseGuid) => {
+let getTransactions = (leaseGuid, userRole) => {
 
     let url = "/api/lease/transactions/" + leaseGuid;
     $.ajax({
@@ -108,7 +108,7 @@ let getTransactions = (leaseGuid) => {
                 }
             }else{
                 data.forEach(function (transaction) {
-                    const delete_button = transaction.isLandlord === true
+                    const delete_button = userRole.localeCompare("landlord") === 0
                         ? '<div class="col-1"><i class="fa-solid fa-trash-can red-text delete-transaction-button" role="button" transaction-id="' +
                         transaction.guid +
                         '"></i></div>'

@@ -585,24 +585,20 @@ class LeaseApi extends AbstractController
             $this->em->flush($inspection);
 
             if (strcmp($inspectionGuid, "0") == 0) {
-                //send sms to applicant
-                $smsApi = new SMSApi($this->em, $this->logger);
-                $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
-                $message = "New inspection created. View on your tenant portal " . $tenantPortalURL;
-                $isSMSSent = $smsApi->sendMessage("+27" . substr($lease->getTenant()->getPhone(), 0, 9), $message);
+                $message = "New inspection created. You will find the inspection on your tenant portal" ;
+                $subject = "Aluve App - New Inspection";
 
-                if ($isSMSSent) {
-                    return array(
-                        'result_message' => "Successfully created inspection",
-                        'result_code' => 0,
-                        'guid'=> $inspection->getGuid()
-                    );
-                } else {
-                    return array(
-                        'result_message' => "Error. Created inspection. SMS to tenant failed",
-                        'result_code' => 1
-                    );
-                }
+                $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+                $linkText = "View Inspection";
+                $template = "generic";
+                $communicationApi = new CommunicationApi($this->em, $this->logger);
+                $communicationApi->sendEmail($lease->getTenant()->getEmail(), $lease->getTenant()->getName(),$subject , $message, $link, $linkText, $template);
+
+                return array(
+                    'result_message' => "Successfully created inspection",
+                    'result_code' => 0,
+                    'guid'=> $inspection->getGuid()
+                );
             } else {
                 return array(
                     'result_message' => "Successfully created inspection",
@@ -846,6 +842,14 @@ class LeaseApi extends AbstractController
                         $application->setStatus("lease uploaded");
                         $this->em->persist($application);
                         $this->em->flush($application);
+
+                        $message = "Lease documents have been uploaded for application " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() ;
+                        $subject = "Aluve App - Lease Uploaded";
+                        $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+                        $linkText = "View Application";
+                        $template = "generic";
+                        $communicationApi = new CommunicationApi($this->em, $this->logger);
+                        $communicationApi->sendEmail($application->getProperty()->getEmail(), $application->getProperty()->getName(),$subject , $message, $link, $linkText, $template);
                     }else{
                         return array(
                             'result_message' => "Error. Failed to update application status",

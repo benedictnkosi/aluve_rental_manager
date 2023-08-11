@@ -2,16 +2,13 @@
 
 namespace App\Service;
 
-use App\Entity\Leases;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use PhpImap\Exceptions\ConnectionException;
 use Psr\Log\LoggerInterface;
-use SecIT\ImapBundle\Service\Imap;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Twilio\Rest\Client;
+require_once(__DIR__ . '/../app/application.php');
 
 class CommunicationApi extends AbstractController
 {
@@ -73,58 +70,54 @@ class CommunicationApi extends AbstractController
     }
 
     /**
-     * @throws ConnectionException
      */
-    function sendEmail(): JsonResponse|array
+    function sendEmail($toEmail, $recipientName, $subject, $message, $link, $linkText, $template): bool
     {
         $this->logger->info("Starting Method: " . __METHOD__);
-        $responseArray = array();
-
-
-        $this->logger->info("Connection to mail worked");
         $Parameters = array(
-            "recipient_name" => "Benedict Nkosi",
-            "message" => "Alert: Manual Export of Records Required",
-            "main_button_link" => "https://rentals.hotelrunner.co.za",
-            "main_button_link_text" => "View Statement",
+            "recipient_name" => $recipientName,
+            "message" => $message,
+            "main_button_link" => $link,
+            "main_button_link_text" => $linkText,
         );
 
-        $message = $this->generate_email_body("generic", $Parameters);
+        $message = $this->generate_email_body($template, $Parameters);
 
         try {
             imap_mail(
-                "payments@hotelrunner.co.za",
-                "Cosmo City - Thank you for payment",
+                $toEmail,
+                $subject,
                 wordwrap($message, 70),
                 $this->createHeaders()
             );
-            $responseArray[] = "   ---> Admin notified via email!\n";
-            $this->logger->info("   ---> Admin notified via email!\n");
+            $this->logger->info("Email sent successfully to $toEmail");
+            return true;
         } catch (Exception $e) {
-            $this->logger->info($e->getMessage());
-            $responseArray[] = $e->getMessage();
+            $this->logger->error($e->getMessage());
+            return false;
         }
-
-
-        return $responseArray;
     }
 
-    private function createHeaders()
+    private function createHeaders(): string
     {
         return "MIME-Version: 1.0" . "\r\n" .
             "Content-type: text/html; charset=iso-8859-1" . "\r\n" .
-            "From: " . "payments@hotelrunner.co.za" . "\r\n";
+            "From: " . EMAIL_FROM . "\r\n";
     }
 
-
-//generate_email_body("password_reset", $Parameters);
-
-    function generate_email_body($templateName, $Parameters){
+    function generate_email_body($templateName, $Parameters): array|bool|string
+    {
         $templateString = $this->readTemplateFile($templateName);
-        return $this->replaceParameters($templateString, $Parameters);
+        if($templateString !== false){
+            return $this->replaceParameters($templateString, $Parameters);
+        }else{
+            return false;
+        }
+
     }
 
-    function replaceParameters($templateString, $Parameters){
+    function replaceParameters($templateString, $Parameters): array|bool|string
+    {
         try{
             $body = $templateString;
 
@@ -134,7 +127,8 @@ class CommunicationApi extends AbstractController
 
             return $body;
         }catch (Exception $e) {
-            return $e->getMessage();
+            $this->logger->error($e->getMessage());
+            return false;
         }
     }
 
@@ -145,7 +139,8 @@ class CommunicationApi extends AbstractController
             fclose($emailFile);
             return $templateString;
         }catch (Exception $e) {
-            return $e->getMessage();
+            $this->logger->error($e->getMessage());
+            return false;
         }
     }
 }

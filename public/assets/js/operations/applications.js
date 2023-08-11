@@ -29,7 +29,7 @@ $(document).ready(function () {
 
     $(".application-details-close").click(function () {
         $('.closable-div').addClass('display-none');
-        $('#applications-div').removeClass('display-none');
+        $('.application-card').removeClass('display-none');
         //hide the buttons on open application window
         $('.btn-decline-application').addClass('display-none');
         $('.btn-convert-application').addClass('display-none');
@@ -69,7 +69,7 @@ let openApplicationDetails = (applicaitonGuid) => {
 
             $("#application-documents").html(html);
 
-            $('#applications-div').addClass('display-none');
+            $('.application-card').addClass('display-none');
             $('.application-card-details').removeClass('display-none');
             
             if (data.application.status.localeCompare("accepted") === 0) {
@@ -189,7 +189,7 @@ let getApplications = () => {
 
             //close the application details window
             $('.closable-div').addClass('display-none');
-            $('#applications-div').removeClass('display-none');
+            $('.application-card').removeClass('display-none');
 
         },
         error: function (xhr) {

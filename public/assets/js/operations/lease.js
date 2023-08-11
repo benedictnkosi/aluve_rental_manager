@@ -341,7 +341,7 @@ let getAllLeases = () => {
 
       $(".view-statement-button").click(function (event) {
         populateStatement(event.target.getAttribute("lease-guid"));
-        getTransactions(event.target.getAttribute("lease-guid"));
+        getTransactions(event.target.getAttribute("lease-guid"), "landlord");
         $("#div-leases").addClass("display-none");
         $('#btn-new-lease').addClass('display-none');
       });
@@ -520,7 +520,7 @@ let deleteTransaction = () => {
       success: function (response) {
           showToast(response.result_message);
           if (response.result_code === 0) {1
-              getTransactions(sessionStorage.getItem("lease-guid"));
+              getTransactions(sessionStorage.getItem("lease-guid"), "landlord");
           }
           $('#confirmDeleteTransactionModal').modal('toggle');
       }

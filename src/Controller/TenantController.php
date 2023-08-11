@@ -136,7 +136,6 @@ class TenantController extends AbstractController
             $response = $leaseApi->addLeaseDoc($request->get("document_type"), $response["file_name"], $request->get("application_guid"));
         }
 
-
         if($response["result_code"] == 1){
             return new JsonResponse($response, 200, array());
         }else{
