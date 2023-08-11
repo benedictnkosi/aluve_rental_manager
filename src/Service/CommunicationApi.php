@@ -2,14 +2,13 @@
 
 namespace App\Service;
 
-use App\Entity\Application;
 use App\Entity\Leases;
-use App\Entity\Units;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use JetBrains\PhpStorm\ArrayShape;
+use PhpImap\Exceptions\ConnectionException;
 use Psr\Log\LoggerInterface;
+use SecIT\ImapBundle\Service\Imap;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Twilio\Rest\Client;
@@ -71,5 +70,46 @@ class CommunicationApi extends AbstractController
                 'result_code' => 1
             );
         }
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    function sendEmail(): JsonResponse|array
+    {
+        $this->logger->info("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+
+            $this->logger->info("Connection to mail worked");
+
+            $message = "testing";
+
+            try {
+            imap_mail(
+                "nkosi.benedict@gmail.com",
+                "Alert: Manual Export of Records Required",
+                wordwrap($message, 70),
+                $this->createHeaders()
+            );
+                $this->logger->info("   ---> Admin notified via email!\n");
+        }
+        catch (Exception $e) {
+            $this->logger->info($e->getMessage());
+                throw new Exception("Error in notifyAdminForCompleteSet()");
+            }
+
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage());
+            return new JsonResponse($exception->getMessage(), 200, array());
+        }
+
+        return $responseArray;
+    }
+
+    private function createHeaders() {
+        return "MIME-Version: 1.0" . "\r\n" .
+            "Content-type: text/html; charset=iso-8859-1" . "\r\n" .
+            "From: " . "payments@hotelrunner.co.za" . "\r\n";
     }
 }

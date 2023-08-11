@@ -105,8 +105,8 @@ function uploadInspectionImage(file_data) {
             const jsonObj = JSON.parse(response);
             showToast(jsonObj.result_message);
             if(jsonObj.alldocs_uploaded === true){
-                $('#text-message').removeClass("display-none");
-                $('#regForm').addClass("display-none");
+                $('#text-message').show();
+                $('#regForm').hide();
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -114,6 +114,8 @@ function uploadInspectionImage(file_data) {
         }
     });
 }
+
+
 
 let saveInspection = (status) => {
     const checklistData = {
@@ -161,7 +163,7 @@ let getInspectionDetails = () => {
             );
             generateBedroomChecklist(parseInt(data.bedrooms));
             generateBathroomChecklist(parseInt(data.bathrooms));
-            $("#property-name").html(data.property);
+            $("#property-name").html(data.property_address);
             $("#unit-name").html(data.unit_name);
             //save empty inspection so you have id for uploading images
             saveInspection("new");
@@ -238,7 +240,9 @@ function generateBedroomChecklist(numBedrooms) {
 }
 
 function createRoomHeader(number, roomName) {
-    const roomHeader = document.createElement('h2');
+    const roomHeader = document.createElement('p');
+    roomHeader.classList.add('fs-6');
+    roomHeader.classList.add('mt-5');
     if(number === 1){
         roomHeader.textContent = `${roomName}`;
     }else{

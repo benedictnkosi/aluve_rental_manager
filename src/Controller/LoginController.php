@@ -45,7 +45,7 @@ class LoginController extends AbstractController
     }
 
     /**
-     * @Route("/public/is_logged_in/", name="app_is_logged_in")
+     * @Route("/no_auth/is_logged_in/", name="app_is_logged_in")
      */
     public function app_is_logged_in(LoggerInterface $logger): Response
     {

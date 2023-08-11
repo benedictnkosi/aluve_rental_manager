@@ -63,8 +63,8 @@ function populateImages(jsonData) {
     let html = '';
     jsonData.forEach((image) => {
         html += '<div class="col-lg-4 col-md-4 col-xs-4 thumb mb-2 max-w-[160px] mt-5">\n' +
-            '                <a class="thumbnail" href="/public/inspection_image/'+image.name+'">\n' +
-            '                    <img class="img-responsive" src="/public/inspection_image/'+image.name+'" alt="">\n' +
+            '                <a class="thumbnail" href="/api/inspection_image/'+image.name+'">\n' +
+            '                    <img class="img-responsive" src="/api/inspection_image/'+image.name+'" alt="">\n' +
             '                </a>\n' +
             '            </div>';
     });

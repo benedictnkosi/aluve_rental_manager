@@ -26,7 +26,7 @@ class CommunicationController extends AbstractController
 {
 
     /**
-     * @Route("api/comms/send")
+     * @Route("api/comms/sendwhatsapp")
      */
     public function test(Request $request, LoggerInterface $logger, CommunicationApi $communicationApi): Response
     {
@@ -40,4 +40,18 @@ class CommunicationController extends AbstractController
         return new JsonResponse($response, 200, array());
     }
 
+    /**
+     * @Route("no_auth/comms/sendemail")
+     * @throws ConnectionException
+     */
+    public function sendEmail(Request $request, LoggerInterface $logger, CommunicationApi $communicationApi): Response
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('GET')) {
+            return new JsonResponse("Method Not Allowed", 405, array());
+        }
+
+        $response = $communicationApi->sendEmail();
+        return new JsonResponse($response, 200, array());
+    }
 }
