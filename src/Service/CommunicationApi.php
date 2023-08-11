@@ -92,10 +92,12 @@ class CommunicationApi extends AbstractController
                 wordwrap($message, 70),
                 $this->createHeaders()
             );
+                $responseArray[] = "   ---> Admin notified via email!\n";
                 $this->logger->info("   ---> Admin notified via email!\n");
         }
         catch (Exception $e) {
-            $this->logger->info($e->getMessage());
+                $this->logger->info($e->getMessage());
+                $responseArray[] = $e->getMessage();
                 throw new Exception("Error in notifyAdminForCompleteSet()");
             }
 
