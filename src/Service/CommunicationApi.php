@@ -82,8 +82,12 @@ class CommunicationApi extends AbstractController
 
 
         $this->logger->info("Connection to mail worked");
+        $Parameters = array(
+            "client_name" => "Benedict",
+            "client_surname" => "Nkosi",
+        );
 
-        $message = "testing";
+        $message = $this->generate_email_body("welcome", $Parameters);
 
         try {
             imap_mail(
@@ -108,5 +112,39 @@ class CommunicationApi extends AbstractController
         return "MIME-Version: 1.0" . "\r\n" .
             "Content-type: text/html; charset=iso-8859-1" . "\r\n" .
             "From: " . "payments@hotelrunner.co.za" . "\r\n";
+    }
+
+
+//generate_email_body("password_reset", $Parameters);
+
+    function generate_email_body($templateName, $Parameters){
+        $templateString = $this->readTemplateFile($templateName);
+        return $this->replaceParameters($templateString, $Parameters);
+    }
+
+    function replaceParameters($templateString, $Parameters){
+        try{
+            $bodytag = $templateString;
+
+            foreach ($Parameters as $key => $value) {
+                $bodytag = str_replace("<<" . $key . ">>", $value , $bodytag);
+            }
+
+            return $bodytag;
+        }catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+
+    function readTemplateFile($templateName){
+        try{
+            $myfile = fopen(__DIR__.'/../../templates/email/' . $templateName . ".html", "r") or die("Unable to open file!");
+            $templateString =  fread($myfile,filesize(__DIR__.'/../../templates/email/' . $templateName . ".html"));
+            fclose($myfile);
+            return $templateString;
+        }catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 }
