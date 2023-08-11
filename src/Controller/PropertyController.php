@@ -47,7 +47,23 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("no_auth/property/upload_lease")
+     * @Route("api/properties/bank/get/{id}")
+     */
+    public function getBankingDetails($id, PropertyApi $propertyApi, Request $request, LoggerInterface $logger): Response{
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('get')) {
+            return new JsonResponse("Method Not Allowed" , 405, array());
+        }
+
+        $response = $propertyApi->getBankingDetails($id);
+        $serializer = SerializerBuilder::create()->build();
+        $jsonContent = $serializer->serialize($response, 'json');
+        return new JsonResponse($jsonContent , 200, array(), true);
+    }
+
+
+    /**
+     * @Route("api/property/upload_lease")
      * @throws \Exception
      */
     public function uploadPropertyLease( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, PropertyApi $propertyApi): Response
@@ -102,6 +118,21 @@ class PropertyController extends AbstractController
         $response = $propertyApi->updateProperty($request->get('field'), $request->get('value'), $request->get('id'));
         return new JsonResponse($response , 200, array());
     }
+
+    /**
+     * @Route("api/bank_account/update")
+     */
+    public function updatePropertyBank(Request $request,  LoggerInterface $logger, PropertyApi $propertyApi): Response{
+        $logger->info("Starting Method fail: " . __METHOD__);
+        if (!$request->isMethod('put')) {
+            return new JsonResponse("Method Not Allowed here" , 405, array());
+        }
+
+        $response = $propertyApi->updatePropertyBank($request->get('name'), $request->get('type'), $request->get('number'), $request->get('branch'), $request->get('property_guid'));
+        return new JsonResponse($response , 200, array());
+    }
+
+
 
     /**
      * @Route("api/properties/create")

@@ -86,7 +86,7 @@ class TransactionController extends AbstractController
     }
 
     /**
-     * @Route("no_auth/lease/transactions/{guid}")
+     * @Route("api/lease/transactions/{guid}")
      */
     public function getLeaseTransactions($guid, Request $request, LoggerInterface $logger, TransactionApi $transactionApi): Response
     {
@@ -120,7 +120,7 @@ class TransactionController extends AbstractController
     }
 
     /**
-     * @Route("no_auth/transactions/import")
+     * @Route("api/transactions/import")
      * @throws ConnectionException
      */
     public function importTransactions(TransactionApi $transactionApi, LoggerInterface $logger, Imap $imap): Response

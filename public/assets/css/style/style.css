@@ -5,7 +5,7 @@ body{
     font-size: 12px !important;
     width:100%;
     font-weight: 300;
-
+    color:#524f4f;
 }
 
 .green-button {
@@ -269,3 +269,6 @@ i{
     display: none;
 }
 
+.capitalize{
+    text-transform: capitalize;
+}

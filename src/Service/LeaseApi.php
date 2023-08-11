@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Application;
+use App\Entity\BankAccount;
 use App\Entity\Inspection;
 use App\Entity\InspectionImage;
 use App\Entity\Leases;
@@ -281,12 +282,26 @@ class LeaseApi extends AbstractController
                 $inspectionExist = true;
             }
 
+            $bankAccount = $this->em->getRepository(BankAccount::class)->findOneBy(array('id' => $lease->getUnit()->getProperty()->getBankAccount(), 'status' => "active"));
+            if($bankAccount == null){
+                $bankAccountNumber = "";
+                $bankAccountType = "";
+                $bankBranch = "";
+                $bankName = "";
+            }else{
+                $bankAccountNumber = $bankAccount->getAccountNumber();
+                $bankAccountType = $bankAccount->getAccountType();
+                $bankBranch = $bankAccount->getBranchCode();
+                $bankName = $bankAccount->getBankName();
+            }
+
             $now = new DateTime();
 
             $due = $this->transactionApi->getBalanceDue($lease->getId());
             return array(
                 'unit_name' => $lease->getUnit()->getName(),
                 'unit_id' => $lease->getUnit()->getId(),
+                'unit_guid' => $lease->getUnit()->getGuid(),
                 'tenant_name' => $tenant->getName(),
                 'phone_number' => $tenant->getPhone(),
                 'email' => $tenant->getEmail(),
@@ -316,7 +331,12 @@ class LeaseApi extends AbstractController
                 "signed_lease" => $leaseDocumentName,
                 "id_document" => $idDocumentName,
                 "proof_of_payment" => $popDocumentName,
+                "bank_account_number" => $bankAccountNumber,
+                "bank_account_type" => $bankAccountType,
+                "bank_branch" => $bankBranch,
+                "bank_name" => $bankName
             );
+
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
             return array(
@@ -369,7 +389,7 @@ class LeaseApi extends AbstractController
             $successMessage = "Successfully created lease";
 
 
-            if (strlen($leaseId) < 1 || !is_numeric($leaseId)) {
+            if (strlen($leaseId) !== 36 && strlen($leaseId) !== 1) {
                 return array(
                     'result_message' => "Error. Lease ID value is invalid",
                     'result_code' => 1
@@ -395,7 +415,6 @@ class LeaseApi extends AbstractController
                 );
             }
 
-
             if ($leaseId == 0) {
                 $lease = new Leases();
                 $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $unitId));
@@ -406,10 +425,7 @@ class LeaseApi extends AbstractController
                     );
                 }
             } else {
-                $lease = $this->em->getRepository(Leases::class)->findOneBy(array('id' => $leaseId));
-
-                $auth = $this->authApi->isAuthorisedToChangeUnit($lease->getUnit()->getId());
-                if($auth["result_code"] == 1){return $auth;}
+                $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseId));
 
                 if ($lease == null) {
                     return array(
@@ -418,7 +434,10 @@ class LeaseApi extends AbstractController
                     );
                 }
 
-                $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $unitId));
+                $auth = $this->authApi->isAuthorisedToChangeUnit($lease->getUnit()->getId());
+                if($auth["result_code"] == 1){return $auth;}
+
+                $unit = $lease->getUnit();
                 $successMessage = "Successfully updated lease";
             }
 

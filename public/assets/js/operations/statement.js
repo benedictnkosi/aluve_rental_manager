@@ -2,7 +2,6 @@ $(document).ready(function () {
     getTransactions();
     getStatementDetails();
 
-
     $('#btn-confirm-delete-transaction').click(function () {
         deleteTransaction();
     });
@@ -15,7 +14,7 @@ let getTransactions = () => {
     console.log(queryString);
     const urlParams = new URLSearchParams(queryString);
     const guid = urlParams.get('guid');
-    let url = "/no_auth/lease/transactions/" + guid
+    let url = "/api/lease/transactions/" + guid
     $.ajax({
         type: "GET",
         url: url,
@@ -67,13 +66,12 @@ let deleteTransaction = () => {
     });
 }
 
-
 let getStatementDetails = () => {
     const queryString = window.location.search;
     console.log(queryString);
     const urlParams = new URLSearchParams(queryString);
     const guid = urlParams.get('guid');
-    let url = "/no_auth/lease/" + guid
+    let url = "/api/lease/" + guid
     $.ajax({
         type: "GET",
         url: url,
@@ -88,49 +86,14 @@ let getStatementDetails = () => {
             $("#lease-start-date").html("Lease Start Date: " + data.lease_start);
             $("#lease-end-date").html("Lease End Date: " + data.lease_end);
             $("#amount-due").html("Amount Due: R" + data.due);
+
+            $("#statement-bank-name").html(data.bank_name);
+            $("#statement-bank-account").html(data.bank_account_number);
+            $("#statement-bank-account-type").html(data.bank_account_type);
+            $("#statement-bank-branch").html(data.bank_branch);
         },
         error: function (xhr) {
 
         }
     });
-}
-
-let addPayment = () => {
-    const amount = $("#payment-amount").val().trim();
-    const paymentDate = $("#payment-date").val().trim();
-
-
-
-    let url = "/api/transaction/payment";
-    const data = {
-        lease_id: sessionStorage.getItem("lease-id"),
-        amount: amount,
-        payment_date: paymentDate
-    };
-
-    $.ajax({
-        url: url,
-        type: "post",
-        data: data,
-        success: function (response) {
-            showToast(response.result_message)
-            if (response.result_code === 0) {
-                $('#leasePaymentModal').modal('toggle');
-                getAllLeases();
-            }
-        }
-    });
-}
-
-let showToast = (message) =>{
-    const liveToast = document.getElementById('liveToast')
-    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(liveToast)
-    if(message.toLowerCase().includes("success")){
-        $('#toast-message').html('<div class="alert alert-success" role="alert">'+message+'</div>');
-    }else if(message.toLowerCase().includes("fail") || message.toLowerCase().includes("error")){
-        $('#toast-message').html('<div class="alert alert-danger" role="alert">'+message+'</div>');
-    }else{
-        $('#toast-message').html('<div class="alert alert-dark" role="alert">'+message+'</div>');
-    }
-    toastBootstrap.show();
 }

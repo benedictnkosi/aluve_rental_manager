@@ -1,9 +1,29 @@
 $(document).ready(function () {
     sessionStorage.setItem("update_property_settings", "false");
-   getProperty();
+    sessionStorage.setItem("account-type", "");
+    getProperty();
+
     $('.property-value').focus(function () {
         sessionStorage.setItem("update_property_settings", "true");
     });
+
+    $(".account-type-dropdown").click(function (event) {
+        sessionStorage.setItem("account-type", event.target.getAttribute("type"));
+        $('#account-type-selected').html(event.target.innerText);
+    });
+
+    $("#settings-form-banking").validate({
+        // Specify validation rules
+        rules: {},
+        submitHandler: function () {
+            updateBankAccount();
+        },
+    });
+
+    $("#settings-form-banking").submit(function (event) {
+        event.preventDefault();
+    });
+
 });
 
 let updatePropertyField = (field, value) =>{
@@ -23,12 +43,31 @@ let updatePropertyField = (field, value) =>{
             showToast(response.result_message);
         }
     });
+}
 
+let updateBankAccount = () =>{
+    let url = "/api/bank_account/update";
+    const data = {
+        name: $("#bank-name").val().trim(),
+        branch: $("#branch-code").val().trim(),
+        number: $("#account-number").val().trim(),
+        type: sessionStorage.getItem("account-type"),
+        property_guid: sessionStorage.getItem("property-id")
+    };
 
+    $.ajax({
+        url : url,
+        type: "PUT",
+        data : data,
+        success: function(response)
+        {
+            showToast(response.result_message);
+        }
+    });
 }
 
 function uploadPropertyLease(file_data) {
-    let url = "/no_auth/property/upload_lease";
+    let url = "/api/property/upload_lease";
     const form_data = new FormData();
     form_data.append("file", file_data);
     form_data.append("property_id", sessionStorage.getItem("property-id"));
@@ -105,3 +144,26 @@ let getProperty = () => {
     });
 }
 
+
+let getBankingDetails = () => {
+    const queryString = window.location.search;
+    console.log(queryString);
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get('id');
+
+    let url = "/api/properties/bank/get/" + id.replace("#", "");
+    $.ajax({
+        type: "GET",
+        url: url,
+        contentType: "application/json; charset=UTF-8",
+        success: function (data) {
+            $("#bank-name").val(data.bank_name);
+            $("#branch-code").val(data.branch_code);
+            $("#account-number").val(data.account_number);
+            $('#account-type-selected').html(data.account_type);
+        },
+        error: function (xhr) {
+
+        }
+    });
+}

@@ -30,7 +30,7 @@ class MaintenanceController extends AbstractController
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $maintenanceApi->logMaintenanceCallByIDNumber($request->get("id_number"), $request->get("phone_number"), $request->get("summary"));
+        $response = $maintenanceApi->logMaintenanceByTenant($request->get("summary"));
         return new JsonResponse($response, 200, array());
     }
 
@@ -44,9 +44,10 @@ class MaintenanceController extends AbstractController
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $maintenanceApi->logMaintenanceByTenant($request->get("summary"));
+        $response = $maintenanceApi->logMaintenance($request->get("summary"), $request->get("unit_guid"), $request->get("property_guid"));
         return new JsonResponse($response, 200, array());
     }
+
 
     /**
      * @Route("api/maintenance/close")

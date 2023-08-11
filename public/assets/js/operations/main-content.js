@@ -25,6 +25,9 @@ $(document).ready(function () {
         $(".settings-nav-link").removeClass("active");
         updateSettingsView(event.target.getAttribute("form-to-show"));
         $(event.target).addClass("active");
+        if(event.target.getAttribute("form-to-show").localeCompare("settings-form-banking") === 0){
+            getBankingDetails();
+        }
     });
 
     $('.nav-links').unbind('click')
@@ -83,19 +86,6 @@ function updateView(selectedDiv, header) {
         default:
 
     }
-}
-
-let showToast = (message) => {
-    const liveToast = document.getElementById('liveToast')
-    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(liveToast)
-    if (message.toLowerCase().includes("success")) {
-        $('#toast-message').html('<div class="alert alert-success" role="alert">' + message + '</div>');
-    } else if (message.toLowerCase().includes("fail") || message.toLowerCase().includes("error")) {
-        $('#toast-message').html('<div class="alert alert-danger" role="alert">' + message + '</div>');
-    } else {
-        $('#toast-message').html('<div class="alert alert-dark" role="alert">' + message + '</div>');
-    }
-    toastBootstrap.show();
 }
 
 

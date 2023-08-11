@@ -21,6 +21,15 @@ $(document).ready(function () {
     $('#onboarding_pop').change(function () {
         uploadSupportingDocuments("Proof OF Payment", $("#onboarding_pop").prop("files")[0]);
     });
+
+    $(".statement-close").click(function () {
+        $(".statement-card-details").addClass("display-none");
+    });
+
+    $(".view-statement-button").click(function () {
+        populateStatement(sessionStorage.getItem("lease-guid"));
+        getTransactions(sessionStorage.getItem("lease-guid"));
+    });
 });
 
 
@@ -52,54 +61,54 @@ let getMaintenanceCalls = () => {
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             let html = "";
-            if(data.result_code !== undefined){
-                if(data.result_code === 1){
+            if (data.result_code !== undefined) {
+                if (data.result_code === 1) {
                     return;
                 }
             }
             data.forEach(function (response) {
-                const callDate =  new Date(response.date_logged);
+                const callDate = new Date(response.date_logged);
                 const today = new Date();
                 // To calculate the time difference of two dates
-                const Difference_In_Time = today.getTime() - callDate.getTime() ;
+                const Difference_In_Time = today.getTime() - callDate.getTime();
                 // To calculate the no. of days between two dates
                 const Difference_In_Days = parseInt(Difference_In_Time / (1000 * 3600 * 24));
 
                 let dateClass = "green-text";
                 let cardClass = "";
-                if(Difference_In_Days > 7){
+                if (Difference_In_Days > 7) {
                     dateClass = "red-text";
-                    cardClass =  "border-left-red";
+                    cardClass = "border-left-red";
                 }
 
                 let numberOfDays = Difference_In_Days + " days ago";
-                if(Difference_In_Days === 0){
+                if (Difference_In_Days === 0) {
                     numberOfDays = "Today";
-                }else if(Difference_In_Days === 1){
+                } else if (Difference_In_Days === 1) {
                     numberOfDays = "Yesterday";
                 }
-                html += '<div class="maintenance-card d-flex w-100 mt-1 '+cardClass+'">\n' +
+                html += '<div class="maintenance-card d-flex w-100 mt-1 ' + cardClass + '">\n' +
                     '                <div class="col-1">\n' +
                     '                  <i class="fa-solid fa-wrench green-text expense-icon m-0"></i>\n' +
                     '                </div>\n' +
                     '                <div class="col-7">\n' +
-                    '                  <p class="m-0 fw-normal">'+response.summary+'</p>\n' +
+                    '                  <p class="m-0 fw-normal">' + response.summary + '</p>\n' +
                     '                </div>\n' +
                     '                <div class="col-3">\n' +
-                    '                  <p class="m-0 fw-normal">'+response.status.toLocaleString()+'</p>\n' +
-                    '                  <p class="m-0 '+dateClass+'">'+numberOfDays +'</p>\n' +
+                    '                  <p class="m-0 fw-normal">' + response.status.toLocaleString() + '</p>\n' +
+                    '                  <p class="m-0 ' + dateClass + '">' + numberOfDays + '</p>\n' +
                     '                </div>\n';
                 if (response.status.localeCompare("new") === 0) {
                     html += '                <div class="col-1" style="text-align: right;">\n' +
-                        '                  <i class="fa-solid fa-xmark m-0 delete-maintenance-icon red-text"  role="button" maintenance-guid="'+response.uid+'"></i>\n' +
+                        '                  <i class="fa-solid fa-xmark m-0 delete-maintenance-icon red-text"  role="button" maintenance-guid="' + response.uid + '"></i>\n' +
                         '                </div>';
-                }else{
+                } else {
                     html += '                <div class="col-1" style="text-align: right;">\n' +
                         '                  <i class="fa-solid fa-check green-text"></i>\n' +
                         '                </div>';
                 }
 
-                html +=  '            </div> ';
+                html += '            </div> ';
 
             });
 
@@ -130,6 +139,8 @@ let getTenantInfo = () => {
 
             if (data.application.application.status !== undefined) {
                 sessionStorage.setItem("application_guid", data.application.application.uid);
+                sessionStorage.setItem("lease-guid", data.lease.guid);
+
                 $(".tenant-div-toggle").addClass("display-none");
                 $("." + data.application.application.status.replace(" ", "-")).removeClass("display-none");
 
@@ -143,7 +154,6 @@ let getTenantInfo = () => {
                     $("#tenant-documents").html(html);
                 } else if (data.application.application.status.localeCompare("tenant") === 0) {
                     getSignedLeaseLink();
-                    getStatementLink();
                     getInspectionLink();
                 }
 
@@ -152,9 +162,9 @@ let getTenantInfo = () => {
                 const parking = data.application.application.unit.parking === true ? "1" : "0";
                 const children = data.application.application.unit.children_allowed === true ? "1" : "0";
 
-                if(data.lease.start !== undefined){
+                if (data.lease.start !== undefined) {
                     $("#lease-dates").html(data.lease.start.substring(0, data.lease.start.indexOf("T")) + " to " + data.lease.end.substring(0, data.lease.end.indexOf("T")));
-                }else{
+                } else {
                     $('#lease-dates-p').addClass("display-none");
                 }
                 $("#unit-name").html(data.application.application.unit.name);
@@ -190,40 +200,13 @@ let getPropertyLeaseToSign = () => {
             } else {
                 const exisingDocuments = $('#tenant-documents').html();
                 if (exisingDocuments === undefined) {
-                    html = '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/no_auth/lease_document/' + data.name + '"><i class="fa-solid fa-file-pdf red-icon me-3"></i><small>Property Lease (Download)</small></a></p>\n';
+                    html = '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/api/lease_document/' + data.name + '"><i class="fa-solid fa-file-pdf red-icon me-3"></i><small>Property Lease (Download)</small></a></p>\n';
                 } else {
-                    html = exisingDocuments + '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/no_auth/lease_document/' + data.name + '"><i class="fa-solid fa-file-pdf red-icon me-3"></i><medium>Property Lease (Download)</medium></a></p>\n';
+                    html = exisingDocuments + '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/api/lease_document/' + data.name + '"><i class="fa-solid fa-file-pdf red-icon me-3"></i><medium>Property Lease (Download)</medium></a></p>\n';
                 }
             }
 
             $("#tenant-documents").html(html);
-        },
-        error: function (xhr) {
-
-        }
-    });
-}
-
-let getStatementLink = () => {
-    let url = "/api/tenant/get";
-    $.ajax({
-        type: "GET",
-        url: url,
-        contentType: "application/json; charset=UTF-8",
-        success: function (data) {
-            if (data.lease.guid === undefined) {
-                showToast("Error: Statement link not found. Please contact agent.");
-                $("#btn-view-statement").removeAttr('href');
-            } else {
-                const exisingDocuments = $('#tenant-documents').html();
-                if (exisingDocuments === undefined) {
-                    html = '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/statement/?guid=' + data.lease.guid + '"><i class="fa-solid fa-link  red-icon me-3"></i><medium>View Statement</medium></a></p>\n';
-                } else {
-                    html = exisingDocuments + '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/statement/?guid=' + data.lease.guid + '"><i class="fa-solid fa-link  red-icon me-3"></i><medium>View Statement</medium></a></p>\n';
-                }
-                $('#tenant-documents').html(html);
-            }
-
         },
         error: function (xhr) {
 
@@ -282,18 +265,6 @@ let getInspectionLink = () => {
     });
 }
 
-let showToast = (message) => {
-    const liveToast = document.getElementById('liveToast')
-    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(liveToast)
-    if (message.toLowerCase().includes("success")) {
-        $('#toast-message').html('<div class="alert alert-success" role="alert">' + message + '</div>');
-    } else if (message.toLowerCase().includes("fail") || message.toLowerCase().includes("error")) {
-        $('#toast-message').html('<div class="alert alert-danger" role="alert">' + message + '</div>');
-    } else {
-        $('#toast-message').html('<div class="alert alert-dark" role="alert">' + message + '</div>');
-    }
-    toastBootstrap.show();
-}
 
 function uploadSupportingDocuments(documentType, file_data) {
     let url = "/api/tenant/upload/lease";

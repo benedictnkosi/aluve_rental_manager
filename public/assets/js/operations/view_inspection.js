@@ -9,7 +9,7 @@ let getInspection = () => {
     console.log(queryString);
     const urlParams = new URLSearchParams(queryString);
     const guid = urlParams.get('guid');
-    let url = "/no_auth/inspection/" + guid
+    let url = "/api/inspection/" + guid
     $.ajax({
         type: "GET",
         url: url,
@@ -38,7 +38,7 @@ let getInspectionDetails = () => {
     console.log(queryString);
     const urlParams = new URLSearchParams(queryString);
     const guid = urlParams.get('guid');
-    let url = "/no_auth/lease/" + guid
+    let url = "/api/lease/" + guid
     $.ajax({
         type: "GET",
         url: url,

@@ -359,5 +359,28 @@ class Properties
         $this->email = $email;
     }
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="bank_account", type="integer", nullable=false)
+     */
+    private $bankAccount;
+
+    /**
+     * @return int
+     */
+    public function getBankAccount(): int
+    {
+        return $this->bankAccount;
+    }
+
+    /**
+     * @param int $bankAccount
+     */
+    public function setBankAccount(int $bankAccount): void
+    {
+        $this->bankAccount = $bankAccount;
+    }
+
 
 }

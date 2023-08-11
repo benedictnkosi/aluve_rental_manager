@@ -88,7 +88,7 @@ let getUnit = () => {
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get('id');
 
-    let url = "/no_auth/unit/get/" + id.replace("#", "");
+    let url = "/api/unit/get/" + id.replace("#", "");
     $.ajax({
         type: "GET",
         url: url,
@@ -137,7 +137,7 @@ let submitApplication = () => {
 
     const unitId = getURLParameter("id");
 
-    let url = "/no_auth/application/new";
+    let url = "/api/application/new";
     const data = {
         unit_id: unitId,
         application_name: tenantName,
@@ -167,21 +167,8 @@ let submitApplication = () => {
     });
 }
 
-let showToast = (message) =>{
-    const liveToast = document.getElementById('liveToast')
-    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(liveToast)
-    if(message.toLowerCase().includes("success")){
-        $('#toast-message').html('<div class="alert alert-success" role="alert">'+message+'</div>');
-    }else if(message.toLowerCase().includes("fail") || message.toLowerCase().includes("error")){
-        $('#toast-message').html('<div class="alert alert-danger" role="alert">'+message+'</div>');
-    }else{
-        $('#toast-message').html('<div class="alert alert-dark" role="alert">'+message+'</div>');
-    }
-    toastBootstrap.show();
-}
-
 function uploadSupportingDocuments(documentType, file_data) {
-    let url = "/no_auth/application/upload/";
+    let url = "/api/application/upload/";
     const form_data = new FormData();
     form_data.append("file", file_data);
     form_data.append("application_id", sessionStorage.getItem("application_guid"));

@@ -1399,10 +1399,10 @@
                     </div>
 
                     <div class="col-6 text-start statement-entity  mt-3">
-                        <p class="m-0 fw-normal" id="statement-bank-name">FNB</p>
-                        <p class="m-0" id="statement-bank-account">6309873921</p>
-                        <p class="m-0" id="statement-bank-account-type">Cheque</p>
-                        <p class="m-0" id="statement-bank-branch">250050</p>
+                        <p class="m-0 fw-normal capitalize" id="statement-bank-name"></p>
+                        <p class="m-0" id="statement-bank-account"></p>
+                        <p class="m-0 capitalize" id="statement-bank-account-type"></p>
+                        <p class="m-0" id="statement-bank-branch"></p>
                     </div>
 
 
@@ -1781,7 +1781,18 @@
                     form-to-show="settings-form-fees"
                     aria-current="page"
                     href="javascript:void(0)"
+                    style="color:#524f4f !important;"
             >General</a
+            >
+        </li>
+        <li class="nav-item">
+            <a
+                    class="nav-link settings-nav-link"
+                    form-to-show="settings-form-banking"
+                    aria-current="page"
+                    href="javascript:void(0)"
+                    style="color:#524f4f !important;"
+            >Banking</a
             >
         </li>
         <!--                    <li class="nav-item">-->
@@ -1808,6 +1819,71 @@
     <!--                        <input type="password" class="form-control property-value" id="settings-password">-->
     <!--                    </div>-->
     <!--                </form>-->
+
+<!--    banking details-->
+                    <form id="settings-form-banking" class="mt-5 display-none settings-form">
+                        <h3>Banking</h3>
+
+                        <div class="mb-3">
+                            <label for="bank-name" class="form-label"
+                            >Bank Name</label
+                            >
+                            <input
+                                    type="string"
+                                    class="form-control"
+                                    field-name="bank-name"
+                                    id="bank-name"
+                                    required
+                            />
+                        </div>
+
+
+                        <div class="mb-3">
+                            <div class="dropdown" id="account_type">
+                                <button class="btn dropdown-toggle" id="account-type-selected"
+                                        type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false" style="text-transform: capitalize;">
+                                    Account Type
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item account-type-dropdown" type="cheque" href="javascript:void(0)">Cheque</a></li>
+                                    <li><a class="dropdown-item account-type-dropdown"  type="savings" href="javascript:void(0)">Savings</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="account-number" class="form-label"
+                            >Account Number</label
+                            >
+                            <input
+                                    type="number"
+                                    class="form-control"
+                                    field-name="account-number"
+                                    id="account-number"
+                                    required
+                            />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="branch-code" class="form-label"
+                            >Branch Code</label
+                            >
+                            <input
+                                    type="number"
+                                    class="form-control"
+                                    field-name="branch-code"
+                                    id="branch-code"
+                                    required
+                            />
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="submit" class="btn transparent-green-button">Submit</button>
+                        </div>
+
+                    </form>
+
 
     <form class="mt-5 settings-form" id="settings-form-fees">
         <h3>Fees</h3>
@@ -1933,7 +2009,7 @@
         integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG"
         crossorigin="anonymous"
 ></script>
-<script src="/assets/js/loader.js"></script>
+<script src="/assets/js/commons.js"></script>
 <script src="/assets/js/dashboard.js"></script>
 <script src="/assets/js/operations/units.js"></script>
 <script src="/assets/js/operations/lease.js"></script>

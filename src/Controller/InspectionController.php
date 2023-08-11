@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class InspectionController extends AbstractController
 {
     /**
-     * @Route("no_auth/inspection/{leaseGuid}")
+     * @Route("api/inspection/{leaseGuid}")
      */
     public function getLatestInspection($leaseGuid, LeaseApi $leaseApi, Request $request, LoggerInterface $logger): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -90,7 +90,7 @@ class InspectionController extends AbstractController
     }
 
     /**
-     * @Route("no_auth/inspection_image/{name}")
+     * @Route("api/inspection_image/{name}")
      */
     public function getDocument($name, LoggerInterface $logger): BinaryFileResponse
     {

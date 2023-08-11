@@ -2,11 +2,13 @@
 
 namespace App\Service;
 
+use App\Entity\BankAccount;
 use App\Entity\Properties;
 use App\Entity\Propertyusers;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use JetBrains\PhpStorm\ArrayShape;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -72,6 +74,92 @@ class PropertyApi extends AbstractController
             );
         }
     }
+
+    public function getBankingDetails($propertyGuid)
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
+            if ($property == null) {
+                return array(
+                    'result_message' => "Error. Property not found",
+                    'result_code' => 1
+                );
+            }
+
+            $bankAccount = $this->em->getRepository(BankAccount::class)->findOneBy(array('id' => $property->getBankAccount()));
+            if ($bankAccount == null) {
+                return array(
+                    'result_message' => "Error. Bank account not found",
+                    'result_code' => 1
+                );
+            }
+
+            return $bankAccount;
+        } catch (Exception $ex) {
+            $this->logger->error("Error " . print_r($responseArray, true));
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
+
+    #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
+    public function updatePropertyBank($bankName, $accountType, $accountNumber, $branch, $propertyGuid): array
+    {
+        $this->logger->debug("Starting Method: " . __METHOD__);
+        $responseArray = array();
+        try {
+            $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
+            if ($property == null) {
+                return array(
+                    'result_message' => "Error. Property not found",
+                    'result_code' => 1
+                );
+            }
+
+            if(strcmp($accountType, "cheque") !== 0 && strcmp($accountType, "savings") !== 0){
+                return array(
+                    'result_message' => "Error. Account type is invalid",
+                    'result_code' => 1
+                );
+            }
+
+            //bank account
+            $bankAccount = $this->em->getRepository(BankAccount::class)->findOneBy(array('id' => $property->getBankAccount()));
+            if ($bankAccount == null) {
+                $bankAccount = new BankAccount();
+                $guid = $this->generateGuid();
+                $bankAccount->setGuid($guid);
+            }
+
+            $bankAccount->setAccountNumber($accountNumber);
+            $bankAccount->setAccountType($accountType);
+            $bankAccount->setBankName($bankName);
+            $bankAccount->setBranchCode($branch);
+
+            $this->em->persist($bankAccount);
+            $this->em->flush($bankAccount);
+
+            $property->setBankAccount($bankAccount->getId());
+            $this->em->persist($property);
+            $this->em->flush($property);
+
+            return array(
+                'result_message' => "Successfully update bank account",
+                'result_code' => 0
+            );
+        }catch (Exception $ex) {
+            $this->logger->error("Error " . print_r($responseArray, true));
+            return array(
+                'result_message' => $ex->getMessage(),
+                'result_code' => 1
+            );
+        }
+    }
+
 
     public function updateProperty($field, $value, $propertyGuid): array
     {
