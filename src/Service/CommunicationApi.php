@@ -83,16 +83,18 @@ class CommunicationApi extends AbstractController
 
         $this->logger->info("Connection to mail worked");
         $Parameters = array(
-            "client_name" => "Benedict",
-            "client_surname" => "Nkosi",
+            "recipient_name" => "Benedict Nkosi",
+            "message" => "Alert: Manual Export of Records Required",
+            "main_button_link" => "https://rentals.hotelrunner.co.za",
+            "main_button_link_text" => "View Statement",
         );
 
-        $message = $this->generate_email_body("welcome", $Parameters);
+        $message = $this->generate_email_body("generic", $Parameters);
 
         try {
             imap_mail(
                 "payments@hotelrunner.co.za",
-                "Alert: Manual Export of Records Required",
+                "Cosmo City - Thank you for payment",
                 wordwrap($message, 70),
                 $this->createHeaders()
             );
@@ -135,7 +137,6 @@ class CommunicationApi extends AbstractController
             return $e->getMessage();
         }
     }
-
 
     function readTemplateFile($templateName){
         try{
