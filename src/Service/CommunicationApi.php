@@ -126,13 +126,13 @@ class CommunicationApi extends AbstractController
 
     function replaceParameters($templateString, $Parameters){
         try{
-            $bodytag = $templateString;
+            $body = $templateString;
 
             foreach ($Parameters as $key => $value) {
-                $bodytag = str_replace("<<" . $key . ">>", $value , $bodytag);
+                $body = str_replace("<<" . $key . ">>", $value , $body);
             }
 
-            return $bodytag;
+            return $body;
         }catch (Exception $e) {
             return $e->getMessage();
         }
@@ -140,9 +140,9 @@ class CommunicationApi extends AbstractController
 
     function readTemplateFile($templateName){
         try{
-            $myfile = fopen(__DIR__.'/../../templates/email/' . $templateName . ".html", "r") or die("Unable to open file!");
-            $templateString =  fread($myfile,filesize(__DIR__.'/../../templates/email/' . $templateName . ".html"));
-            fclose($myfile);
+            $emailFile = fopen(__DIR__.'/../../templates/email/' . $templateName . ".html", "r") or die("Unable to open file!");
+            $templateString =  fread($emailFile,filesize(__DIR__.'/../../templates/email/' . $templateName . ".html"));
+            fclose($emailFile);
             return $templateString;
         }catch (Exception $e) {
             return $e->getMessage();
