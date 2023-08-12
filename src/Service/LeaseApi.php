@@ -843,9 +843,9 @@ class LeaseApi extends AbstractController
                         $this->em->persist($application);
                         $this->em->flush($application);
 
-                        $message = "Lease documents have been uploaded for application " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() ;
+                        $message = "Lease documents have been uploaded for application " . $application->getTenant()->getName() . " - " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() ;
                         $subject = "Aluve App - Lease Uploaded";
-                        $link =  "https://" . $_SERVER['HTTP_HOST'] . "/tenant";
+                        $link =  "https://" . $_SERVER['HTTP_HOST'] . "/landlord";
                         $linkText = "View Application";
                         $template = "generic";
                         $communicationApi = new CommunicationApi($this->em, $this->logger);

@@ -120,7 +120,10 @@ let getMaintenanceCalls = () => {
 
             });
 
-            $("#maintenance-div").html(html);
+            if(html.length > 0){
+                $("#maintenance-div").html(html);
+                $("#maintenance-div").removeClass("display-none");
+            }
 
             $(".delete-maintenance-icon").click(function (event) {
                 sessionStorage.setItem("maintenance-guid", event.target.getAttribute("maintenance-guid"));
