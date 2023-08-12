@@ -92,6 +92,8 @@ let registerUser = () => {
     success: function (response) {
       $(".spinner-border").hide();
       $(".overlay").hide();
+      $('#success-reg-div').removeClass('display-none');
+      $('#register-form').addClass('display-none');
       showToast(response.result_message);
     },
     error: function (jqXHR, textStatus, errorThrown) {
