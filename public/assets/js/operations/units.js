@@ -99,8 +99,8 @@ let createUnit = () => {
     numberOfUnits: numberOfUnits,
     property_id: sessionStorage.getItem("property-id"),
     meter: meter,
-    water:waterCharge,
-    electricity:electricityCharge
+    water: waterCharge,
+    electricity: electricityCharge,
   };
 
   $.ajax({
@@ -206,10 +206,10 @@ let getAllUnits = () => {
           unit.listed +
           '" unit-name="' +
           unit.unit_name +
-            '" unit-water="' +
-            unit.water +
-            '" unit-electricity="' +
-            unit.electricity +
+          '" unit-water="' +
+          unit.water +
+          '" unit-electricity="' +
+          unit.electricity +
           '">\n' +
           '<div class="property-details">\n' +
           '<p><a class="btn-update-unit"  unit-id="' +
@@ -234,10 +234,10 @@ let getAllUnits = () => {
           unit.listed +
           '" unit-name="' +
           unit.unit_name +
-            '" unit-water="' +
-            unit.water +
-            '" unit-electricity="' +
-            unit.electricity +
+          '" unit-water="' +
+          unit.water +
+          '" unit-electricity="' +
+          unit.electricity +
           '">' +
           unit.unit_name +
           "</a></p>\n";
@@ -253,11 +253,16 @@ let getAllUnits = () => {
           unit.bedrooms +
           "\n" +
           '   <i class="fa-solid fa-shower ml-1"></i>  ' +
-          unit.bathrooms +
-          ' <i class="fa-solid fa-link ml-1 btn-copy-listing-link" role="button" unit-id="' + unit.guid + '"></i>\n' +
-          " </div>\n" +
-          "</div>\n" +
-          "</div> ";
+          unit.bathrooms;
+          
+        if (unit.listed) {
+          html +=
+            ' <i class="fa-solid fa-link ml-1 btn-copy-listing-link" role="button" unit-id="' +
+            unit.guid +
+            '"></i>\n';
+        }
+
+        html += " </div>\n" + "</div>\n" + "</div> ";
       });
 
       $("#div-units").html(html);
@@ -275,7 +280,6 @@ let getAllUnits = () => {
       });
 
       $(".btn-update-unit").click(function (event) {
-       
         // Update the modal's content.
         const unitName = event.target.getAttribute("unit-name");
         const unitId = event.target.getAttribute("unit-id");
@@ -305,19 +309,17 @@ let getAllUnits = () => {
         $("#unit-bedrooms").val(bedrooms);
         $("#unit-bathrooms").val(bathrooms);
         $("#unit-meter").val(meter);
-        if(waterCharge.localeCompare("undefined") ===0){
+        if (waterCharge.localeCompare("undefined") === 0) {
           $("#ul-unit-water-selected").html("Free");
-        }else{
+        } else {
           $("#ul-unit-water-selected").html(waterCharge);
         }
 
-        if(electricityCharge.localeCompare("undefined") ===0){
+        if (electricityCharge.localeCompare("undefined") === 0) {
           $("#ul-unit-electricity-selected").html("Free");
-        }else{
+        } else {
           $("#ul-unit-electricity-selected").html(electricityCharge);
         }
-
-
 
         if (children.localeCompare("true") === 0) {
           $("#checkChildrenAllowed").prop("checked", true);
@@ -356,7 +358,7 @@ let getAllUnits = () => {
         $("#maintenance-unit-dropdown-selected").html(event.target.innerText);
       });
 
-      $('#btn-create-new-unit').removeClass('display-none');
+      $("#btn-create-new-unit").removeClass("display-none");
     },
     error: function (xhr) {},
   });
@@ -381,7 +383,6 @@ let populateUnitsDropdown = (elementId) => {
 
       let unitsDropDownHtml = "";
       data.forEach(function (unit) {
-
         unitsDropDownHtml +=
           '<li><a class="dropdown-item unit-dropdown" unit-guid="' +
           unit.guid +
@@ -389,8 +390,6 @@ let populateUnitsDropdown = (elementId) => {
           '                                           href="javascript:void(0)">' +
           unit.unit_name +
           "</a></li>";
-
-
       });
 
       $("#" + elementId).html(unitsDropDownHtml);
@@ -400,7 +399,7 @@ let populateUnitsDropdown = (elementId) => {
           "unit-guid",
           event.target.getAttribute("unit-guid")
         );
-        $("#" +elementId+"-selected").html(event.target.innerText);
+        $("#" + elementId + "-selected").html(event.target.innerText);
       });
     },
     error: function (xhr) {},

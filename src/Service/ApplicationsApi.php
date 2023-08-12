@@ -70,34 +70,33 @@ class ApplicationsApi extends AbstractController
     }
 
 
-    public function getApplicationByTenant()
+    public function getTenantApplications(): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         try {
             $emailAddress = $this->getUser()->getUserIdentifier();
             $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('email' => $emailAddress));
             if ($tenant == null) {
-                return array();
-            }
-
-            $application = $this->em->getRepository(Application::class)->findOneBy(array('tenant' => $tenant->getId()), array('date' => 'DESC'));
-
-            if ($application == null) {
                 return array(
-                    'result_message' => "Error. Application not found",
+                    'result_message' => "Error. Tenant not found",
                     'result_code' => 1
                 );
             }
 
-            //get documents
-            $documentApi = new DocumentApi($this->em, $this->logger);
+            $applications = $this->em->getRepository("App\Entity\Application")->createQueryBuilder('a')
+                ->where('a.tenant = :property')
+                ->setParameter('property', $tenant->getId())
+                ->getQuery()
+                ->getResult();
 
-            $documents = $documentApi->getTenantDocuments($application->getTenant()->getId());
+            if (sizeof($applications) < 1) {
+                return array(
+                    'result_message' => "Error. No applications found",
+                    'result_code' => 1
+                );
+            }
 
-            return array(
-                "application" => $application,
-                "documents" => $documents
-            );
+            return $applications;
         } catch (Exception $ex) {
             $this->logger->error("Error " . $ex->getMessage() . $ex->getTraceAsString());
             return array(
@@ -107,12 +106,11 @@ class ApplicationsApi extends AbstractController
         }
     }
 
-
-    public function getApplication($appicationGuid): array
+    public function getApplication($applicationGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         try {
-            $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $appicationGuid));
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $applicationGuid));
             if ($application == null) {
                 return array(
                     'result_message' => "Error. Application not found",
@@ -123,7 +121,7 @@ class ApplicationsApi extends AbstractController
             //get documents
             $documentApi = new DocumentApi($this->em, $this->logger);
 
-            $documents = $documentApi->getTenantDocuments($application->getTenant()->getId());
+            $documents = $documentApi->getApplicationDocuments($application->getId());
 
             return array(
                 "application" => $application,
@@ -137,7 +135,6 @@ class ApplicationsApi extends AbstractController
             );
         }
     }
-
 
     public function createApplication($request): array
     {
@@ -205,7 +202,7 @@ class ApplicationsApi extends AbstractController
         }
     }
 
-    public function addSupportingDoc($applicationGuid, $documentType, $fileName): array
+    public function addFinancialsDoc($applicationGuid, $documentType, $fileName): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -221,13 +218,13 @@ class ApplicationsApi extends AbstractController
             $documentApi = new DocumentApi($this->em, $this->logger);
 
             if (strcmp($documentType, "statement") == 0) {
-                $documentApi->addDocument($tenant->getId(), "Bank Statement", $fileName);
+                $documentApi->addDocument($application->getId(), "Bank Statement", $fileName);
             } else if (strcmp($documentType, "payslip") == 0) {
-                $documentApi->addDocument($tenant->getId(), "payslip", $fileName);
+                $documentApi->addDocument($application->getId(), "payslip", $fileName);
             } else if (strcmp($documentType, "co_statement") == 0) {
-                $documentApi->addDocument($tenant->getId(), "Co-Bank Statement", $fileName);
+                $documentApi->addDocument($application->getId(), "Co-Bank Statement", $fileName);
             } else if (strcmp($documentType, "co_payslip") == 0) {
-                $documentApi->addDocument($tenant->getId(), "Co-payslip", $fileName);
+                $documentApi->addDocument($application->getId(), "Co-payslip", $fileName);
             } else {
                 return array(
                     'result_message' => "Error. Document type not suppoerted",
@@ -235,8 +232,8 @@ class ApplicationsApi extends AbstractController
                 );
             }
 
-            $bankStatementDocument = $documentApi->getDocumentName($tenant->getId(), "Bank Statement");
-            $PayslipDocument = $documentApi->getDocumentName($tenant->getId(), "payslip");
+            $bankStatementDocument = $documentApi->getDocumentName($application->getId(), "Bank Statement");
+            $PayslipDocument = $documentApi->getDocumentName($application->getId(), "payslip");
             $allDocsUploaded = $bankStatementDocument["result_code"] == 0 && $PayslipDocument["result_code"] == 0;
 
             if ($allDocsUploaded) {
@@ -250,7 +247,6 @@ class ApplicationsApi extends AbstractController
                 $template = "generic";
                 $communicationApi = new CommunicationApi($this->em, $this->logger);
                 $communicationApi->sendEmail($application->getUnit()->getProperty()->getEmail(), $application->getUnit()->getProperty()->getName(), $subject, $message, $link, $linkText, $template);
-
             }
 
             $this->em->persist($application);

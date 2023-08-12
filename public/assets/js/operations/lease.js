@@ -204,7 +204,7 @@ let createLease = () => {
   const adultCount = $("#adult_count").val().trim();
   const childCount = $("#child_count").val().trim();
 
-  let url = "/api/lease/create";
+  let url = "/api/lease/landlord/create";
   const data = {
     unitId: sessionStorage.getItem("unit-guid"),
     tenantName: tenantName,
@@ -237,7 +237,7 @@ let createLease = () => {
 };
 
 let deleteLease = () => {
-  let url = "/api/lease/update";
+  let url = "/api/lease_update/update";
   const data = {
     field: "status",
     value: "deleted",
@@ -367,11 +367,7 @@ let getAllLeases = () => {
         );
       });
 
-      $(".btn-cancel-lease").click(function (event) {
-        sessionStorage.setItem(
-          "lease-guid",
-          event.target.getAttribute("lease-guid")
-        );
+      $(".btn-cancel-lease").click(function () {
         $("#confirmModal").modal("toggle");
       });
 
@@ -385,7 +381,7 @@ let getAllLeases = () => {
 };
 
 let populateLeaseDetails = (leaseGuid) => {
-  let id = getURLParameter("id");
+  sessionStorage.setItem("lease-guid", leaseGuid);
   let url = "/api/lease/" + leaseGuid;
   $.ajax({
     type: "GET",
@@ -397,8 +393,6 @@ let populateLeaseDetails = (leaseGuid) => {
           return;
         }
       }
-
-      sessionStorage.setItem("lease-guid", lease.lease_guid);
       sessionStorage.setItem("tenant_guid", lease.tenant_guid);
       sessionStorage.setItem("unit_guid", lease.unit_guid);
 

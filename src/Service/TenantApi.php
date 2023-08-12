@@ -237,7 +237,7 @@ class TenantApi extends AbstractController
                 );
             }
 
-            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('idNumber' => $idNumber));
+            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('email' => $email));
             if ($tenant == null) {
                 $tenant = new Tenant();
             }

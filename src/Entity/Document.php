@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Document
  *
- * @ORM\Table(name="document", indexes={@ORM\Index(name="tenant", columns={"tenant"}), @ORM\Index(name="document_type", columns={"document_type"})})
+ * @ORM\Table(name="document", indexes={@ORM\Index(name="document_type", columns={"document_type"}), @ORM\Index(name="tenant", columns={"application"})})
  * @ORM\Entity
  */
 class Document
@@ -29,6 +29,13 @@ class Document
     private $status = 'active';
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=50, nullable=false)
+     */
+    private $name;
+
+    /**
      * @var DocumentTypeLookup
      *
      * @ORM\ManyToOne(targetEntity="DocumentTypeLookup")
@@ -39,22 +46,14 @@ class Document
     private $documentType;
 
     /**
-     * @var string
+     * @var Application
      *
-     * @ORM\Column(name="name", type="string", length=50, nullable=false)
-     */
-    private $name;
-
-
-    /**
-     * @var Tenant
-     *
-     * @ORM\ManyToOne(targetEntity="Tenant")
+     * @ORM\ManyToOne(targetEntity="Application")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tenant", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="application", referencedColumnName="id")
      * })
      */
-    private $tenant;
+    private $application;
 
     /**
      * @return int
@@ -89,22 +88,6 @@ class Document
     }
 
     /**
-     * @return DocumentTypeLookup
-     */
-    public function getDocumentType(): DocumentTypeLookup
-    {
-        return $this->documentType;
-    }
-
-    /**
-     * @param DocumentTypeLookup $documentType
-     */
-    public function setDocumentType(DocumentTypeLookup $documentType): void
-    {
-        $this->documentType = $documentType;
-    }
-
-    /**
      * @return string
      */
     public function getName(): string
@@ -121,19 +104,35 @@ class Document
     }
 
     /**
-     * @return Tenant
+     * @return DocumentTypeLookup
      */
-    public function getTenant(): Tenant
+    public function getDocumentType(): DocumentTypeLookup
     {
-        return $this->tenant;
+        return $this->documentType;
     }
 
     /**
-     * @param Tenant $tenant
+     * @param DocumentTypeLookup $documentType
      */
-    public function setTenant(Tenant $tenant): void
+    public function setDocumentType(DocumentTypeLookup $documentType): void
     {
-        $this->tenant = $tenant;
+        $this->documentType = $documentType;
+    }
+
+    /**
+     * @return Application
+     */
+    public function getApplication(): Application
+    {
+        return $this->application;
+    }
+
+    /**
+     * @param Application $application
+     */
+    public function setApplication(Application $application): void
+    {
+        $this->application = $application;
     }
 
 

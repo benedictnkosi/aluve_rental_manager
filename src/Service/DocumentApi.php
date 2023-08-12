@@ -5,20 +5,8 @@ namespace App\Service;
 use App\Entity\Application;
 use App\Entity\Document;
 use App\Entity\DocumentTypeLookup;
-use App\Entity\Inspection;
-use App\Entity\InspectionImage;
-use App\Entity\Leases;
-use App\Entity\PaymentRule;
-use App\Entity\Properties;
-use App\Entity\Propertyusers;
-use App\Entity\Tenant;
-use App\Entity\Units;
-use App\Entity\User;
-use Cassandra\Date;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use JetBrains\PhpStorm\ArrayShape;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -38,15 +26,15 @@ class DocumentApi extends AbstractController
         }
     }
 
-    public function addDocument($tenantId, $documentType, $fileName): array
+    public function addDocument($applicationId, $documentType, $fileName): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('id' => $tenantId));
-            if($tenant == null){
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
+            if($application == null){
                 return array(
-                    'result_message' => "Error. Tenant not found",
+                    'result_message' => "Error. Application not found",
                     'result_code' => 1
                 );
             }
@@ -59,15 +47,15 @@ class DocumentApi extends AbstractController
                 );
             }
 
-            //remove old document for tenant and id type
-            $document = $this->em->getRepository(Document::class)->findOneBy(array('tenant' => $tenant->getId(), 'documentType' => $documentType->getId()));
+            //remove old document for application and id type
+            $document = $this->em->getRepository(Document::class)->findOneBy(array('application' => $application->getId(), 'documentType' => $documentType->getId()));
             if($document !== null){
                 $this->em->remove($document);
                 $this->em->flush($document);
             }
 
             $document = new Document();
-            $document->setTenant($tenant);
+            $document->setApplication($application);
             $document->setDocumentType($documentType);
             $document->setName($fileName);
             $this->em->persist($document);
@@ -87,19 +75,11 @@ class DocumentApi extends AbstractController
     }
 
 
-    public function getDocumentName($tenantId, $documentType): array
+    public function getDocumentName($applicationId, $documentType): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('id' => $tenantId));
-            if($tenant == null){
-                return array(
-                    'result_message' => "Error. Tenant not found",
-                    'result_code' => 1
-                );
-            }
-
             $documentType = $this->em->getRepository(DocumentTypeLookup::class)->findOneBy(array('name' => $documentType));
             if($documentType == null){
                 return array(
@@ -108,7 +88,7 @@ class DocumentApi extends AbstractController
                 );
             }
 
-            $document = $this->em->getRepository(Document::class)->findOneBy(array('tenant' => $tenantId, 'documentType' => $documentType, 'status' => 'active'));
+            $document = $this->em->getRepository(Document::class)->findOneBy(array('application' => $applicationId, 'documentType' => $documentType, 'status' => 'active'));
 
             if($document == null){
                 return array(
@@ -131,20 +111,20 @@ class DocumentApi extends AbstractController
         }
     }
 
-    public function getTenantDocuments($tenantId): array
+    public function getApplicationDocuments($applicationId): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('id' => $tenantId));
-            if($tenant == null){
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
+            if($application == null){
                 return array(
-                    'result_message' => "Error. Tenant not found",
+                    'result_message' => "Error. Application not found",
                     'result_code' => 1
                 );
             }
 
-            return $this->em->getRepository(Document::class)->findBy(array('tenant' => $tenantId, 'status' => 'active'));
+            return $this->em->getRepository(Document::class)->findBy(array('application' => $application, 'status' => 'active'));
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
             return array(
@@ -154,28 +134,5 @@ class DocumentApi extends AbstractController
         }
     }
 
-    public function getDocumentByTenant($documentType): array
-    {
-        $this->logger->debug("Starting Method: " . __METHOD__);
-        $responseArray = array();
-        try {
-            $emailAddress = $this->getUser()->getUserIdentifier();
-            $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('email' => $emailAddress));
-            if($tenant == null){
-                return array(
-                    'result_message' => "Error. Tenant not found",
-                    'result_code' => 1
-                );
-            }
 
-            return $this->getDocumentName($tenant->getId(), $documentType);
-
-        } catch (Exception $ex) {
-            $this->logger->error("Error " . print_r($responseArray, true));
-            return array(
-                'result_message' => $ex->getMessage(),
-                'result_code' => 1
-            );
-        }
-    }
 }

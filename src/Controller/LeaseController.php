@@ -68,7 +68,7 @@ class LeaseController extends AbstractController
 
 
     /**
-     * @Route("api/lease/update")
+     * @Route("api/lease_update/update")
      */
     public function updateLease(Request $request,  LoggerInterface $logger, LeaseApi $leaseApi, AuthApi $authApi): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -111,7 +111,7 @@ class LeaseController extends AbstractController
 
 
     /**
-     * @Route("api/lease/create")
+     * @Route("api/lease/landlord/create")
      */
     public function createLease(Request $request, LoggerInterface $logger, LeaseApi $leaseApi, TenantApi $tenantApi): Response{
         $logger->info("Starting Method: " . __METHOD__);

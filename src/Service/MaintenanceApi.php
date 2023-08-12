@@ -130,7 +130,7 @@ class MaintenanceApi extends AbstractController
                 );
             }
 
-            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId()));
+            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId(), 'status' => 'active'));
             if ($lease == null) {
                 return array(
                     'result_message' => "Error. Lease not found",
@@ -204,7 +204,7 @@ class MaintenanceApi extends AbstractController
                 );
             }
 
-            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId()));
+            $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId(), 'status' => 'active'));
             if ($lease == null) {
                 return array(
                     'result_message' => "Error. Lease not found",

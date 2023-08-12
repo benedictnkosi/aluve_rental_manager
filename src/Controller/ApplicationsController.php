@@ -6,6 +6,7 @@ use App\Service\ApplicationsApi;
 use App\Service\FileUploaderApi;
 use App\Service\LeaseApi;
 use App\Service\PropertyApi;
+use App\Service\TenantApi;
 use App\Service\TransactionApi;
 use App\Service\UnitApi;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,6 +36,22 @@ class ApplicationsController extends AbstractController
         }
 
         $response = $applicationsApi->getApplications($propertyGuid);
+        $serializer = SerializerBuilder::create()->build();
+        $jsonContent = $serializer->serialize($response, 'json');
+        return new JsonResponse($jsonContent , 200, array(), true);
+    }
+
+    /**
+     * @Route("api/applications/tenant/get")
+     */
+    public function getTenantApplications( Request $request, LoggerInterface $logger, ApplicationsApi $applicationsApi): Response
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('GET')) {
+            return new JsonResponse("Method Not Allowed", 405, array());
+        }
+
+        $response = $applicationsApi->getTenantApplications();
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);
@@ -112,7 +129,7 @@ class ApplicationsController extends AbstractController
     /**
      * @Route("api/lease_document/{name}")
      */
-    public function getLease($name, LoggerInterface $logger): BinaryFileResponse
+    public function getLeaseDocument($name, LoggerInterface $logger): BinaryFileResponse
     {
         $logger->info("Starting Method: " . __METHOD__);
         $documentDir = __DIR__ . '/../../files/property_leases/';
@@ -142,7 +159,7 @@ class ApplicationsController extends AbstractController
      * @Route("api/application/upload/")
      * @throws \Exception
      */
-    public function uploadSupportingDocument( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, ApplicationsApi $applicationsApi): Response
+    public function uploadFinancialDocument( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, ApplicationsApi $applicationsApi): Response
     {
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('post')) {
@@ -172,7 +189,7 @@ class ApplicationsController extends AbstractController
         }
 
         //write to DB
-        $response = $applicationsApi->addSupportingDoc($request->get("application_id"), $request->get("document_type"), $response["file_name"]);
+        $response = $applicationsApi->addFinancialsDoc($request->get("application_id"), $request->get("document_type"), $response["file_name"]);
         if($response["result_code"] == 1){
             return new JsonResponse($response, 200, array());
        }else{
@@ -181,4 +198,50 @@ class ApplicationsController extends AbstractController
         }
 
     }
+
+    /**
+     * @Route("api/tenant/upload/lease")
+     * @throws \Exception
+     */
+    public function uploadLeaseDocuments( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, LeaseApi $leaseApi, TenantApi $tenantApi): Response
+    {
+        $logger->info("Starting Method: " . __METHOD__);
+        if (!$request->isMethod('post')) {
+            return new JsonResponse("Internal server errors" , 500, array());
+        }
+
+        $file = $request->files->get('file');
+        if (empty($file))
+        {
+            $logger->info("No file specified");
+            return new Response("No file specified",
+                Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
+        }
+
+        $uploadDir = __DIR__ . '/../../files/application_documents/';
+        $uploader->setDir($uploadDir);
+        $uploader->setExtensions(array('pdf','jpg','png','bmp','jpeg' ));  //allowed extensions list//
+
+        $uploader->setMaxSize(5);//set max file size to be allowed in MB//
+
+        $response = $uploader->uploadFile();
+        if($response["result_code"] == 1){
+            //upload failed
+            header("HTTP/1.1 500 Internal Server Error");
+            return new Response($response["result_message"],
+                Response::HTTP_NOT_ACCEPTABLE, ['content-type' => 'text/plain']);
+        }
+
+        //write to DB
+        $response = $leaseApi->addLeaseDoc($request->get("document_type"), $response["file_name"], $request->get("application_guid"));
+
+
+        if($response["result_code"] == 1){
+            return new JsonResponse($response, 200, array());
+        }else{
+            return new JsonResponse($response, 201, array());
+
+        }
+    }
+
 }

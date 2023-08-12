@@ -74,74 +74,10 @@ class TenantController extends AbstractController
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response["lease"] = $leaseApi->getLeaseByLoggedInTenant();
-        $response["application"] = $applicationsApi->getApplicationByTenant();
+        $response = $leaseApi->getLeaseByLoggedInTenant();
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($response, 'json');
         return new JsonResponse($jsonContent , 200, array(), true);
     }
 
-    /**
-     * @Route("api/tenant/getleaseDocumentName")
-     */
-    public function getLeaseDocumentNameByIdNumber(DocumentApi $documentApi, Request $request, LoggerInterface $logger): Response{
-        $logger->info("Starting Method: " . __METHOD__);
-        if (!$request->isMethod('get')) {
-            return new JsonResponse("Method Not Allowed" , 405, array());
-        }
-
-        $response = $documentApi->getDocumentByTenant("Signed Lease");
-        $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($response, 'json');
-        return new JsonResponse($jsonContent , 200, array(), true);
-    }
-
-    /**
-     * @Route("api/tenant/upload/lease")
-     * @throws \Exception
-     */
-    public function uploadLeaseDocuments( Request $request, LoggerInterface $logger, FileUploaderApi $uploader, LeaseApi $leaseApi, TenantApi $tenantApi): Response
-    {
-        $logger->info("Starting Method: " . __METHOD__);
-        if (!$request->isMethod('post')) {
-            return new JsonResponse("Internal server errors" , 500, array());
-        }
-
-        $file = $request->files->get('file');
-        if (empty($file))
-        {
-            $logger->info("No file specified");
-            return new Response("No file specified",
-                Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
-        }
-
-        $uploadDir = __DIR__ . '/../../files/application_documents/';
-        $uploader->setDir($uploadDir);
-        $uploader->setExtensions(array('pdf','jpg','png','bmp','jpeg' ));  //allowed extensions list//
-
-        $uploader->setMaxSize(5);//set max file size to be allowed in MB//
-
-        $response = $uploader->uploadFile();
-        if($response["result_code"] == 1){
-            //upload failed
-            header("HTTP/1.1 500 Internal Server Error");
-            return new Response($response["result_message"],
-                Response::HTTP_NOT_ACCEPTABLE, ['content-type' => 'text/plain']);
-        }
-
-        //write to DB
-        if(is_null($request->get("application_guid"))){
-            $response = $leaseApi->addLeaseDoc($request->get("document_type"), $response["file_name"]);
-        }else{
-            $response = $leaseApi->addLeaseDoc($request->get("document_type"), $response["file_name"], $request->get("application_guid"));
-        }
-
-        if($response["result_code"] == 1){
-            return new JsonResponse($response, 200, array());
-        }else{
-            return new JsonResponse($response, 201, array());
-
-        }
-
-    }
 }
