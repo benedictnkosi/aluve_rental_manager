@@ -70,7 +70,7 @@ class ApplicationsApi extends AbstractController
     }
 
 
-    public function getApplicationByTenant(): array
+    public function getApplicationByTenant()
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         try {
@@ -80,9 +80,9 @@ class ApplicationsApi extends AbstractController
                 return array();
             }
 
-            $applications = $this->em->getRepository(Application::class)->findOneBy(array('id' => $tenant->getId()), array('date' => 'DESC'));
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $tenant->getId()), array('date' => 'DESC'));
 
-            if (sizeof($applications) < 1) {
+            if ($application == null) {
                 return array(
                     'result_message' => "Error. Application not found",
                     'result_code' => 1
@@ -92,10 +92,10 @@ class ApplicationsApi extends AbstractController
             //get documents
             $documentApi = new DocumentApi($this->em, $this->logger);
 
-            $documents = $documentApi->getTenantDocuments($applications[0]->getTenant()->getId());
+            $documents = $documentApi->getTenantDocuments($application->getTenant()->getId());
 
             return array(
-                "application" => $applications[0],
+                "application" => $application,
                 "documents" => $documents
             );
         } catch (Exception $ex) {
