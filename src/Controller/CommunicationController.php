@@ -51,7 +51,14 @@ class CommunicationController extends AbstractController
             return new JsonResponse("Method Not Allowed", 405, array());
         }
 
-        $response = $communicationApi->sendEmail();
+        $toEmail = "payments@hotelrunner.co.za";
+        $recipientName = "Ben";
+        $subject = "test email";
+        $message = "test email";
+        $link = "";
+        $linkText = "";
+        $template = "generic";
+        $response = $communicationApi->sendEmail($toEmail, $recipientName, $subject, $message, $link, $linkText, $template);
         return new JsonResponse($response, 200, array());
     }
 }
