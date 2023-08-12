@@ -212,7 +212,7 @@ class MaintenanceApi extends AbstractController
                 );
             }
 
-            $maintenanceCalls = $this->em->getRepository(Maintenance::class)->findBy(array('unit' => $lease->getUnit()->getID()));
+            $maintenanceCalls = $this->em->getRepository(Maintenance::class)->findBy(array('unit' => $lease->getUnit()->getID()), array('dateLogged' => 'DESC'));
 
             if (sizeof($maintenanceCalls) < 1) {
                 return array(

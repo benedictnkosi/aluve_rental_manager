@@ -78,13 +78,6 @@ class Properties
     private $status = 'active';
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="account_number", type="string", length=20, nullable=true)
-     */
-    private $accountNumber;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="deposit_pecent", type="integer", nullable=false)
@@ -247,22 +240,6 @@ class Properties
     public function setStatus(string $status): void
     {
         $this->status = $status;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAccountNumber(): ?string
-    {
-        return $this->accountNumber;
-    }
-
-    /**
-     * @param string|null $accountNumber
-     */
-    public function setAccountNumber(?string $accountNumber): void
-    {
-        $this->accountNumber = $accountNumber;
     }
 
     /**

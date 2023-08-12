@@ -68,6 +68,8 @@ class UnitApi extends AbstractController
                         'bathrooms' => $unit->getbathrooms(),
                         'guid' => $unit->getGuid(),
                         'meter' => $unit->getMeter(),
+                        'water' => $unit->getWater(),
+                        'electricity' => $unit->getElectricity()
 
                     );
                 } else {
@@ -92,6 +94,8 @@ class UnitApi extends AbstractController
                         'bathrooms' => $unit->getBathrooms(),
                         'guid' => $unit->getGuid(),
                         'meter' => $unit->getMeter(),
+                        'water' => $unit->getWater(),
+                        'electricity' => $unit->getElectricity(),
                     );
                 }
 
@@ -172,7 +176,7 @@ class UnitApi extends AbstractController
     }
 
     #[ArrayShape(['result_message' => "string", 'result_code' => "int"])]
-    public function createUnit($name, $guid, $listed, $parking, $childrenAllowed, $maxOccupants, $minGrossSalary, $rent, $bedrooms, $bathrooms, $propertyGuid, $meter): array
+    public function createUnit($name, $guid, $listed, $parking, $childrenAllowed, $maxOccupants, $minGrossSalary, $rent, $bedrooms, $bathrooms, $propertyGuid, $meter, $water, $electricity): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -212,9 +216,6 @@ class UnitApi extends AbstractController
                 $successMessage = "Successfully updated rental unit";
             }
 
-
-
-
             $this->logger->info("min salary " .$minGrossSalary);
             $unit->setName($name);
             $unit->setProperty($property);
@@ -224,6 +225,8 @@ class UnitApi extends AbstractController
             $unit->setBedrooms($bedrooms);
             $unit->setBathrooms($bathrooms);
             $unit->setMeter($meter);
+            $unit->setWater($water);
+            $unit->setElectricity($electricity);
 
             if(strcmp($listed, "true") == 0){
                 $unit->setListed(true);

@@ -229,15 +229,6 @@ class PropertyApi extends AbstractController
                     }
                     $property->setStatus($value);
                     break;
-                case "accountNumber":
-                    if (strlen($value) < 1 || !is_numeric($value) || strlen($value) > 20) {
-                        return array(
-                            'result_message' => "Error. New value is invalid",
-                            'result_code' => 1
-                        );
-                    }
-                    $property->setAccountNUmber($value);
-                    break;
                 case "applicationFee":
                     if (strlen($value) < 1 || !is_numeric($value) || strlen($value) > 4) {
                         return array(
@@ -264,6 +255,24 @@ class PropertyApi extends AbstractController
                         );
                     }
                     $property->setLeaseFileName($value);
+                    break;
+                case "property-email":
+                    if (strlen($value) < 1 || strlen($value) > 100) {
+                        return array(
+                            'result_message' => "Error. New value length is invalid",
+                            'result_code' => 1
+                        );
+                    }
+                    $property->setEmail($value);
+                    break;
+                case "property-phone":
+                    if (strlen($value) < 1 || strlen($value) > 100) {
+                        return array(
+                            'result_message' => "Error. New value length is invalid",
+                            'result_code' => 1
+                        );
+                    }
+                    $property->setPhone($value);
                     break;
                 default:
                     return array(

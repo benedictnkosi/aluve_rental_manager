@@ -44,13 +44,26 @@ $(document).ready(function () {
   });
 
   $("#btn-close-new-unit").click(function (event) {
-    updateView("units-content-div", "Lease");
+    updateView("units-content-div", "Units");
   });
 
   $(".btn-confirm-delete-unit").unbind("click");
   $("#btn-confirm-delete-unit").click(function (event) {
     event.preventDefault();
     deleteUnit(sessionStorage.getItem("unit-id"));
+  });
+
+  $(".unit-details-close").click(function () {
+    $("#new-unit-content-div").addClass("display-none");
+    $("#units-content-div").removeClass("display-none");
+  });
+
+  $(".dropdown-water-charge").click(function (event) {
+    $("#ul-unit-water-selected").html(event.target.innerText);
+  });
+
+  $(".dropdown-electricity-charge").click(function (event) {
+    $("#ul-unit-electricity-selected").html(event.target.innerText);
   });
 });
 
@@ -67,6 +80,8 @@ let createUnit = () => {
   const numberOfUnits = $("#number-of-units").val().trim();
   const meter = $("#unit-meter").val().trim();
   const checkBulkCreateUnits = $("#checkBulkCreateUnits").is(":checked");
+  const waterCharge = $("#ul-unit-water-selected").html();
+  const electricityCharge = $("#ul-unit-electricity-selected").html();
 
   let url = "/api/units/create";
   const data = {
@@ -84,6 +99,8 @@ let createUnit = () => {
     numberOfUnits: numberOfUnits,
     property_id: sessionStorage.getItem("property-id"),
     meter: meter,
+    water:waterCharge,
+    electricity:electricityCharge
   };
 
   $.ajax({
@@ -189,6 +206,10 @@ let getAllUnits = () => {
           unit.listed +
           '" unit-name="' +
           unit.unit_name +
+            '" unit-water="' +
+            unit.water +
+            '" unit-electricity="' +
+            unit.electricity +
           '">\n' +
           '<div class="property-details">\n' +
           '<p><a class="btn-update-unit"  unit-id="' +
@@ -213,6 +234,10 @@ let getAllUnits = () => {
           unit.listed +
           '" unit-name="' +
           unit.unit_name +
+            '" unit-water="' +
+            unit.water +
+            '" unit-electricity="' +
+            unit.electricity +
           '">' +
           unit.unit_name +
           "</a></p>\n";
@@ -257,6 +282,8 @@ let getAllUnits = () => {
         const listed = event.target.getAttribute("listed");
         const parking = event.target.getAttribute("parking");
         const children = event.target.getAttribute("children");
+        const waterCharge = event.target.getAttribute("unit-water");
+        const electricityCharge = event.target.getAttribute("unit-electricity");
         const minSalary = parseInt(
           event.target.getAttribute("min-salary").replace("R", "")
         );
@@ -278,6 +305,19 @@ let getAllUnits = () => {
         $("#unit-bedrooms").val(bedrooms);
         $("#unit-bathrooms").val(bathrooms);
         $("#unit-meter").val(meter);
+        if(waterCharge.localeCompare("undefined") ===0){
+          $("#ul-unit-water-selected").html("Free");
+        }else{
+          $("#ul-unit-water-selected").html(waterCharge);
+        }
+
+        if(electricityCharge.localeCompare("undefined") ===0){
+          $("#ul-unit-electricity-selected").html("Free");
+        }else{
+          $("#ul-unit-electricity-selected").html(electricityCharge);
+        }
+
+
 
         if (children.localeCompare("true") === 0) {
           $("#checkChildrenAllowed").prop("checked", true);
@@ -321,8 +361,6 @@ let getAllUnits = () => {
     error: function (xhr) {},
   });
 };
-
-
 
 let populateUnitsDropdown = (elementId) => {
   const queryString = window.location.search;

@@ -122,6 +122,8 @@ let getProperty = () => {
             $("#depositPercent").val(data.deposit_pecent);
             $("#applicationFee").val(data.application_fee);
             $("#property_name").html(data.name);
+            $("#property-email").val(data.email);
+            $("#property-phone").val(data.phone);
 
             if(data.lease_file_name !== undefined){
                 $("#view_uploaded_property_lease").removeClass("display-none");

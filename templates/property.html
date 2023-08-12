@@ -228,7 +228,7 @@
                         >
                         <div class="dropdown" id="drop-expense-name">
                             <button
-                                    class="btn dropdown-toggle"
+                                    class="btn dropdown-toggle solid-grey-border"
                                     id="drop-expense-name-selected"
                                     type="button"
                                     data-bs-toggle="dropdown"
@@ -319,7 +319,7 @@
                         >
                         <div class="dropdown" id="maintenance-unit-name">
                             <button
-                                    class="btn dropdown-toggle"
+                                    class="btn dropdown-toggle solid-grey-border"
                                     id="maintenance-units-selected"
                                     type="button"
                                     data-bs-toggle="dropdown"
@@ -1088,17 +1088,12 @@
 
         <!--            new unit div-------------------------------------------------------------------->
         <div id="new-unit-content-div" class="main-content display-none border-shadow">
+            <i class="fa-regular fa-circle-xmark unit-details-close" role="button"></i>
             <div class="container">
                 <main>
-
-                    <!-- <div class="py-5 text-center">
-                        <p class="lead" id="unit-name-header"></p>
-                    </div> -->
-
-
                     <div class="row g-5 justify-content-center">
 
-                        <div class="col-md-7 col-lg-8">
+
                             <form class="needs-validation" id="form-create-unit" novalidate>
                                 <div class="row g-3">
 
@@ -1187,7 +1182,6 @@
                                         </div>
                                     </div>
 
-
                                     <div class="col-sm-6">
                                         <label for="unit-bathrooms" class="col-form-label"
                                         >Number Of Bathrooms:</label
@@ -1203,7 +1197,6 @@
                                             Your username is required.
                                         </div>
                                     </div>
-
 
                                     <div class="col-sm-6">
                                         <label for="unit-name" class="col-form-label"
@@ -1221,7 +1214,6 @@
                                         </div>
                                     </div>
 
-
                                     <div class="col-sm-6">
                                         <label for="unit-meter" class="col-form-label"
                                         >Meter Number:</label
@@ -1235,6 +1227,53 @@
                                         />
                                         <div class="invalid-feedback">
                                             Your username is required.
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <label for="unit-water" class="col-form-label"
+                                        >Water Charge:</label
+                                        >
+                                        <div class="dropdown" id="unit-water">
+                                            <button
+                                                    class="btn dropdown-toggle solid-grey-border  w-100"
+                                                    id="ul-unit-water-selected"
+                                                    type="button"
+                                                    data-bs-toggle="dropdown"
+                                                    aria-expanded="false"
+                                            >
+                                                Free
+                                            </button>
+                                            <ul class="dropdown-menu" id="ul-unit-water">
+                                                <li><a class="dropdown-item  dropdown-water-charge" charge="free" href="javascript:void(0)">Free</a></li>
+                                                <li><a class="dropdown-item dropdown-water-charge"  charge="pre-paid" href="javascript:void(0)">Pre-paid</a></li>
+                                                <li><a class="dropdown-item dropdown-water-charge" charge="post-paid" href="javascript:void(0)">Post-Paid</a></li>
+                                                <li><a class="dropdown-item dropdown-water-charge" charge="flat-fee" href="javascript:void(0)">Flat Fee</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-6">
+                                        <label for="unit-water" class="col-form-label"
+                                        >Electricity Charge:</label
+                                        >
+                                        <div class="dropdown" id="unit-electricity">
+                                            <button
+                                                    class="btn dropdown-toggle solid-grey-border w-100"
+                                                    id="ul-unit-electricity-selected"
+                                                    type="button"
+                                                    data-bs-toggle="dropdown"
+                                                    aria-expanded="false"
+                                            >
+                                                Free
+                                            </button>
+                                            <ul class="dropdown-menu" id="ul-unit-electricity">
+                                                <li><a class="dropdown-item dropdown-electricity-charge" charge="free" href="javascript:void(0)">Free</a></li>
+                                                <li><a class="dropdown-item dropdown-electricity-charge"  charge="pre-paid" href="javascript:void(0)">Pre-paid</a></li>
+                                                <li><a class="dropdown-item  dropdown-electricity-charge" charge="post-paid" href="javascript:void(0)">Post-Paid</a></li>
+                                                <li><a class="dropdown-item  dropdown-electricity-charge" charge="flat-fee" href="javascript:void(0)">Flat Fee</a></li>
+                                            </ul>
                                         </div>
                                     </div>
 
@@ -1254,6 +1293,7 @@
                                             Your username is required.
                                         </div>
                                     </div>
+
 
 
                                 </div>
@@ -1315,7 +1355,7 @@
                                     </div>
                                 </div>
                             </form>
-                        </div>
+
                     </div>
                 </main>
             </div>
@@ -1339,10 +1379,9 @@
                 </p>
             </div>
 
+            <!--            Statement modal div -------------------------------------------------------------------->
             <div class="statement-card-details closable-div display-none">
                 <i class="fa-regular fa-circle-xmark statement-close" role="button"></i>
-                <!-- <i class="fa-regular fa-circle-xmark"></i> -->
-
 
                 <div class="row p-2">
 
@@ -1424,7 +1463,7 @@
                             >
                             <div class="dropdown" id="lease-unit-name">
                                 <button
-                                        class="btn dropdown-toggle"
+                                        class="btn dropdown-toggle solid-grey-border"
                                         id="ul-lease-units-selected"
                                         type="button"
                                         data-bs-toggle="dropdown"
@@ -1478,7 +1517,7 @@
                             >
                             <div class="dropdown" id="application_id_doc_type">
                                 <button
-                                        class="btn dropdown-toggle"
+                                        class="btn dropdown-toggle solid-grey-border"
                                         id="drop-id-doc-type-selected"
                                         type="button"
                                         data-bs-toggle="dropdown"
@@ -1676,329 +1715,367 @@
                     </div>
                 </form>
             </div>
-</div>
+        </div>
 
 
-<!--            applications div -------------------------------------------------------------------->
-<div id="applications-content-div" class="main-content display-none">
-    <div class="d-flex flex-column">
-        <div class="font-12 align-items-center d-flex flex-column" id="applications-div">
+        <!--            applications div -------------------------------------------------------------------->
+        <div id="applications-content-div" class="main-content display-none">
+            <div class="d-flex flex-column">
+                <div class="font-12 align-items-center d-flex flex-column" id="applications-div">
+
+                </div>
+
+                <div class="application-card-details display-none closable-div">
+                    <i class="fa-regular fa-circle-xmark application-details-close" role="button"></i>
+                    <div class="row p-sm-5">
+                        <p class="fw-bolder p-3" id="application_reference"></p>
+                        <div class="col-8 text-start p-0">
+                            <p><i class="fa-solid fa-user me-3 ms-0 green-text"></i><small id="applicant_name"></small>
+                            </p>
+                            <p><i class="fa-solid fa-phone me-3 ms-0 green-text"></i><small
+                                    id="applicant_phone"></small></p>
+                            <p><i class="fa-solid fa-envelope me-3 ms-0 green-text"></i> <small
+                                    id="applicant_email"></small>
+                            </p>
+                            <p><i class="fa-solid fa-id-badge me-3 ms-0 green-text"></i> <small
+                                    id="applicant_id_number"></small></p>
+                        </div>
+                        <div class="col-4 text-start">
+                            <p><i class="fa-solid fa-id-badge me-3 ms-0 green-text"></i> <small
+                                    id="applicant_occupation"></small></p>
+
+                            <p><i class="fa-solid fa-sack-dollar me-3 ms-0 green-text"></i> <small
+                                    id="applicant_salary"></small></p>
+                            <p><i class="fa-solid fa-person me-3 ms-0 green-text"></i><small
+                                    id="applicant_adults"></small></p>
+                            <p><i class="fa-solid fa-child-reaching me-3 ms-0 green-text"></i> <small
+                                    id="applicant_children"></small></p>
+
+                        </div>
+                        <p class="fw-bolder p-3">Documents</p>
+                        <div class="col-12 text-start p-0">
+
+                            <div id="application-documents"></div>
+
+                        </div>
+
+
+                        <div class="col-md-6 mt-1 ms-0 btn-accept-application display-none">
+                            <button type="button"
+                                    class="btn transparent-green-button w-100 btn-accept-application display-none">
+                                Accept
+                            </button>
+                        </div>
+                        <div class="col-md-6 mt-1 ms-0 btn-decline-application display-none">
+                            <button type="button"
+                                    class="btn transparent-red-button w-100 btn-decline-application display-none">
+                                Decline
+                            </button>
+                        </div>
+                        <div class="col-md-6 mt-1 ms-0 btn-convert-application display-none p-0">
+                            <button type="button"
+                                    class="btn transparent-green-button w-100 btn-convert-application display-none">
+                                Convert To Lease
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
 
-        <div class="application-card-details display-none closable-div">
-            <i class="fa-regular fa-circle-xmark application-details-close" role="button"></i>
-            <div class="row p-sm-5">
-                <p class="fw-bolder p-3" id="application_reference"></p>
-                <div class="col-8 text-start p-0">
-                    <p><i class="fa-solid fa-user me-3 ms-0 green-text"></i><small id="applicant_name"></small></p>
-                    <p><i class="fa-solid fa-phone me-3 ms-0 green-text"></i><small id="applicant_phone"></small></p>
-                    <p><i class="fa-solid fa-envelope me-3 ms-0 green-text"></i> <small id="applicant_email"></small>
-                    </p>
-                    <p><i class="fa-solid fa-id-badge me-3 ms-0 green-text"></i> <small
-                            id="applicant_id_number"></small></p>
+        <!--            maintenance div -------------------------------------------------------------------->
+        <div id="maintenance-content-div" class="main-content display-none">
+            <p>
+                <button
+                        type="button"
+                        class="btn transparent-green-button"
+                        id="btn-new-maintanance"
+                        data-bs-toggle="modal"
+                        data-bs-target="#maintenanceModal"
+                >
+                    Log A Call
+                </button>
+            </p>
+
+            <div class="row" id="maintenance-div"></div>
+        </div>
+
+        <!--            expenses div-------------------------------------------------------------------->
+        <div id="expenses-content-div" class="main-content display-none w-100">
+            <p>
+                <button
+                        type="button"
+                        class="btn transparent-green-button"
+                        id="btn-new-expense"
+                        data-bs-toggle="modal"
+                        data-bs-target="#propertyExpenseModal"
+                >
+                    Add Expense
+                </button>
+            </p>
+            <div id="expenses-div"></div>
+        </div>
+
+        <!--            settings DIV -------------------------------------------------------------------->
+        <div id="settings-content-div" class="main-content display-none w-75">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a
+                            class="nav-link active settings-nav-link"
+                            form-to-show="settings-form-fees"
+                            aria-current="page"
+                            href="javascript:void(0)"
+                            style="color:#524f4f !important;"
+                    >General</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                            class="nav-link settings-nav-link"
+                            form-to-show="settings-form-banking"
+                            aria-current="page"
+                            href="javascript:void(0)"
+                            style="color:#524f4f !important;"
+                    >Banking</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                            class="nav-link settings-nav-link"
+                            form-to-show="settings-form-communication"
+                            aria-current="page"
+                            href="javascript:void(0)"
+                            style="color:#524f4f !important;"
+                    >Communication</a
+                    >
+                </li>
+                <!--                    <li class="nav-item">-->
+                <!--                        <a class="nav-link settings-nav-link" form-to-show="settings-form-security"-->
+                <!--                           href="javascript:void(0)">Security</a>-->
+                <!--                    </li>-->
+            </ul>
+
+            <!--                <form id="settings-form-security" class="mt-5 display-none settings-form">-->
+            <!--                    <h3>Security</h3>-->
+
+            <!--                    <h2>Item List</h2>-->
+
+            <!--                    <button class="btn transparent-green-button mt-3" id="addItemBtn">Add Item</button>-->
+
+            <!--                    <div class="mb-3">-->
+            <!--                        <label for="settings-email" class="form-label">Email address</label>-->
+            <!--                        <input type="email" class="form-control property-value" id="settings-email" field-name="email"-->
+            <!--                               aria-describedby="emailHelp">-->
+            <!--                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
+            <!--                    </div>-->
+            <!--                    <div class="mb-3">-->
+            <!--                        <label for="settings-password" field-name="password" class="form-label">Password</label>-->
+            <!--                        <input type="password" class="form-control property-value" id="settings-password">-->
+            <!--                    </div>-->
+            <!--                </form>-->
+
+            <!--    banking details-->
+            <form id="settings-form-banking" class="mt-5 display-none settings-form">
+                <h3>Banking</h3>
+
+                <div class="mb-3">
+                    <label for="bank-name" class="form-label"
+                    >Bank Name</label
+                    >
+                    <input
+                            type="string"
+                            class="form-control"
+                            field-name="bank-name"
+                            id="bank-name"
+                            required
+                    />
                 </div>
-                <div class="col-4 text-start">
-                    <p><i class="fa-solid fa-id-badge me-3 ms-0 green-text"></i> <small
-                            id="applicant_occupation"></small></p>
 
-                    <p><i class="fa-solid fa-sack-dollar me-3 ms-0 green-text"></i> <small
-                            id="applicant_salary"></small></p>
-                    <p><i class="fa-solid fa-person me-3 ms-0 green-text"></i><small id="applicant_adults"></small></p>
-                    <p><i class="fa-solid fa-child-reaching me-3 ms-0 green-text"></i> <small
-                            id="applicant_children"></small></p>
 
+                <div class="mb-3">
+                    <div class="dropdown" id="account_type">
+                        <button class="btn dropdown-toggle solid-grey-border solid-grey-border" id="account-type-selected"
+                                type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false" style="text-transform: capitalize;">
+                            Account Type
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item account-type-dropdown" type="cheque" href="javascript:void(0)">Cheque</a>
+                            </li>
+                            <li><a class="dropdown-item account-type-dropdown" type="savings" href="javascript:void(0)">Savings</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <p class="fw-bolder p-3">Documents</p>
-                <div class="col-12 text-start p-0">
 
-                    <div id="application-documents"></div>
-
+                <div class="mb-3">
+                    <label for="account-number" class="form-label"
+                    >Account Number</label
+                    >
+                    <input
+                            type="number"
+                            class="form-control"
+                            field-name="account-number"
+                            id="account-number"
+                            required
+                    />
                 </div>
 
+                <div class="mb-3">
+                    <label for="branch-code" class="form-label"
+                    >Branch Code</label
+                    >
+                    <input
+                            type="number"
+                            class="form-control"
+                            field-name="branch-code"
+                            id="branch-code"
+                            required
+                    />
+                </div>
 
-                <div class="col-md-6 mt-1 ms-0 btn-accept-application display-none">
-                    <button type="button" class="btn transparent-green-button w-100 btn-accept-application display-none">
-                        Accept
-                    </button>
+                <div class="mb-3">
+                    <button type="submit" class="btn transparent-green-button">Submit</button>
                 </div>
-                <div class="col-md-6 mt-1 ms-0 btn-decline-application display-none">
-                    <button type="button" class="btn transparent-red-button w-100 btn-decline-application display-none">
-                        Decline
-                    </button>
+
+            </form>
+
+
+            <form class="mt-5 settings-form" id="settings-form-fees">
+                <h3>Fees</h3>
+                <div class="mb-3">
+                    <label for="late-fee" class="form-label"
+                    >Late Fee Amount (zero for no late fee)</label
+                    >
+                    <input
+                            type="number"
+                            class="form-control property-value"
+                            field-name="lateFee"
+                            id="late-fee"
+                            placeholder="e.g. 500"
+                    />
                 </div>
-                <div class="col-md-6 mt-1 ms-0 btn-convert-application display-none p-0">
-                    <button type="button" class="btn transparent-green-button w-100 btn-convert-application display-none">
-                        Convert To Lease
-                    </button>
+                <div class="mb-3">
+                    <label for="rent-due-day" class="form-label"
+                    >Rent Due (Day Of Month)</label
+                    >
+                    <input
+                            type="number"
+                            class="form-control property-value"
+                            field-name="rent-due-day"
+                            id="rent-due-day"
+                    />
+                </div>
+                <div class="mb-3">
+                    <label for="late-fee-day" class="form-label"
+                    >Auto-Late Fee (Day Of Month)</label
+                    >
+                    <input
+                            type="number"
+                            class="form-control property-value"
+                            field-name="late-fee-day"
+                            id="late-fee-day"
+                    />
+                </div>
+
+                <div class="mb-3">
+                    <label for="applicationFee" class="form-label"
+                    >Application Fee</label
+                    >
+                    <input
+                            type="number"
+                            class="form-control property-value"
+                            field-name="applicationFee"
+                            id="applicationFee"
+                            value="0"
+                    />
+                </div>
+                <div class="mb-3">
+                    <label for="depositPercent" class="form-label"
+                    >Required Deposit Percentage</label
+                    >
+                    <input
+                            type="number"
+                            class="form-control property-value"
+                            field-name="depositPercent"
+                            id="depositPercent"
+                            value="0"
+                    />
+                </div>
+                <div class="mb-3">
+                    <div class="mb-3">
+                        <label for="property_lease" class="form-label"
+                        >Property Lease</label
+                        >
+                        <a
+                                href="#"
+                                target="_blank"
+                                id="view_uploaded_property_lease"
+                                class="display-none"
+                        >View Uploaded Lease</a
+                        >
+                        <input type="file" class="form-control" id="property_lease"/>
+                    </div>
+                </div>
+            </form>
+
+            <form id="settings-form-communication" class="mt-5 display-none settings-form">
+                <h3>Communication</h3>
+
+                <div class="mb-3">
+                    <label for="property-email" class="form-label"
+                    >Email Address</label
+                    >
+                    <input
+                            type="email"
+                            class="form-control property-value"
+                            field-name="property-email"
+                            id="property-email"
+                            required
+                    />
+                </div>
+
+                <div class="mb-3">
+                    <label for="property-phone" class="form-label"
+                    >Phone Number</label
+                    >
+                    <input
+                            type="number"
+                            class="form-control property-value"
+                            field-name="property-phone"
+                            id="property-phone"
+                            required
+                    />
+                </div>
+            </form>
+        </div>
+
+        <!--            toast for messages-------------------------------------------------------------------->
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div
+                    id="liveToast"
+                    class="toast"
+                    role="alert"
+                    aria-live="assertive"
+                    aria-atomic="true"
+            >
+                <div class="toast-header">
+                    <strong class="me-auto">Notification</strong>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="toast"
+                            aria-label="Close"
+                    ></button>
+                </div>
+                <div class="toast-body" id="toast-message">
+                    Hello, world! This is a toast message.
                 </div>
             </div>
         </div>
-    </div>
-
-
-</div>
-
-<!--            maintenance div -------------------------------------------------------------------->
-<div id="maintenance-content-div" class="main-content display-none">
-    <p>
-        <button
-                type="button"
-                class="btn transparent-green-button"
-                id="btn-new-maintanance"
-                data-bs-toggle="modal"
-                data-bs-target="#maintenanceModal"
-        >
-            Log A Call
-        </button>
-    </p>
-
-    <div class="row" id="maintenance-div"></div>
-</div>
-
-<!--            expenses div-------------------------------------------------------------------->
-<div id="expenses-content-div" class="main-content display-none w-100">
-    <p>
-        <button
-                type="button"
-                class="btn transparent-green-button"
-                id="btn-new-expense"
-                data-bs-toggle="modal"
-                data-bs-target="#propertyExpenseModal"
-        >
-            Add Expense
-        </button>
-    </p>
-    <div id="expenses-div"></div>
-</div>
-
-<!--            settings DIV -------------------------------------------------------------------->
-<div id="settings-content-div" class="main-content display-none w-75">
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a
-                    class="nav-link active settings-nav-link"
-                    form-to-show="settings-form-fees"
-                    aria-current="page"
-                    href="javascript:void(0)"
-                    style="color:#524f4f !important;"
-            >General</a
-            >
-        </li>
-        <li class="nav-item">
-            <a
-                    class="nav-link settings-nav-link"
-                    form-to-show="settings-form-banking"
-                    aria-current="page"
-                    href="javascript:void(0)"
-                    style="color:#524f4f !important;"
-            >Banking</a
-            >
-        </li>
-        <!--                    <li class="nav-item">-->
-        <!--                        <a class="nav-link settings-nav-link" form-to-show="settings-form-security"-->
-        <!--                           href="javascript:void(0)">Security</a>-->
-        <!--                    </li>-->
-    </ul>
-
-    <!--                <form id="settings-form-security" class="mt-5 display-none settings-form">-->
-    <!--                    <h3>Security</h3>-->
-
-    <!--                    <h2>Item List</h2>-->
-
-    <!--                    <button class="btn transparent-green-button mt-3" id="addItemBtn">Add Item</button>-->
-
-    <!--                    <div class="mb-3">-->
-    <!--                        <label for="settings-email" class="form-label">Email address</label>-->
-    <!--                        <input type="email" class="form-control property-value" id="settings-email" field-name="email"-->
-    <!--                               aria-describedby="emailHelp">-->
-    <!--                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
-    <!--                    </div>-->
-    <!--                    <div class="mb-3">-->
-    <!--                        <label for="settings-password" field-name="password" class="form-label">Password</label>-->
-    <!--                        <input type="password" class="form-control property-value" id="settings-password">-->
-    <!--                    </div>-->
-    <!--                </form>-->
-
-<!--    banking details-->
-                    <form id="settings-form-banking" class="mt-5 display-none settings-form">
-                        <h3>Banking</h3>
-
-                        <div class="mb-3">
-                            <label for="bank-name" class="form-label"
-                            >Bank Name</label
-                            >
-                            <input
-                                    type="string"
-                                    class="form-control"
-                                    field-name="bank-name"
-                                    id="bank-name"
-                                    required
-                            />
-                        </div>
-
-
-                        <div class="mb-3">
-                            <div class="dropdown" id="account_type">
-                                <button class="btn dropdown-toggle" id="account-type-selected"
-                                        type="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false" style="text-transform: capitalize;">
-                                    Account Type
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item account-type-dropdown" type="cheque" href="javascript:void(0)">Cheque</a></li>
-                                    <li><a class="dropdown-item account-type-dropdown"  type="savings" href="javascript:void(0)">Savings</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="account-number" class="form-label"
-                            >Account Number</label
-                            >
-                            <input
-                                    type="number"
-                                    class="form-control"
-                                    field-name="account-number"
-                                    id="account-number"
-                                    required
-                            />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="branch-code" class="form-label"
-                            >Branch Code</label
-                            >
-                            <input
-                                    type="number"
-                                    class="form-control"
-                                    field-name="branch-code"
-                                    id="branch-code"
-                                    required
-                            />
-                        </div>
-
-                        <div class="mb-3">
-                            <button type="submit" class="btn transparent-green-button">Submit</button>
-                        </div>
-
-                    </form>
-
-
-    <form class="mt-5 settings-form" id="settings-form-fees">
-        <h3>Fees</h3>
-        <div class="mb-3">
-            <label for="late-fee" class="form-label"
-            >Late Fee Amount (zero for no late fee)</label
-            >
-            <input
-                    type="number"
-                    class="form-control property-value"
-                    field-name="lateFee"
-                    id="late-fee"
-                    placeholder="e.g. 500"
-            />
-        </div>
-        <div class="mb-3">
-            <label for="rent-due-day" class="form-label"
-            >Rent Due (Day Of Month)</label
-            >
-            <input
-                    type="number"
-                    class="form-control property-value"
-                    field-name="rent-due-day"
-                    id="rent-due-day"
-            />
-        </div>
-        <div class="mb-3">
-            <label for="late-fee-day" class="form-label"
-            >Auto-Late Fee (Day Of Month)</label
-            >
-            <input
-                    type="number"
-                    class="form-control property-value"
-                    field-name="late-fee-day"
-                    id="late-fee-day"
-            />
-        </div>
-        <div class="mb-3">
-            <label for="accountNumber" class="form-label"
-            >Last 4 Digits Of Account Number On Payment
-                Notifications</label
-            >
-            <input
-                    type="number"
-                    class="form-control property-value"
-                    field-name="accountNumber"
-                    id="accountNumber"
-            />
-        </div>
-        <div class="mb-3">
-            <label for="applicationFee" class="form-label"
-            >Application Fee</label
-            >
-            <input
-                    type="number"
-                    class="form-control property-value"
-                    field-name="applicationFee"
-                    id="applicationFee"
-                    value="0"
-            />
-        </div>
-        <div class="mb-3">
-            <label for="depositPercent" class="form-label"
-            >Required Deposit Percentage</label
-            >
-            <input
-                    type="number"
-                    class="form-control property-value"
-                    field-name="depositPercent"
-                    id="depositPercent"
-                    value="0"
-            />
-        </div>
-        <div class="mb-3">
-            <div class="mb-3">
-                <label for="property_lease" class="form-label"
-                >Property Lease</label
-                >
-                <a
-                        href="#"
-                        target="_blank"
-                        id="view_uploaded_property_lease"
-                        class="display-none"
-                >View Uploaded Lease</a
-                >
-                <input type="file" class="form-control" id="property_lease"/>
-            </div>
-        </div>
-    </form>
-</div>
-
-<!--            toast for messages-------------------------------------------------------------------->
-<div class="toast-container position-fixed top-0 end-0 p-3">
-    <div
-            id="liveToast"
-            class="toast"
-            role="alert"
-            aria-live="assertive"
-            aria-atomic="true"
-    >
-        <div class="toast-header">
-            <strong class="me-auto">Notification</strong>
-            <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="toast"
-                    aria-label="Close"
-            ></button>
-        </div>
-        <div class="toast-body" id="toast-message">
-            Hello, world! This is a toast message.
-        </div>
-    </div>
-</div>
-</main>
+    </main>
 </div>
 </div>
 

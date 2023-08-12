@@ -10,6 +10,14 @@ $(document).ready(function () {
         closeACall();
     });
 
+    $("#btn-log-call").click(function (event) {
+        event.preventDefault();
+        logACall();
+    });
+
+
+
+
     $('#onboarding_lease').change(function () {
         uploadSupportingDocuments("Signed Lease", $("#onboarding_lease").prop("files")[0]);
     });

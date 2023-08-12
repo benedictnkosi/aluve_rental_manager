@@ -340,4 +340,49 @@ class Units
         $this->meter = $meter;
     }
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="electricity", type="string", length=45, nullable=true)
+     */
+    private $electricity;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="water", type="string", length=45, nullable=true)
+     */
+    private $water;
+
+    /**
+     * @return string|null
+     */
+    public function getElectricity(): ?string
+    {
+        return $this->electricity;
+    }
+
+    /**
+     * @param string|null $electricity
+     */
+    public function setElectricity(?string $electricity): void
+    {
+        $this->electricity = $electricity;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getWater(): ?string
+    {
+        return $this->water;
+    }
+
+    /**
+     * @param string|null $water
+     */
+    public function setWater(?string $water): void
+    {
+        $this->water = $water;
+    }
 }

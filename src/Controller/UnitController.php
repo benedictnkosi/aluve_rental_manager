@@ -93,13 +93,13 @@ class UnitController extends AbstractController
             $numberOfUnitsToCreate = intval($request->get('numberOfUnits'));
             for ($x = 0; $x < $numberOfUnitsToCreate; $x++) {
                 $roomName = $request->get('name') . " " . $x + 1;
-                $response = $unitApi->createUnit($roomName, $request->get('id'), $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'), $request->get('meter'));
+                $response = $unitApi->createUnit($roomName, $request->get('id'), $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'), $request->get('meter'), $request->get('water'), $request->get('electricity'));
                 if($response["result_code"] == 1){
                     $errors = true;
                 }
             }
         }else{
-            $response = $unitApi->createUnit($request->get('name'), $request->get('id'), $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'), $request->get('meter'));
+            $response = $unitApi->createUnit($request->get('name'), $request->get('id'), $request->get('listed'), $request->get('parkingProvided'), $request->get('childrenAllowed'), $request->get('maxOccupants'), $request->get('minGrossSalary'), $request->get('rent'), $request->get('bedrooms'), $request->get('bathrooms'), $request->get('property_id'), $request->get('meter'), $request->get('water'), $request->get('electricity'));
         }
 
         if($errors){

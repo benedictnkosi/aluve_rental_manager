@@ -116,7 +116,7 @@ let getTransactions = (leaseGuid, userRole) => {
                     html +=
                         '<div class="transaction-card d-flex w-100 gap-2">\n' +
                         '                                <div class="col-1">\n' +
-                        '                                    <i class="fa-solid fa-money-bill-transfer ms-0"></i>\n' +
+                        '                                    <i class="fa-solid fa-money-bill-transfer ms-0 green-text"></i>\n' +
                         "                                </div>\n" +
                         '                                <div class="col-6">\n' +
                         '                                    <p class="m-0">' +

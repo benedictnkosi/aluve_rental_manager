@@ -1,6 +1,6 @@
 $(document).ready(function () {
     sessionStorage.removeItem("application_reference");
-    $("#regForm").validate({
+    $("#applicationForm").validate({
         rules: {
             application_name: {
                 maxlength: 100
@@ -70,8 +70,6 @@ $(document).ready(function () {
         }
     });
 
-    
-
     getUnit();
 });
 
@@ -117,7 +115,15 @@ let getUnit = () => {
             $("#unit-max-occupants").html(data.max_occupants );
             $("#unit-parking").html(parking);
             $("#unit-children").html(children);
+            $("#unit-water").html(data.water);
+            $("#unit-electricity").html(data.electricity);
             $(".unit-details-card").removeClass("display-none");
+
+            //deposit
+            const depositPercent = parseInt(data.property.deposit_pecent) / 100;
+            const deposit = parseInt(data.rent) * depositPercent;
+            $("#unit-deposit").html("R" +deposit.toFixed(2));
+            $("#unit-application-fee").html("R" +data.property.application_fee.toFixed(2));
         },
         error: function (xhr) {
 
@@ -160,8 +166,9 @@ let submitApplication = () => {
             if (response.result_code === 0) {
                 sessionStorage.setItem("application_guid", response.id);
                 $("#applicant-details-div").addClass("display-none");
+                $("#applicant-details-div").removeClass("row");
                 $("#supporting-docs-div").removeClass("display-none");
-                $("#supporting-docs-div").removeClass("display-none");
+
             }
         }
     });

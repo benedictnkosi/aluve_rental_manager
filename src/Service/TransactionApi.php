@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\BankAccount;
 use App\Entity\Leases;
 use App\Entity\Properties;
 use App\Entity\Propertyusers;
@@ -329,12 +330,17 @@ class TransactionApi extends AbstractController
 
                     if(sizeof($leases) > 0){
                         foreach ($leases as $lease){
-                            $this->logger->info("account number " . $lease->getUnit()->getProperty()->getAccountNumber());
+                            $bankAccount = $this->em->getRepository(BankAccount::class)->findOneBy(array('id' => $lease->getUnit()->getProperty()->getBankAccount()));
+                            if($bankAccount === null){
+                                continue;
+                            }
+                            $bankAccountNumber = $bankAccount->getAccountNumber();
+                            $this->logger->info("account number " . $bankAccountNumber);
                             $this->logger->info("partial account number " . $partialAccountNumber);
                             $this->logger->info("ref " . $ref);
                             $this->logger->info("lease pay rule " . $lease->getPaymentRules());
                             if(str_contains(strtolower($ref), strtolower($lease->getPaymentRules())) && strlen($lease->getPaymentRules()>1)){
-                                if(str_contains($lease->getUnit()->getProperty()->getAccountNumber(), $partialAccountNumber)){
+                                if(str_contains($bankAccountNumber, $partialAccountNumber)){
                                     $this->logger->info("Leases found matching payment reference");
                                     $response = $this->addTransaction($lease->getId(), $amount * -1, "Thank you for payment - $ref", $now->format("Y-m-d"), $emailID);
                                     $this->logger->info(print_r($response,true));
