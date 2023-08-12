@@ -80,11 +80,7 @@ class ApplicationsApi extends AbstractController
                 return array();
             }
 
-            $applications = $this->em->getRepository("App\Entity\Application")->createQueryBuilder('a')
-                ->where('a.tenant = :tenant')
-                ->setParameter('tenant', $tenant->getId())
-                ->getQuery()
-                ->getResult();
+            $applications = $this->em->getRepository(Application::class)->findOneBy(array('id' => $tenant->getId()), array('date' => 'DESC'));
 
             if (sizeof($applications) < 1) {
                 return array(
