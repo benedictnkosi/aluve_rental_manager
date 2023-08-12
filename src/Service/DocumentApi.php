@@ -34,7 +34,7 @@ class DocumentApi extends AbstractController
             $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
             if($application == null){
                 return array(
-                    'result_message' => "Error. Application not found",
+                    'result_message' => "Application not found",
                     'result_code' => 1
                 );
             }
@@ -42,7 +42,7 @@ class DocumentApi extends AbstractController
             $documentType = $this->em->getRepository(DocumentTypeLookup::class)->findOneBy(array('name' => $documentType));
             if($documentType == null){
                 return array(
-                    'result_message' => "Error. Document type invalid",
+                    'result_message' => "Document type invalid",
                     'result_code' => 1
                 );
             }
@@ -83,7 +83,7 @@ class DocumentApi extends AbstractController
             $documentType = $this->em->getRepository(DocumentTypeLookup::class)->findOneBy(array('name' => $documentType));
             if($documentType == null){
                 return array(
-                    'result_message' => "Error. Document type invalid",
+                    'result_message' => "Document type invalid",
                     'result_code' => 1
                 );
             }
@@ -92,7 +92,7 @@ class DocumentApi extends AbstractController
 
             if($document == null){
                 return array(
-                    'result_message' => "Error. Document not found",
+                    'result_message' => "Document not found",
                     'result_code' => 1
                 );
             }
@@ -119,7 +119,7 @@ class DocumentApi extends AbstractController
             $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationId));
             if($application == null){
                 return array(
-                    'result_message' => "Error. Application not found",
+                    'result_message' => "Application not found",
                     'result_code' => 1
                 );
             }

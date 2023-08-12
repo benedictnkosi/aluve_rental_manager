@@ -313,3 +313,7 @@ i{
     align-items: center;
     justify-content: center;
 }
+
+.dropdown-menu{
+    width:100% !important;
+}

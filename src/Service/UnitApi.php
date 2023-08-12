@@ -39,7 +39,7 @@ class UnitApi extends AbstractController
             $Property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid, 'status' => 'active'));
             if ($Property == null) {
                 return array(
-                    'result_message' => "Error. No units found",
+                    'result_message' => "No units found",
                     'result_code' => 1
                 );
             }
@@ -47,7 +47,7 @@ class UnitApi extends AbstractController
             $units = $this->em->getRepository(Units::class)->findBy(array('property' => $Property->getId(), 'status' => 'active'));
             if (sizeof($units) < 1) {
                 return array(
-                    'result_message' => "Error. No units found",
+                    'result_message' => "No units found",
                     'result_code' => 1
                 );
             }
@@ -120,7 +120,7 @@ class UnitApi extends AbstractController
             $Property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid, 'status' => 'active'));
             if ($Property == null) {
                 return array(
-                    'result_message' => "Error. No units found",
+                    'result_message' => "No units found",
                     'result_code' => 1
                 );
             }
@@ -128,7 +128,7 @@ class UnitApi extends AbstractController
             $units = $this->em->getRepository(Units::class)->findBy(array('property' => $Property->getId(), 'status' => 'active'));
             if (sizeof($units) < 1) {
                 return array(
-                    'result_message' => "Error. No units found",
+                    'result_message' => "No units found",
                     'result_code' => 1
                 );
             }
@@ -186,7 +186,7 @@ class UnitApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' =>  $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Error. Property not found",
+                    'result_message' => "Property not found",
                     'result_code' => 1
                 );
             }

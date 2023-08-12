@@ -38,7 +38,7 @@ class PropertyApi extends AbstractController
             if (sizeof($properties) < 1) {
 
                 return array(
-                    'result_message' => "Error. No Properties found",
+                    'result_message' => "No Properties found",
                     'result_code' => 1
                 );
             }
@@ -61,7 +61,7 @@ class PropertyApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Error. Property not found",
+                    'result_message' => "Property not found",
                     'result_code' => 1
                 );
             }
@@ -83,7 +83,7 @@ class PropertyApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Error. Property not found",
+                    'result_message' => "Property not found",
                     'result_code' => 1
                 );
             }
@@ -91,7 +91,7 @@ class PropertyApi extends AbstractController
             $bankAccount = $this->em->getRepository(BankAccount::class)->findOneBy(array('id' => $property->getBankAccount()));
             if ($bankAccount == null) {
                 return array(
-                    'result_message' => "Error. Bank account not found",
+                    'result_message' => "Bank account not found",
                     'result_code' => 1
                 );
             }
@@ -115,14 +115,14 @@ class PropertyApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Error. Property not found",
+                    'result_message' => "Property not found",
                     'result_code' => 1
                 );
             }
 
             if(strcmp($accountType, "cheque") !== 0 && strcmp($accountType, "savings") !== 0){
                 return array(
-                    'result_message' => "Error. Account type is invalid",
+                    'result_message' => "Account type is invalid",
                     'result_code' => 1
                 );
             }
@@ -169,7 +169,7 @@ class PropertyApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Error. Property not found",
+                    'result_message' => "Property not found",
                     'result_code' => 1
                 );
             }
@@ -178,7 +178,7 @@ class PropertyApi extends AbstractController
                 case "name":
                     if (strlen($value) < 1 || strlen($value) > 100) {
                         return array(
-                            'result_message' => "Error. New value length is invalid",
+                            'result_message' => "New value length is invalid",
                             'result_code' => 1
                         );
                     }
@@ -187,7 +187,7 @@ class PropertyApi extends AbstractController
                 case "address":
                     if (strlen($value) < 1 || strlen($value) > 100) {
                         return array(
-                            'result_message' => "Error. New value length is invalid",
+                            'result_message' => "New value length is invalid",
                             'result_code' => 1
                         );
                     }
@@ -196,7 +196,7 @@ class PropertyApi extends AbstractController
                 case "lateFee":
                     if (strlen($value) < 1 || !is_numeric($value) || strlen($value) > 4) {
                         return array(
-                            'result_message' => "Error. New value is invalid",
+                            'result_message' => "New value is invalid",
                             'result_code' => 1
                         );
                     }
@@ -205,7 +205,7 @@ class PropertyApi extends AbstractController
                 case "rent-due-day":
                     if (strlen($value) < 1 || !is_numeric($value) || intval($value) > 30) {
                         return array(
-                            'result_message' => "Error. New value is invalid",
+                            'result_message' => "New value is invalid",
                             'result_code' => 1
                         );
                     }
@@ -214,7 +214,7 @@ class PropertyApi extends AbstractController
                 case "late-fee-day":
                     if (strlen($value) < 1 || !is_numeric($value) || intval($value) > 30) {
                         return array(
-                            'result_message' => "Error. New length is invalid",
+                            'result_message' => "New length is invalid",
                             'result_code' => 1
                         );
                     }
@@ -223,7 +223,7 @@ class PropertyApi extends AbstractController
                 case "status":
                     if (strcmp($value, "deleted") !== 0) {
                         return array(
-                            'result_message' => "Error. New value is invalid",
+                            'result_message' => "New value is invalid",
                             'result_code' => 1
                         );
                     }
@@ -232,7 +232,7 @@ class PropertyApi extends AbstractController
                 case "applicationFee":
                     if (strlen($value) < 1 || !is_numeric($value) || strlen($value) > 4) {
                         return array(
-                            'result_message' => "Error. New value is invalid",
+                            'result_message' => "New value is invalid",
                             'result_code' => 1
                         );
                     }
@@ -241,7 +241,7 @@ class PropertyApi extends AbstractController
                 case "depositPercent":
                     if (strlen($value) < 1 || !is_numeric($value) || intval($value) > 300) {
                         return array(
-                            'result_message' => "Error. New value is invalid",
+                            'result_message' => "New value is invalid",
                             'result_code' => 1
                         );
                     }
@@ -250,7 +250,7 @@ class PropertyApi extends AbstractController
                 case "property_lease":
                     if (strlen($value) < 1 || strlen($value) > 100) {
                         return array(
-                            'result_message' => "Error. New value length is invalid",
+                            'result_message' => "New value length is invalid",
                             'result_code' => 1
                         );
                     }
@@ -259,7 +259,7 @@ class PropertyApi extends AbstractController
                 case "property-email":
                     if (strlen($value) < 1 || strlen($value) > 100) {
                         return array(
-                            'result_message' => "Error. New value length is invalid",
+                            'result_message' => "New value length is invalid",
                             'result_code' => 1
                         );
                     }
@@ -268,7 +268,7 @@ class PropertyApi extends AbstractController
                 case "property-phone":
                     if (strlen($value) < 1 || strlen($value) > 100) {
                         return array(
-                            'result_message' => "Error. New value length is invalid",
+                            'result_message' => "New value length is invalid",
                             'result_code' => 1
                         );
                     }
@@ -276,7 +276,7 @@ class PropertyApi extends AbstractController
                     break;
                 default:
                     return array(
-                        'result_message' => "Error. Field not found " . $field,
+                        'result_message' => "Field not found " . $field,
                         'result_code' => 1
                     );
             }
@@ -306,14 +306,14 @@ class PropertyApi extends AbstractController
 
             if (strlen($name) < 1 || strlen($name) > 100) {
                 return array(
-                    'result_message' => "Error. Name is invalid",
+                    'result_message' => "Name is invalid",
                     'result_code' => 1
                 );
             }
 
             if (strlen($address) < 1 || strlen($address) > 100) {
                 return array(
-                    'result_message' => "Error. Address is invalid",
+                    'result_message' => "Address is invalid",
                     'result_code' => 1
                 );
             }
@@ -324,7 +324,7 @@ class PropertyApi extends AbstractController
                 $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
                 if ($property == null) {
                     return array(
-                        'result_message' => "Error. Property not found",
+                        'result_message' => "Property not found",
                         'result_code' => 1
                     );
                 }

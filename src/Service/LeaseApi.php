@@ -51,7 +51,7 @@ class LeaseApi extends AbstractController
             //validate property id
             if (strlen($propertyGuid) !== 36) {
                 return array(
-                    'result_message' => "Error. Property GUID is invalid",
+                    'result_message' => "Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -59,7 +59,7 @@ class LeaseApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Error. Property not found",
+                    'result_message' => "Property not found",
                     'result_code' => 1
                 );
             }
@@ -75,7 +75,7 @@ class LeaseApi extends AbstractController
                 ->getResult();
             if (sizeof($leases) < 1) {
                 return array(
-                    'result_message' => "Error. No leases found",
+                    'result_message' => "No leases found",
                     'result_code' => 1
                 );
             }
@@ -161,7 +161,7 @@ class LeaseApi extends AbstractController
             //validate property id
             if (strlen($propertyGuid) !== 36) {
                 return array(
-                    'result_message' => "Error. Property GUID is invalid",
+                    'result_message' => "Property GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -169,7 +169,7 @@ class LeaseApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Error. Property not found",
+                    'result_message' => "Property not found",
                     'result_code' => 1
                 );
             }
@@ -185,7 +185,7 @@ class LeaseApi extends AbstractController
                 ->getResult();
             if (sizeof($leases) < 1) {
                 return array(
-                    'result_message' => "Error. No leases found",
+                    'result_message' => "No leases found",
                     'result_code' => 1
                 );
             }
@@ -237,7 +237,7 @@ class LeaseApi extends AbstractController
             //validate property id
             if (strlen($guid) !== 36) {
                 return array(
-                    'result_message' => "Error. Lease GUID is invalid",
+                    'result_message' => "Lease GUID is invalid",
                     'result_code' => 1
                 );
             }
@@ -245,7 +245,7 @@ class LeaseApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $guid));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Error. Lease not found",
+                    'result_message' => "Lease not found",
                     'result_code' => 1
                 );
             }
@@ -391,14 +391,14 @@ class LeaseApi extends AbstractController
 
             if (strlen($leaseId) !== 36 && strlen($leaseId) !== 1) {
                 return array(
-                    'result_message' => "Error. Lease ID value is invalid",
+                    'result_message' => "Lease ID value is invalid",
                     'result_code' => 1
                 );
             }
 
             if (strcmp($status, "active") !== 0 && strcmp($status, "pending_docs") !== 0) {
                 return array(
-                    'result_message' => "Error. Status value is invalid",
+                    'result_message' => "Status value is invalid",
                     'result_code' => 1
                 );
             }
@@ -410,7 +410,7 @@ class LeaseApi extends AbstractController
             $totalNights = intval($startDateDateObject->diff($endDateDateObject)->format('%a'));
             if ($totalNights < 30) {
                 return array(
-                    'result_message' => "Error. The lease period is invalid",
+                    'result_message' => "The lease period is invalid",
                     'result_code' => 1
                 );
             }
@@ -429,7 +429,7 @@ class LeaseApi extends AbstractController
 
                 if ($lease == null) {
                     return array(
-                        'result_message' => "Error. Lease not found",
+                        'result_message' => "Lease not found",
                         'result_code' => 1
                     );
                 }
@@ -536,27 +536,27 @@ class LeaseApi extends AbstractController
 
             if (strlen($json) < 1 || strlen($json) > 5000) {
                 return array(
-                    'result_message' => "Error. Json value length is invalid",
+                    'result_message' => "Json value length is invalid",
                     'result_code' => 1
                 );
             }
 
             if (strlen($leaseGuid) !== 36) {
                 return array(
-                    'result_message' => "Error. Lease guid value is invalid",
+                    'result_message' => "Lease guid value is invalid",
                     'result_code' => 1
                 );
             }
             if (strlen($inspectionGuid) < 1 || strlen($inspectionGuid) > 36) {
                 return array(
-                    'result_message' => "Error. Inspection guid value is invalid",
+                    'result_message' => "Inspection guid value is invalid",
                     'result_code' => 1
                 );
             }
 
             if (strcmp($status, "active") !== 0 && strcmp($status, "new") !== 0) {
                 return array(
-                    'result_message' => "Error. Status value is invalid",
+                    'result_message' => "Status value is invalid",
                     'result_code' => 1
                 );
             }
@@ -564,7 +564,7 @@ class LeaseApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseGuid));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Error. Lease not found",
+                    'result_message' => "Lease not found",
                     'result_code' => 1
                 );
             }
@@ -624,7 +624,7 @@ class LeaseApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseGuid));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Error. Lease not found",
+                    'result_message' => "Lease not found",
                     'result_code' => 1
                 );
             }
@@ -633,7 +633,7 @@ class LeaseApi extends AbstractController
 
             if (sizeof($inspection) < 1) {
                 return array(
-                    'result_message' => "Error. Inspection not found",
+                    'result_message' => "Inspection not found",
                     'result_code' => 1
                 );
             }
@@ -663,7 +663,7 @@ class LeaseApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $guid));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Error. Lease not found",
+                    'result_message' => "Lease not found",
                     'result_code' => 1
                 );
             }
@@ -738,7 +738,7 @@ class LeaseApi extends AbstractController
                         );
                     } else {
                         $responseArray = array(
-                            'result_message' => "Error. Added transaction. SMS to Applicant failed",
+                            'result_message' => "Added transaction. SMS to Applicant failed",
                             'result_code' => 1
                         );
                     }
@@ -793,7 +793,7 @@ class LeaseApi extends AbstractController
                     );
                 } else {
                     $responseArray[] = array(
-                        'result_message' => "Error. Added monthly rent. SMS to Applicant failed",
+                        'result_message' => "Added monthly rent. SMS to Applicant failed",
                         'result_code' => 1
                     );
                 }
@@ -853,7 +853,7 @@ class LeaseApi extends AbstractController
                         $communicationApi->sendEmail($application->getProperty()->getEmail(), $application->getProperty()->getName(),$subject , $message, $link, $linkText, $template);
                     }else{
                         return array(
-                            'result_message' => "Error. Failed to update application status",
+                            'result_message' => "Failed to update application status",
                             'result_code' => 1
                         );
                     }

@@ -34,7 +34,7 @@ class CommunicationApi extends AbstractController
         //validate the number
 //        if(strlen($number) <> 10 || !str_starts_with($number, "0")){
 //            return array(
-//                'result_message' => "Error. Phone number is not valid",
+//                'result_message' => "Phone number is not valid",
 //                'result_code' => 1,
 //            );
 //        }

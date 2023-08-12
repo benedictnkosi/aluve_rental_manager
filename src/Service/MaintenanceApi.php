@@ -53,7 +53,7 @@ class MaintenanceApi extends AbstractController
                 $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $unitGuid));
                 if ($unit == null) {
                     return array(
-                        'result_message' => "Error. Unit not found",
+                        'result_message' => "Unit not found",
                         'result_code' => 1
                     );
                 }
@@ -62,28 +62,28 @@ class MaintenanceApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Error. Property not found",
+                    'result_message' => "Property not found",
                     'result_code' => 1
                 );
             }
 
             if (strlen($unitGuid)!== 36 && strlen($unitGuid) !== 1) {
                 return array(
-                    'result_message' => "Error. Unit is invalid",
+                    'result_message' => "Unit is invalid",
                     'result_code' => 1
                 );
             }
 
             if (strlen($propertyGuid)!== 36) {
                 return array(
-                    'result_message' => "Error. Property Guid is invalid",
+                    'result_message' => "Property Guid is invalid",
                     'result_code' => 1
                 );
             }
 
             if (strlen($summary)<1 || strlen($summary)> 100) {
                 return array(
-                    'result_message' => "Error. Summary length is invalid",
+                    'result_message' => "Summary length is invalid",
                     'result_code' => 1
                 );
             }
@@ -133,7 +133,7 @@ class MaintenanceApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId(), 'status' => 'active'));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Error. Lease not found",
+                    'result_message' => "Lease not found",
                     'result_code' => 1
                 );
             }
@@ -142,7 +142,7 @@ class MaintenanceApi extends AbstractController
 
             if (strlen($summary)<1 || strlen($summary)> 100) {
                 return array(
-                    'result_message' => "Error. Summary length is invalid",
+                    'result_message' => "Summary length is invalid",
                     'result_code' => 1
                 );
             }
@@ -207,7 +207,7 @@ class MaintenanceApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId(), 'status' => 'active'));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Error. Lease not found",
+                    'result_message' => "Lease not found",
                     'result_code' => 1
                 );
             }

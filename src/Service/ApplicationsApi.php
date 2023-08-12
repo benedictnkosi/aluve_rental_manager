@@ -40,7 +40,7 @@ class ApplicationsApi extends AbstractController
             $property = $this->em->getRepository(Properties::class)->findOneBy(array('guid' => $propertyGuid));
             if ($property == null) {
                 return array(
-                    'result_message' => "Error. Property not found",
+                    'result_message' => "Property not found",
                     'result_code' => 1
                 );
             }
@@ -53,7 +53,7 @@ class ApplicationsApi extends AbstractController
 
             if (sizeof($applications) < 1) {
                 return array(
-                    'result_message' => "Error. No applications found",
+                    'result_message' => "No applications found",
                     'result_code' => 1
                 );
             }
@@ -77,7 +77,7 @@ class ApplicationsApi extends AbstractController
             $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('email' => $emailAddress));
             if ($tenant == null) {
                 return array(
-                    'result_message' => "Error. Tenant not found",
+                    'result_message' => "Tenant not found",
                     'result_code' => 1
                 );
             }
@@ -90,7 +90,7 @@ class ApplicationsApi extends AbstractController
 
             if (sizeof($applications) < 1) {
                 return array(
-                    'result_message' => "Error. No applications found",
+                    'result_message' => "No applications found",
                     'result_code' => 1
                 );
             }
@@ -112,7 +112,7 @@ class ApplicationsApi extends AbstractController
             $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $applicationGuid));
             if ($application == null) {
                 return array(
-                    'result_message' => "Error. Application not found",
+                    'result_message' => "Application not found",
                     'result_code' => 1
                 );
             }
@@ -226,7 +226,7 @@ class ApplicationsApi extends AbstractController
                 $documentApi->addDocument($application->getId(), "Co-payslip", $fileName);
             } else {
                 return array(
-                    'result_message' => "Error. Document type not suppoerted",
+                    'result_message' => "Document type not suppoerted",
                     'result_code' => 1
                 );
             }

@@ -34,7 +34,7 @@ class AuthApi  extends AbstractController
         $unit = $this->em->getRepository(Units::class)->findOneBy(array('id' => $unitId));
         if($unit == null){
             return array(
-                'result_message' => "Error. Unit not found",
+                'result_message' => "Unit not found",
                 'result_code' => 1
             );
         }
@@ -45,7 +45,7 @@ class AuthApi  extends AbstractController
         $propertyUser = $this->em->getRepository(Propertyusers::class)->findOneBy(array('user' => $user->getIdusers(), 'property' => $unit->getProperty()->getId()));
         if($propertyUser == null){
             return array(
-                'result_message' => "Error. You are not authorised to update this entity",
+                'result_message' => "You are not authorised to update this entity",
                 'result_code' => 1
             );
         }else{
@@ -63,7 +63,7 @@ class AuthApi  extends AbstractController
         $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseGuid));
         if($lease == null){
             return array(
-                'result_message' => "Error. Lease not found",
+                'result_message' => "Lease not found",
                 'result_code' => 1
             );
         }

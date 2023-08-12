@@ -105,7 +105,7 @@ class TenantApi extends AbstractController
             $application = $this->em->getRepository(Application::class)->findOneBy(array('tenant' => $tenant->getId()));
             if ($application == null) {
                 return array(
-                    'result_message' => "Error. No Application found",
+                    'result_message' => "No Application found",
                     'result_code' => 1
                 );
             }
@@ -158,7 +158,7 @@ class TenantApi extends AbstractController
             //validate name
             if (strlen($name) > 100 || strlen($name) < 3) {
                 return array(
-                    'result_message' => "Error. Applicant name is invalid",
+                    'result_message' => "Applicant name is invalid",
                     'result_code' => 1
                 );
             }
@@ -166,7 +166,7 @@ class TenantApi extends AbstractController
             //validate phone
             if (strlen($phone) !== 10) {
                 return array(
-                    'result_message' => "Error. Phone number is invalid ",
+                    'result_message' => "Phone number is invalid ",
                     'result_code' => 1
                 );
             }
@@ -175,7 +175,7 @@ class TenantApi extends AbstractController
             $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
             if (!preg_match($pattern, $email)) {
                 return array(
-                    'result_message' => "Error. Email is invalid2",
+                    'result_message' => "Email is invalid2",
                     'result_code' => 1
                 );
             }
@@ -183,7 +183,7 @@ class TenantApi extends AbstractController
             //validate id document type
             if (strcmp($idDocType, "South African ID") !== 0 &&  strcmp($idDocType, "Passport") !== 0) {
                 return array(
-                    'result_message' => "Error. ID document type is not valid",
+                    'result_message' => "ID document type is not valid",
                     'result_code' => 1
                 );
             }
@@ -192,14 +192,14 @@ class TenantApi extends AbstractController
             if(strcmp($idDocType, "South African ID") == 0){
                 if (!$this->validateSouthAfricanID($idNumber)) {
                     return array(
-                        'result_message' => "Error. ID number is not valid",
+                        'result_message' => "ID number is not valid",
                         'result_code' => 1
                     );
                 }
             }else{
                 if (strlen($idNumber) > 50 || strlen($idNumber) < 3) {
                     return array(
-                        'result_message' => "Error. Passport number is invalid",
+                        'result_message' => "Passport number is invalid",
                         'result_code' => 1
                     );
                 }
@@ -208,7 +208,7 @@ class TenantApi extends AbstractController
             //validate salary
             if (strlen($salary) > 10 || !is_numeric($salary) || intval($salary) < 1) {
                 return array(
-                    'result_message' => "Error. Salary is invalid",
+                    'result_message' => "Salary is invalid",
                     'result_code' => 1
                 );
             }
@@ -216,7 +216,7 @@ class TenantApi extends AbstractController
             //validate occupation
             if (strlen($occupation) > 100 || strlen($occupation) < 3) {
                 return array(
-                    'result_message' => "Error. Occupation name is invalid",
+                    'result_message' => "Occupation name is invalid",
                     'result_code' => 1
                 );
             }
@@ -224,7 +224,7 @@ class TenantApi extends AbstractController
             //validate child count
             if (strlen($children) > 1 || !is_numeric($children)) {
                 return array(
-                    'result_message' => "Error. Children field is invalid",
+                    'result_message' => "Children field is invalid",
                     'result_code' => 1
                 );
             }
@@ -232,7 +232,7 @@ class TenantApi extends AbstractController
             //validate adult count
             if (strlen($adults) > 1 || !is_numeric($adults) || intval($adults) < 1) {
                 return array(
-                    'result_message' => "Error. Adult field is invalid",
+                    'result_message' => "Adult field is invalid",
                     'result_code' => 1
                 );
             }

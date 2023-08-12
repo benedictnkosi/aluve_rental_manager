@@ -49,7 +49,7 @@ class TransactionApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseId));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Error. Lease not found",
+                    'result_message' => "Lease not found",
                     'result_code' => 1
                 );
             }
@@ -57,14 +57,14 @@ class TransactionApi extends AbstractController
             if (strlen($amount) < 1 || !is_numeric($amount) || strlen($amount) > 10) {
                 $this->logger->debug("Amount " . $amount);
                 return array(
-                    'result_message' => "Error. Amount is invalid",
+                    'result_message' => "Amount is invalid",
                     'result_code' => 1
                 );
             }
 
             if (strlen($description) < 1 || strlen($description) > 100) {
                 return array(
-                    'result_message' => "Error. Description length is invalid",
+                    'result_message' => "Description length is invalid",
                     'result_code' => 1
                 );
             }
@@ -72,7 +72,7 @@ class TransactionApi extends AbstractController
             if (!DateTime::createFromFormat('Y-m-d', $transactionDate)) {
                 return array(
                     'result_code' => 1,
-                    'result_message' => "Error. Transaction date is not valid",
+                    'result_message' => "Transaction date is not valid",
                 );
             }
 
@@ -190,7 +190,7 @@ class TransactionApi extends AbstractController
 
             if ($transaction == null) {
                 return array(
-                    'result_message' => "Error. Transaction not found",
+                    'result_message' => "Transaction not found",
                     'result_code' => 1
                 );
             }
