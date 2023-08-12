@@ -131,7 +131,7 @@ class CommunicationApi extends AbstractController
             $body = $templateString;
 
             foreach ($Parameters as $key => $value) {
-                $body = str_replace("<<" . $key . ">>", $value , $body);
+                $body = str_replace("{{" . $key . "}}", $value , $body);
             }
 
             return $body;

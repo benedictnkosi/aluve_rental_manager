@@ -41,10 +41,10 @@ class CommunicationController extends AbstractController
     }
 
     /**
-     * @Route("no_auth/comms/sendemail")
+     * @Route("no_auth/comms/sendemail/{subject}")
      * @throws ConnectionException
      */
-    public function sendEmail(Request $request, LoggerInterface $logger, CommunicationApi $communicationApi): Response
+    public function sendEmail($subject, Request $request, LoggerInterface $logger, CommunicationApi $communicationApi): Response
     {
         $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('GET')) {
@@ -53,10 +53,9 @@ class CommunicationController extends AbstractController
 
         $toEmail = "payments@hotelrunner.co.za";
         $recipientName = "Ben";
-        $subject = "test email";
         $message = "test email";
-        $link = "";
-        $linkText = "";
+        $link = "https://rentals.hotelrunner.co.za/landlord";
+        $linkText = $subject;
         $template = "generic";
         $response = $communicationApi->sendEmail($toEmail, $recipientName, $subject, $message, $link, $linkText, $template);
         return new JsonResponse($response, 200, array());

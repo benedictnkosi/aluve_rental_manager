@@ -247,7 +247,7 @@ class ApplicationsApi extends AbstractController
                 $application->setStatus("financials uploaded");
                 //send email
                 $message = "All supporting documents uploaded for  " . $tenant->getName() . " - " . $application->getUnit()->getProperty()->getName() . ", " . $application->getUnit()->getName();
-                $subject = "Aluve App - Financial Uploaded";
+                $subject = "Aluve App - Financials Uploaded";
 
                 $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/landlord";
                 $linkText = "View Application";
@@ -308,7 +308,7 @@ class ApplicationsApi extends AbstractController
 
             //send email
             $message = "Application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has been accepted. Please sign lease and upload your ID document";
-            $subject = "Aluve App - Financial Uploaded";
+            $subject = "Aluve App - Application Accepted";
 
             $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
             $linkText = "Sign Lease";
