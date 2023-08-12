@@ -334,6 +334,7 @@ class PropertyApi extends AbstractController
             $property->setAddress($address);
             $guid = $this->generateGuid();
             $property->setGuid($guid);
+            $property->setBankAccount(0);
             $this->em->persist($property);
             $this->em->flush($property);
 

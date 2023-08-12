@@ -266,7 +266,7 @@ i{
 }
 
 .display-none{
-    display: none;
+    display: none !important;
 }
 
 .capitalize{
@@ -303,4 +303,14 @@ i{
     #maintenance-div{
         min-width: 320px;
     }
+}
+
+.no-results-image{
+    width:200px;
+}
+
+.no-results-container {
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
 }

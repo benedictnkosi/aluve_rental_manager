@@ -22,6 +22,9 @@ $(document).ready(function () {
         event.preventDefault();
         deleteProperty();
     });
+
+ 
+
 });
 
 let createProperty = () =>{
@@ -84,10 +87,12 @@ let getAllProperties = () => {
             let propertiesHTML = "";
             if(data.result_code !== undefined){
                 if(data.result_code === 1){
+                    $('.no-results-image').removeClass("display-none");
                     return;
                 }
             }
             data.forEach(function (property) {
+                $('.no-results-image').addClass("display-none");
                 if (property.property.status.localeCompare("active") === 0) {
 
                     propertiesHTML += '<a href="/dashboard/?id='+property.property.guid+'"> <div class="property-card">\n' +
