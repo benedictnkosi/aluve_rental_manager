@@ -241,8 +241,10 @@ function generateBedroomChecklist(numBedrooms) {
 
 function createRoomHeader(number, roomName) {
     const roomHeader = document.createElement('p');
-    roomHeader.classList.add('fs-6');
+    roomHeader.classList.add('inspection-page-header');
     roomHeader.classList.add('mt-5');
+    roomHeader.classList.add('text-center');
+
     if(number === 1){
         roomHeader.textContent = `${roomName}`;
     }else{

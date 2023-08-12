@@ -2,6 +2,8 @@ $(document).ready(function () {
 // Call the function to generate the HTML
     getInspection();
     getInspectionDetails();
+
+
 });
 
 let getInspection = () => {
@@ -44,7 +46,7 @@ let getInspectionDetails = () => {
         url: url,
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
-            $("#property-name").html(data.property);
+            $("#property-name").html(data.property_name);
             $("#unit-name").html(data.unit_name);
         },
         error: function (xhr) {
@@ -62,11 +64,9 @@ function replaceAll(str, find, replace) {
 function populateImages(jsonData) {
     let html = '';
     jsonData.forEach((image) => {
-        html += '<div class="col-lg-4 col-md-4 col-xs-4 thumb mb-2 max-w-[160px] mt-5">\n' +
-            '                <a class="thumbnail" href="/api/inspection_image/'+image.name+'">\n' +
-            '                    <img class="img-responsive" src="/api/inspection_image/'+image.name+'" alt="">\n' +
-            '                </a>\n' +
-            '            </div>';
+        html += '<div class="carousel-item active">\n' +
+            '                    <img src="/api/inspection_image/'+image.name+'" class="d-block w-100" alt='+image.name+'">\n' +
+            '                </div>';
     });
     // Add HTML to the page
     document.getElementById('inspection_images').innerHTML = html;
@@ -79,7 +79,7 @@ function convertJSONtoHTML(jsonData) {
 
 
     // Convert bedroom checklist
-    html += '<h3 class="mt-5">Bedroom Checklist</h3>';
+    html += '<h5 class="mt-5 inspection-page-header  text-center">Bedroom Checklist</h5>';
     jsonData.bedroomChecklist.forEach((item) => {
         html += '<div class="card">';
         html += `<div class="card-header">Bedroom ${item.bedroomNumber}</div>`;
@@ -106,7 +106,7 @@ function convertJSONtoHTML(jsonData) {
     });
 
     // Convert kitchen checklist
-    html += '<h3 class="mt-5">Kitchen Checklist</h3>';
+    html += '<h5 class="mt-5 inspection-page-header  text-center">Kitchen Checklist</h5>';
     html += '<div class="card">';
     html += '<div class="card-body">';
     html += '<table class="table">\n' +
@@ -133,7 +133,7 @@ function convertJSONtoHTML(jsonData) {
     html += '</div>';
 
     // Convert living room checklist
-    html += '<h3 class="mt-5">Living Room Checklist</h3>';
+    html += '<h5 class="mt-5 inspection-page-header  text-center">Living Room Checklist</h5>';
     html += '<div class="card">';
     html += '<div class="card-body">';
     html += '<table class="table">\n' +
@@ -157,7 +157,7 @@ function convertJSONtoHTML(jsonData) {
     html += '</div>';
 
     // Convert bathroom checklist
-    html += '<h3 class="mt-5">Bathroom Checklist</h3>';
+    html += '<h5 class="mt-5 inspection-page-header  text-center">Bathroom Checklist</h5>';
     jsonData.bathroomChecklist.forEach((item) => {
         html += '<div class="card">';
         html += `<div class="card-header">Bathroom ${item.bathroomNumber}</div>`;

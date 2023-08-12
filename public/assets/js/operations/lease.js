@@ -444,6 +444,11 @@ let populateLeaseDetails = (leaseGuid) => {
           "/view/inspection/?guid=" + lease.lease_guid
         );
 
+        $("#existing_lease_link").attr(
+            "target",
+            "_blank"
+        );
+
         $("#existing_lease_link").removeClass("display-none");
         $("#existing_lease_link").text("View Existing Inspection");
       }
