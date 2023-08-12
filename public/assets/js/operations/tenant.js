@@ -403,10 +403,12 @@ let getApplications = () => {
             let html = "";
             if (data.result_code !== undefined) {
                 if (data.result_code === 1) {
+                    $('.no-applications-message').removeClass("display-none");
                     return;
                 }
             }
             data.forEach(function (application) {
+
                 let declinedClass = "orange-text";
                 if (application.status.localeCompare("declined") === 0) {
                     declinedClass = "red-text";
@@ -474,6 +476,7 @@ let getApplications = () => {
             $(".closable-div").addClass("display-none");
             $(".application-card").removeClass("display-none");
             $("#applications-div-container").removeClass("display-none");
+
         },
         error: function (xhr) {
         },
