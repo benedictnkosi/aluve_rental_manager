@@ -39,6 +39,7 @@ $(document).ready(function () {
 });
 
 let openApplicationDetails = (applicaitonGuid) => {
+    $('.application-buttons').addClass('display-none');
     sessionStorage.setItem("application-guid", applicaitonGuid);
     let url = "/api/application/get/" + applicaitonGuid
     $.ajax({
@@ -152,7 +153,7 @@ let getApplications = () => {
                 '  <div class="col-5 border-right">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-3 d-flex align-items-cente application-guid="' + application.uid + '">\n' +
-                '        <i class="fa-solid fa-hand-pointer application-details-button me-5 green-text" style="z-index: 999;" role="button" application-guid="' + application.uid + '"></i>\n' +
+                '        <i class="fa-solid fa-hand-pointer application-details-button me-5 green-text" style="z-index: 99;" role="button" application-guid="' + application.uid + '"></i>\n' +
                 '      </div>\n' +
                 '      <div class="col-9">\n' +
                 '        <p class="m-0">' + application.tenant.name + '</p>\n' +

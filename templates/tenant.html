@@ -308,16 +308,16 @@
 
                 </div>
                 <p class="fw-bolder p-3">Documents</p>
-                <p><a id="download-lease-agreement-link" target="_blank" role="button" style="color: #000 !important;" ><i class="fa-solid fa-file-pdf  red-icon me-3"></i><medium>Download Lease To Sign</medium></a></p>
+                <p class="accepted display-none application-div-toggle"><a id="download-lease-agreement-link" target="_blank" role="button" style="color: #000 !important;" ><i class="fa-solid fa-file-pdf  red-icon me-3"></i><medium>Download Lease To Sign</medium></a></p>
 
                 <div class="col-12 text-start p-0">
                     <div id="application-documents"></div>
                 </div>
 
                 <!--    upload signed lease\ ID and proof of payment-->
-        <div class="tenant-documents-container container p-3 h-100 accepted  display-none tenant-div-toggle mt-5 ms-3">
+        <div class="tenant-documents-container container p-3 h-100 accepted display-none application-div-toggle mt-5 ms-3">
             <form id="regForm">
-                <p class="mt-2 fs-6">Application approved. Please upload your supporting documents</p>
+                <p class="mt-2 fs-6">Application approved. Please upload your lease documents</p>
                 <div class="mb-3 mt-3">
                     <label for="onboarding_lease" class="form-label">Signed Lease</label>
                     <input type="file" class="form-control" id="onboarding_lease">
@@ -333,32 +333,51 @@
             </form>
         </div>
 
+        <div class="tenant-documents-container new container p-3 h-100 display-none application-div-toggle mt-5 ms-3" id="supporting-docs-div">
+            <p class="mt-2 fs-6">Please upload proof of income documents</p>
+            <div class="mb-3">
+                <label for="bank_statement" class="form-label">Bank Statement</label>
+                <input type="file" class="form-control" id="bank_statement">
+            </div>
+            <div class="mb-3">
+                <label for="application_payslip" class="form-label">Payslip</label>
+                <input type="file" class="form-control" id="application_payslip">
+            </div>
+            <div class="mb-3">
+                <label for="co_bank_statement" class="form-label">Co-Applicant Bank Statement (Optional)</label>
+                <input type="file" class="form-control" id="co_bank_statement">
+            </div>
+            <div class="mb-3">
+                <label for="co_application_payslip" class="form-label">Co-Applicant Payslip (Optional)</label>
+                <input type="file" class="form-control" id="co_application_payslip">
+            </div>
+            <div class="col-sm-6 mt-3 ">
+                <div style="float:right;" class="w-100">
+                    <a id="finishButton" href="javascript:void(0)"
+                       class="btn transparent-green-button w-100">Finish</a>
+                </div>
+            </div>
+        </div>
+
         <div id="messages-div">
             <!--    documents pending verification-->
-            <div class="container py-5 h-100 lease-uploaded display-none tenant-div-toggle">
+            <div class="container py-5 h-100 lease-uploaded display-none application-div-toggle">
                 <div class=" text-center mt-5">
                     <h3>Thanks for uploading your documents!</h3> <span>Your documents have been sent to our team for verification! We will contact you shortly!</span>
                 </div>
             </div>
 
             <!--    application pending decision-->
-            <div class="container py-5 h-100 financials-uploaded display-none tenant-div-toggle">
+            <div class="container py-5 h-100 financials-uploaded display-none application-div-toggle">
                 <div class=" text-center mt-5">
                     <h3>We got your application!</h3> <span>We will contact you shortly!</span>
                 </div>
             </div>
 
             <!--    application declined-->
-            <div class="container py-5 h-100 declined display-none tenant-div-toggle">
+            <div class="container py-5 h-100 declined display-none application-div-toggle">
                 <div class=" text-center mt-5">
                     <h3>Application Declined!</h3> <span>Thank you for your interest in our accommodation!</span>
-                </div>
-            </div>
-
-            <!--    application invalid-->
-            <div class="container py-5 h-100 new display-none tenant-div-toggle">
-                <div class=" text-center mt-5">
-                    <h3>Application Invalid!</h3> <span>You did not upload documents for this application!</span>
                 </div>
             </div>
         </div>

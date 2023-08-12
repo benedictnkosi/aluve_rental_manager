@@ -47,7 +47,6 @@ class ApplicationsApi extends AbstractController
 
             $applications = $this->em->getRepository("App\Entity\Application")->createQueryBuilder('a')
                 ->where('a.property = :property')
-                ->andWhere("a.status = 'financials uploaded' or a.status = 'declined' or a.status = 'accepted' or a.status = 'lease uploaded' or a.status = 'tenant'")
                 ->setParameter('property', $property->getId())
                 ->getQuery()
                 ->getResult();

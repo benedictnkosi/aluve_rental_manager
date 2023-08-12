@@ -18,24 +18,40 @@ $(document).ready(function () {
     getApplications();
 
     $("#onboarding_lease").change(function () {
-        uploadSupportingDocuments(
+        uploadLeaseDocuments(
             "Signed Lease",
             $("#onboarding_lease").prop("files")[0]
         );
     });
 
     $("#onboarding_iddoc").change(function () {
-        uploadSupportingDocuments(
+        uploadLeaseDocuments(
             "ID Document",
             $("#onboarding_iddoc").prop("files")[0]
         );
     });
 
     $("#onboarding_pop").change(function () {
-        uploadSupportingDocuments(
+        uploadLeaseDocuments(
             "Proof OF Payment",
             $("#onboarding_pop").prop("files")[0]
         );
+    });
+
+    $('#bank_statement').change(function () {
+        uploadIncomeDocuments("statement", $("#bank_statement").prop("files")[0]);
+    });
+
+    $('#application_payslip').change(function () {
+        uploadIncomeDocuments("payslip", $("#application_payslip").prop("files")[0]);
+    });
+
+    $('#co_bank_statement').change(function () {
+        uploadIncomeDocuments("co_statement", $("#co_bank_statement").prop("files")[0]);
+    });
+
+    $('#co_application_payslip').change(function () {
+        uploadIncomeDocuments("co_payslip", $("#co_application_payslip").prop("files")[0]);
     });
 
     $(".statement-close").click(function () {
@@ -56,6 +72,15 @@ $(document).ready(function () {
         $(".btn-convert-application").addClass("display-none");
         $(".btn-accept-application").addClass("display-none");
         getApplications();
+    });
+
+    $("#finishButton").click(function () {
+        if(sessionStorage.getItem("application_reference") !== null){
+            $('#supporting-docs-div').addClass("display-none");
+            openApplicationDetails(sessionStorage.getItem("application-guid"))
+        }else{
+            showToast("Error: Please upload all supporting documents");
+        }
     });
 });
 
@@ -235,7 +260,7 @@ let getPropertyLeaseToSign = () => {
     });
 };
 
-function uploadSupportingDocuments(documentType, file_data) {
+function uploadLeaseDocuments(documentType, file_data) {
     let url = "/api/tenant/upload/lease";
     const uid = sessionStorage.getItem("application-guid");
     const form_data = new FormData();
@@ -298,7 +323,6 @@ let closeACall = () => {
 };
 
 let openApplicationDetails = (applicaitonGuid) => {
-    $(".closable-div").addClass("display-none");
     sessionStorage.setItem("application-guid", applicaitonGuid);
     let url = "/api/application/get/" + applicaitonGuid;
     $.ajax({
@@ -313,7 +337,7 @@ let openApplicationDetails = (applicaitonGuid) => {
                 }
             }
 
-            $(".tenant-div-toggle").addClass("display-none");
+            $(".application-div-toggle").addClass("display-none");
             $("." + data.application.status.replace(" ", "-")).removeClass("display-none");
 
             if (data.application.status.localeCompare("accepted") === 0) {
@@ -398,7 +422,7 @@ let getApplications = () => {
                     '      <div class="col-3 d-flex align-items-cente application-guid="' +
                     application.uid +
                     '">\n' +
-                    '        <i class="fa-solid fa-hand-pointer application-details-button me-5 green-text" style="z-index: 999;" role="button" application-guid="' +
+                    '        <i class="fa-solid fa-hand-pointer application-details-button me-5 green-text" style="z-index: 99;" role="button" application-guid="' +
                     application.uid +
                     '"></i>\n' +
                     "      </div>\n" +
@@ -455,3 +479,44 @@ let getApplications = () => {
         },
     });
 };
+
+
+function uploadIncomeDocuments(documentType, file_data) {
+    let url = "/api/application/upload/";
+    const form_data = new FormData();
+    form_data.append("file", file_data);
+    form_data.append("application_id", sessionStorage.getItem("application-guid"));
+    form_data.append("document_type", documentType);
+
+    if (file_data === undefined) {
+        showToast("Error: Please upload file")
+        return;
+    }
+
+    const fileSize =file_data.size;
+    const fileMb = fileSize / 1024 ** 2;
+    if (fileMb >= 5) {
+        showToast("Error: Please upload files less than 5mb");
+        return;
+    }
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: form_data,
+        dataType: 'script',
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            const jsonObj = JSON.parse(response);
+            showToast(jsonObj.result_message);
+            if(jsonObj.alldocs_uploaded === true){
+                sessionStorage.setItem("application_reference", jsonObj.application_id);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showToast(errorThrown);
+        }
+    });
+}
