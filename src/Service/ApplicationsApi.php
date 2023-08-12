@@ -80,7 +80,7 @@ class ApplicationsApi extends AbstractController
                 return array();
             }
 
-            $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $tenant->getId()), array('date' => 'DESC'));
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('tenant' => $tenant->getId()), array('date' => 'DESC'));
 
             if ($application == null) {
                 return array(
