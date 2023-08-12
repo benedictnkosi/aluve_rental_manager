@@ -985,12 +985,19 @@
     <main class="col-md-12 ms-xl-auto col-lg-10 px-md-4 d-flex flex-column align-items-center">
 
         <!--            alert message-------------------------------------------------------------------->
+        
+       
+        
 
         <div class="mb-3">
             <div class="display-none alert" role="alert" id="alert-unit"></div>
         </div>
 
         <h1 id="page-header"></h1>
+
+        <div class="no-results-container d-flex w-100">
+            <img src="/assets/images/noresults.png"  id="no-results-image" class="no-results-image display-none mt-5" alt="">
+        </div>
 
         <!--            dashboard div-------------------------------------------------------------------->
 
@@ -1071,7 +1078,7 @@
                 <p>
                     <button
                             type="button"
-                            class="btn transparent-green-button w-100 display-none"
+                            class="btn transparent-green-button w-100"
                             id="btn-create-new-unit"
                     >
                         Add New Unit
@@ -1365,7 +1372,7 @@
                 <p>
                     <button
                             type="button"
-                            class="btn transparent-green-button w-100 display-none"
+                            class="btn transparent-green-button w-100"
                             id="btn-new-lease"
                     >
                         New Lease
@@ -1784,7 +1791,7 @@
             <p>
                 <button
                         type="button"
-                        class="btn transparent-green-button"
+                        class="btn transparent-green-button mt-5"
                         id="btn-new-maintanance"
                         data-bs-toggle="modal"
                         data-bs-target="#maintenanceModal"
@@ -1797,11 +1804,11 @@
         </div>
 
         <!--            expenses div-------------------------------------------------------------------->
-        <div id="expenses-content-div" class="main-content display-none w-100">
+        <div id="expenses-content-div" class="main-content display-none">
             <p>
                 <button
                         type="button"
-                        class="btn transparent-green-button"
+                        class="btn transparent-green-button mt-5"
                         id="btn-new-expense"
                         data-bs-toggle="modal"
                         data-bs-target="#propertyExpenseModal"

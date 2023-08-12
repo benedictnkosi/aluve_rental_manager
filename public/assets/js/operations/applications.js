@@ -137,10 +137,12 @@ let getApplications = () => {
             let html = "";
             if (data.result_code !== undefined) {
                 if (data.result_code === 1) {
+                    $('.no-results-image').removeClass("display-none");
                     return;
                 }
             }
             data.forEach(function (application) {
+                $('.no-results-image').addClass("display-none");
                 let declinedClass = "orange-text"; 
                 if(application.status.localeCompare("declined") === 0){
                     declinedClass = "red-text";
