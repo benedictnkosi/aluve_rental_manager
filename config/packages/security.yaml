@@ -41,9 +41,8 @@ security:
         - { path: ^/properties, roles: ROLE_LANDLORD }
         - { path: ^/tenant, roles: ROLE_TENANT }
         - { path: ^/api, roles: ROLE_USER }
-        - { path: ^/admin_api, roles: ROLE_ADMIN }
+        - { path: ^/api, roles: ROLE_LANDLORD }
         - { path: ^/, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: PUBLIC_ACCESS }
         
 
 when@test:
