@@ -119,7 +119,7 @@ class TransactionApi extends AbstractController
             }
 
             if(strlen($message) > 0){
-                $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+                $link =  "https://" . $_SERVER['HTTP_HOST'] . "/tenant";
                 $linkText = "View Statement";
                 $template = "generic";
                 $communicationApi = new CommunicationApi($this->em, $this->logger);

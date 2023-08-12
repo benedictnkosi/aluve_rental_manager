@@ -163,7 +163,7 @@ class MaintenanceApi extends AbstractController
             $message = "New maintenance call created for ".$lease->getUnit()->getProperty()->getName(). " - " . $lease->getUnit()->getName() ;
             $subject = "Aluve App - New Maintenance Call";
 
-            $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/landlord";
+            $link =  "https://" . $_SERVER['HTTP_HOST'] . "/landlord";
             $linkText = "View Maintenance";
             $template = "generic";
             $communicationApi = new CommunicationApi($this->em, $this->logger);
@@ -322,7 +322,7 @@ class MaintenanceApi extends AbstractController
             $message = "One of your maintenance calls has been closed. Please login to your tenant portal to view more details";
             $subject = "Aluve App - Maintenance Call Closed";
 
-            $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+            $link =  "https://" . $_SERVER['HTTP_HOST'] . "/tenant";
             $linkText = "View Maintenance";
             $template = "generic";
             $communicationApi = new CommunicationApi($this->em, $this->logger);

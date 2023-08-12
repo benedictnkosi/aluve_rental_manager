@@ -588,7 +588,7 @@ class LeaseApi extends AbstractController
                 $message = "New inspection created. You will find the inspection on your tenant portal" ;
                 $subject = "Aluve App - New Inspection";
 
-                $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+                $link =  "https://" . $_SERVER['HTTP_HOST'] . "/tenant";
                 $linkText = "View Inspection";
                 $template = "generic";
                 $communicationApi = new CommunicationApi($this->em, $this->logger);
@@ -727,7 +727,7 @@ class LeaseApi extends AbstractController
 
                     //send sms to applicant
                     $smsApi = new SMSApi($this->em, $this->logger);
-                    $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+                    $tenantPortalURL =  "https://" . $_SERVER['HTTP_HOST'] . "/tenant";
                     $message = "Late payment fee added on your account R" . $lateFee . " , Balance: R" . $due . ". View Statement " . $tenantPortalURL;
                     $isSMSSent = $smsApi->sendMessage("+27" . substr($lease->getTenant()->getPhone(), 0, 9), $message);
 
@@ -782,7 +782,7 @@ class LeaseApi extends AbstractController
 
                 //send sms to applicant
                 $smsApi = new SMSApi($this->em, $this->logger);
-                $tenantPortalURL = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+                $tenantPortalURL =  "https://" . $_SERVER['HTTP_HOST'] . "/tenant";
                 $message = $now->format("F") ." Rent added to your on your statement R" . $rent .". View Statement " . $tenantPortalURL;
                 $isSMSSent = $smsApi->sendMessage("+27" . substr($lease->getTenant()->getPhone(), 0, 9), $message);
 
@@ -845,7 +845,7 @@ class LeaseApi extends AbstractController
 
                         $message = "Lease documents have been uploaded for application " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() ;
                         $subject = "Aluve App - Lease Uploaded";
-                        $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+                        $link =  "https://" . $_SERVER['HTTP_HOST'] . "/tenant";
                         $linkText = "View Application";
                         $template = "generic";
                         $communicationApi = new CommunicationApi($this->em, $this->logger);

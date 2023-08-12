@@ -187,7 +187,7 @@ class ApplicationsApi extends AbstractController
             $message = "New application received for " . $unit->getProperty()->getName() . " - " . $unit->getName();
             $subject = "Aluve App - New Application";
 
-            $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/landlord";
+            $link =  "https://" . $_SERVER['HTTP_HOST'] . "/landlord";
             $linkText = "View Application";
             $template = "generic";
             $communicationApi = new CommunicationApi($this->em, $this->logger);
@@ -249,7 +249,7 @@ class ApplicationsApi extends AbstractController
                 $message = "All supporting documents uploaded for  " . $tenant->getName() . " - " . $application->getUnit()->getProperty()->getName() . ", " . $application->getUnit()->getName();
                 $subject = "Aluve App - Financials Uploaded";
 
-                $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/landlord";
+                $link =  "https://" . $_SERVER['HTTP_HOST'] . "/landlord";
                 $linkText = "View Application";
                 $template = "generic";
                 $communicationApi = new CommunicationApi($this->em, $this->logger);
@@ -307,10 +307,10 @@ class ApplicationsApi extends AbstractController
             $this->em->flush($application);
 
             //send email
-            $message = "Application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has been accepted. Please sign lease and upload your ID document";
+            $message = "Application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has been accepted. Please sign lease and upload your ID document.";
             $subject = "Aluve App - Application Accepted";
 
-            $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+            $link =  "https://" . $_SERVER['HTTP_HOST'] . "/tenant";
             $linkText = "Sign Lease";
             $template = "generic";
             $communicationApi = new CommunicationApi($this->em, $this->logger);
@@ -349,7 +349,7 @@ class ApplicationsApi extends AbstractController
                 return $auth;
             }
             //send whatsapp with acceptance
-//            $leaseLink = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/api/document/" . $application->getUnit()->getProperty()->getLeaseFileName();
+//            $leaseLink =  "https://" . $_SERVER['HTTP_HOST'] . "/api/document/" . $application->getUnit()->getProperty()->getLeaseFileName();
 //            $message = "We are happy to let you know that your application for " . $application->getUnit()->getName() . " @ " . $application->getUnit()->getProperty()->getName() . " has been accepted.
 //            Please download and sign the lease. " . $leaseLink;
 
@@ -403,7 +403,7 @@ class ApplicationsApi extends AbstractController
             $message = "Application for " . $application->getUnit()->getName() . " @ " . $application->getProperty()->getName() . " has bee converted to a lease. Congratulations you are officially a tenant!!!";
             $subject = "Aluve App - Official Tenant";
 
-            $link = $_SERVER['SERVER_PROTOCOL'] . "://" . $_SERVER['HTTP_HOST'] . "/tenant";
+            $link =  "https://" . $_SERVER['HTTP_HOST'] . "/tenant";
             $linkText = "View Tenant Portal";
             $template = "generic";
             $communicationApi = new CommunicationApi($this->em, $this->logger);
