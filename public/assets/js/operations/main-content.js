@@ -56,11 +56,13 @@ function updateView(selectedDiv, header) {
 
     $("#main-content-header").html(header);
     $("#page-header").html(header);
-
+    $('.no-results-image').addClass("display-none");
+    
     sessionStorage.setItem("current_page", selectedDiv);
     sessionStorage.setItem("current_page_header", header);
-
+$('.no-results-image').addClass("display-none");
     switch (selectedDiv) {
+        
         case "dashboard-content-div":
             generateAllGraphs();
             break;
