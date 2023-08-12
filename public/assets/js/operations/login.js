@@ -52,7 +52,7 @@ let authenticateUser = () => {
 
         $.get(url, function (data) {
           console.log(data.authenticated);
-          if(data.roles.includes("ROLE_ADMIN")){
+          if(data.roles.includes("ROLE_LANDLORD")){
             location.href = "/properties";
           }else if(data.roles.includes("ROLE_TENANT")){
             location.href = "/tenant";
