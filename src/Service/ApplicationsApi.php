@@ -314,7 +314,7 @@ class ApplicationsApi extends AbstractController
             $linkText = "Sign Lease";
             $template = "generic";
             $communicationApi = new CommunicationApi($this->em, $this->logger);
-            $communicationApi->sendEmail($application->getUnit()->getProperty()->getEmail(), $application->getUnit()->getProperty()->getName(), $subject, $message, $link, $linkText, $template);
+            $communicationApi->sendEmail($application->getTenant()->getEmail(), $application->getTenant()->getName(), $subject, $message, $link, $linkText, $template);
 
             return array(
                 'result_message' => "Successfully accepted application.",
