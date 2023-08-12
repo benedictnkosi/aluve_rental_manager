@@ -429,7 +429,7 @@ class ApplicationsApi extends AbstractController
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
         try {
-            $application = $this->em->getRepository(Application::class)->findOneBy(array('id' => $applicationGuid));
+            $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $applicationGuid));
             if ($application == null) {
                 return array(
                     'result_message' => "Failed to decline application. Application not found",
