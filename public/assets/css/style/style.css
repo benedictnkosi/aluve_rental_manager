@@ -289,3 +289,7 @@ i{
 .datepicker-switch{
     text-align: center!important;
 }
+
+#maintenance-div{
+    min-width: 320px;
+}
