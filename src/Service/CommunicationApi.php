@@ -74,12 +74,21 @@ class CommunicationApi extends AbstractController
     function sendEmail($toEmail, $recipientName, $subject, $message, $link, $linkText, $template): bool
     {
         $this->logger->info("Starting Method: " . __METHOD__);
+        $this->logger->debug("Email Parameters: $toEmail");
+        $this->logger->debug("Email Parameters: $recipientName");
+        $this->logger->debug("Email Parameters: $subject");
+        $this->logger->debug("Email Parameters: $message");
+        $this->logger->debug("Email Parameters: $link");
+        $this->logger->debug("Email Parameters: $linkText");
+        $this->logger->debug("Email Parameters: $template");
+
         $Parameters = array(
             "recipient_name" => $recipientName,
             "message" => $message,
             "main_button_link" => $link,
             "main_button_link_text" => $linkText,
         );
+
 
         $message = $this->generate_email_body($template, $Parameters);
 
