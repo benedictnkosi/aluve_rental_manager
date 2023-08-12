@@ -130,7 +130,7 @@ class LeaseApi extends AbstractController
                     'lease_start' => $lease->getStart()->format("Y-M-d"),
                     'lease_end' => $lease->getEnd()->format("Y-M-d"),
                     'lease_id' => $lease->getId(),
-                    'due' => "R" . number_format(intval($due["result_message"]), 2, '.', ''),
+                    'due' =>  number_format(intval($due["result_message"]), 2, '.', ''),
                     'guid' => $lease->getGuid(),
                     'status' => $lease->getStatus(),
                     'inspection_exist' => $inspectionExist,
@@ -204,7 +204,7 @@ class LeaseApi extends AbstractController
                     'lease_start' => $lease->getStart()->format("Y-M-d"),
                     'lease_end' => $lease->getEnd()->format("Y-M-d"),
                     'lease_id' => $lease->getId(),
-                    'due' => "R" . number_format(intval($due["result_message"]), 2, '.', ''),
+                    'due' =>  number_format(intval($due["result_message"]), 2, '.', ''),
                     'guid' => $lease->getGuid(),
                     'status' => $lease->getStatus()
                 );
@@ -728,7 +728,7 @@ class LeaseApi extends AbstractController
                     //send sms to applicant
                     $smsApi = new SMSApi($this->em, $this->logger);
                     $tenantPortalURL =  "https://" . $_SERVER['HTTP_HOST'] . "/tenant";
-                    $message = "Late payment fee added on your account R" . $lateFee . " , Balance: R" . $due . ". View Statement " . $tenantPortalURL;
+                    $message = "Late payment fee added on your account " . $lateFee . " , Balance: " . $due . ". View Statement " . $tenantPortalURL;
                     $isSMSSent = $smsApi->sendMessage("+27" . substr($lease->getTenant()->getPhone(), 0, 9), $message);
 
                     if ($isSMSSent) {
@@ -783,7 +783,7 @@ class LeaseApi extends AbstractController
                 //send sms to applicant
                 $smsApi = new SMSApi($this->em, $this->logger);
                 $tenantPortalURL =  "https://" . $_SERVER['HTTP_HOST'] . "/tenant";
-                $message = $now->format("F") ." Rent added to your on your statement R" . $rent .". View Statement " . $tenantPortalURL;
+                $message = $now->format("F") ." Rent added to your on your statement " . $rent .". View Statement " . $tenantPortalURL;
                 $isSMSSent = $smsApi->sendMessage("+27" . substr($lease->getTenant()->getPhone(), 0, 9), $message);
 
                 if ($isSMSSent) {

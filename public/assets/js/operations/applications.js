@@ -58,7 +58,7 @@ let openApplicationDetails = (applicaitonGuid) => {
             $('#applicant_name').html(data.application.tenant.name);
             $('#applicant_email').html(data.application.tenant.email);
             $('#applicant_phone').html(data.application.tenant.phone);
-            $('#applicant_salary').html("R" + data.application.tenant.salary.toLocaleString());
+            $('#applicant_salary').html( data.application.tenant.salary.toLocaleString());
             $('#applicant_adults').html(data.application.tenant.adults);
             $('#applicant_children').html(data.application.tenant.children);
             $('#applicant_id_number').html(data.application.tenant.id_number);
@@ -168,7 +168,7 @@ let getApplications = () => {
                 '  <div class="col-4">\n' +
                 '    <div class="row align-items-center">\n' +
                 '     <div class="col-9">\n' +
-                '        <p class="m-0">R' + application.tenant.salary.toLocaleString() + '</p>\n' +
+                '        <p class="m-0">' + application.tenant.salary.toLocaleString() + '</p>\n' +
                 '        <p class="m-0 font-10">' + application.date.substring(0, application.date.indexOf("T")) + '</p>\n' +
                 '      </div>\n' +
                 '  </div>\n' +

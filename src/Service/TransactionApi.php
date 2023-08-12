@@ -102,16 +102,16 @@ class TransactionApi extends AbstractController
             $message = "";
             if(strcmp($description, "Thank you for payment") == 0){
                 $balance = $this->getBalanceDue($lease->getId())["result_message"];
-                $message = "Thank you for payment R" .$amount . " , Balance: R" . $balance ;
+                $message = "Thank you for payment " .$amount . " , Balance: " . $balance ;
                 $subject = "Aluve App - Thank you for payment";
 
             }elseif(str_contains($description, "Rent")){
                 $balance = $this->getBalanceDue($lease->getId())["result_message"];
-                $message = "Rent of R$amount has been added to your account. Balance: R" . $balance ;
+                $message = "Rent of R$amount has been added to your account. Balance: " . $balance ;
                 $subject = "Aluve App - Rent Added To Account";
             }elseif(strcmp($description, "Late Rent Payment Fee") == 0){
                 $balance = $this->getBalanceDue($lease->getId())["result_message"];
-                $message = "Late rent payment fee of R$amount has been added to your account. Balance: R" . $balance ;
+                $message = "Late rent payment fee of R$amount has been added to your account. Balance: " . $balance ;
                 $subject = "Aluve App - Late Fee Added To Account";
             }elseif(strcmp($description, "Application Fee") == 0){
                 $message = "Application fee of R$amount has been added to your account.";
@@ -161,8 +161,8 @@ class TransactionApi extends AbstractController
                 $responseArray[] = array(
                     'description' => $transaction->getDescription(),
                     'date' => $transaction->getDate()->format("Y-m-d"),
-                    'amount' => "R" . number_format($transaction->getAmount(), 2, '.', ''),
-                    'balance' => "R" . number_format($balance, 2, '.', ''),
+                    'amount' => number_format($transaction->getAmount(), 2, '.', ''),
+                    'balance' =>  number_format($balance, 2, '.', ''),
                     'logged_in' => $isLoggedIn,
                     'id' => $transaction->getId(),
                     'guid' => $transaction->getGuid(),

@@ -289,11 +289,11 @@ let getAllUnits = () => {
         const waterCharge = event.target.getAttribute("unit-water");
         const electricityCharge = event.target.getAttribute("unit-electricity");
         const minSalary = parseInt(
-          event.target.getAttribute("min-salary").replace("R", "")
+          event.target.getAttribute("min-salary")
         );
         const maxOccupants = event.target.getAttribute("max-occupants");
         const rent = parseInt(
-          event.target.getAttribute("unit-rent").replace("R", "")
+          event.target.getAttribute("unit-rent")
         );
         const bedrooms = event.target.getAttribute("unit-bedrooms");
         const bathrooms = event.target.getAttribute("unit-bathrooms");

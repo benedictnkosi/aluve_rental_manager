@@ -87,7 +87,7 @@ let populateStatement = (leaseGuid) => {
 
             $("#lease-end-date").html("Lease End Date: " + lease.lease_end);
             $("#lease-start-date").html("Lease Start Date: " + lease.lease_start);
-            $(".statement-due").html("Due: R" + lease.due);
+            $(".statement-due").html("Due: " + lease.due);
         },
         error: function (xhr) {},
     });

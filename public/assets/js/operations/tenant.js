@@ -224,7 +224,7 @@ let getTenantInfo = () => {
                 $("#inspection_link").attr("href", "/view/inspection/?guid=" + data.guid);
                 $("#unit-name").html(data.unit.name);
                 $("#unit-address").html(data.property.address);
-                $("#unit-rent").html("R" + data.unit.rent.toFixed(2));
+                $("#unit-rent").html( data.unit.rent.toFixed(2));
                 $("#unit-beds").html(data.unit.bedrooms);
                 $("#unit-bathrooms").html(data.unit.bathrooms);
                 $("#unit-max-occupants").html(data.unit.max_occupants);
@@ -352,7 +352,7 @@ let openApplicationDetails = (applicaitonGuid) => {
             $("#applicant_email").html(data.application.tenant.email);
             $("#applicant_phone").html(data.application.tenant.phone);
             $("#applicant_salary").html(
-                "R" + data.application.tenant.salary.toLocaleString()
+                 data.application.tenant.salary.toLocaleString()
             );
             $("#applicant_adults").html(data.application.tenant.adults);
             $("#applicant_children").html(data.application.tenant.children);
@@ -446,7 +446,7 @@ let getApplications = () => {
                     '  <div class="col-4">\n' +
                     '    <div class="row align-items-center">\n' +
                     '     <div class="col-9">\n' +
-                    '        <p class="m-0">R' +
+                    '        <p class="m-0">' +
                     application.tenant.salary.toLocaleString() +
                     "</p>\n" +
                     '        <p class="m-0 font-10">' +

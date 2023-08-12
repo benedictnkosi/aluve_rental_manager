@@ -277,7 +277,7 @@ let getAllLeases = () => {
 
       data.forEach(function (lease) {
         const dueClass =
-          lease.due.localeCompare("R0.00") !== 0 ? "border-left-red" : "";
+          lease.due.localeCompare("0.00") !== 0 ? "border-left-red" : "";
 
         html +=
           '<div class="lease-card">\n' +
@@ -305,7 +305,7 @@ let getAllLeases = () => {
           '  <div class="lease-price-cards">\n' +
           '    <div class="lease-rent-div">\n' +
           "      <p>Rent</p>\n" +
-          "      <p>R" +
+          "      <p>" +
           lease.rent +
           ".00</p>\n" +
           "    </div>\n" +

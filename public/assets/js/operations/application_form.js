@@ -109,7 +109,7 @@ let getUnit = () => {
 
             $("#unit-name").html(data.name);
             $("#unit-address").html(data.property.address);
-            $("#unit-rent").html("R" + data.rent.toFixed(2) );
+            $("#unit-rent").html( data.rent.toFixed(2) );
             $("#unit-beds").html(data.bedrooms );
             $("#unit-bathrooms").html(data.bathrooms );
             $("#unit-max-occupants").html(data.max_occupants );
@@ -122,8 +122,8 @@ let getUnit = () => {
             //deposit
             const depositPercent = parseInt(data.property.deposit_pecent) / 100;
             const deposit = parseInt(data.rent) * depositPercent;
-            $("#unit-deposit").html("R" +deposit.toFixed(2));
-            $("#unit-application-fee").html("R" +data.property.application_fee.toFixed(2));
+            $("#unit-deposit").html(deposit.toFixed(2));
+            $("#unit-application-fee").html(data.property.application_fee.toFixed(2));
         },
         error: function (xhr) {
 

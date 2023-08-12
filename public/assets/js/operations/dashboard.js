@@ -77,9 +77,9 @@ function generateProfitTable(){
         contentType: "application/json; charset=UTF-8",
         success: function (response) {
             let profit = response.income.total - response.expense.total;
-            $('#td-income').html("R" + response.income.total.toLocaleString());
-            $('#td-expenses').html("R" + response.expense.total.toLocaleString());
-            $('#td-profit').html("R" + profit.toLocaleString());
+            $('#td-income').html(response.income.total.toLocaleString());
+            $('#td-expenses').html(response.expense.total.toLocaleString());
+            $('#td-profit').html(profit.toLocaleString());
 
             if(response.income.total > 1){
                 $('#profit-loss-table').removeClass("display-none");
@@ -239,7 +239,7 @@ let generateInvoicesDue = () => {
             }
             const totalDue = data.total_due < 0 ? 0 : data.total_due;
 
-            $("#invoice-due-stat").html("R" + totalDue.toLocaleString() + ".00");
+            $("#invoice-due-stat").html(totalDue.toLocaleString() + ".00");
         },
         error: function (xhr) {
 
