@@ -119,7 +119,7 @@ class LoginController extends AbstractController
         $link =  "https://" . $_SERVER['HTTP_HOST'] . "/reset?guid=" . $user->getGuid();
         $linkText = "Reset Password";
         $template = "generic";
-        //$communicationApi->sendEmail($user->getEmail(), $user->getName(), $subject, $message, $link, $linkText, $template);
+        $communicationApi->sendEmail($user->getEmail(), $user->getName(), $subject, $message, $link, $linkText, $template);
 
         $response = array(
             "result_message" => "Please check your email for the reset password instructions",
