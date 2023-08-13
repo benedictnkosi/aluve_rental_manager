@@ -81,6 +81,7 @@ class RegistrationController extends AbstractController
             $user->setEmail($request->get("_username"));
             $user->setName($request->get("_name"));
             $user->setGuid($this->generateGuid());
+            $user->setStatus("active");
             if(strcmp($request->get("_user_type"), "Tenant")==0){
                 $user->setRoles(["ROLE_TENANT"]);
             }else if(strcmp($request->get("_user_type"), "Landlord")==0){
