@@ -8,7 +8,6 @@ use PhpImap\Exceptions\ConnectionException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Twilio\Rest\Client;
-require_once(__DIR__ . '/../app/application.php');
 
 class CommunicationApi extends AbstractController
 {

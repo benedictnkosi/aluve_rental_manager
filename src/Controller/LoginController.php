@@ -114,7 +114,7 @@ class LoginController extends AbstractController
             return new JsonResponse($response , 200, array());
         }
 
-        $message = "Forgot your password? That's okay, it happens! Click on the button below to reset your password";
+        $message = "Forgot your password? That's okay, it happens! Click on the button below to reset your password.";
         $subject = "Aluve App - Reset Password";
         $link =  "https://" . $_SERVER['HTTP_HOST'] . "/reset?guid=" . $user->getGuid();
         $linkText = "Reset Password";

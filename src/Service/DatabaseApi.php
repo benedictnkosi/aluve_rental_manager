@@ -6,7 +6,6 @@ namespace App\Service;
 use mysqli;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-require_once(__DIR__ . '/../app/application.php');
 
 class DatabaseApi extends AbstractController
 {
