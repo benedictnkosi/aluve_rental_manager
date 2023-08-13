@@ -73,14 +73,14 @@ function uploadPropertyLease(file_data) {
     form_data.append("property_id", sessionStorage.getItem("property-id"));
 
     if (file_data === undefined) {
-        showToast("Error: Please upload file")
+        showToast(" Please upload file")
         return;
     }
 
     const fileSize =file_data.size;
     const fileMb = fileSize / 1024 ** 2;
     if (fileMb >= 5) {
-        showToast("Error: Please upload files less than 5mb");
+        showToast(" Please upload files less than 5mb");
         return;
     }
 

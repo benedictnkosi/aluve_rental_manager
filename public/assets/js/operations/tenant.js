@@ -79,7 +79,7 @@ $(document).ready(function () {
             $('#supporting-docs-div').addClass("display-none");
             openApplicationDetails(sessionStorage.getItem("application-guid"))
         }else{
-            showToast("Error: Please upload all supporting documents");
+            showToast(" Please upload all supporting documents");
         }
     });
 });
@@ -249,7 +249,7 @@ let getPropertyLeaseToSign = () => {
         contentType: "application/json; charset=UTF-8",
         success: function (data) {
             if (data.name === undefined) {
-                showToast("Error. Property lease not found. Please contact agent.");
+                showToast("Property lease not found. Please contact agent.");
                 $("#download-lease-agreement-link").removeAttr("href");
             } else {
                 $("#download-lease-agreement-link").attr("href", "/api/lease_document/" +data.name);
@@ -269,14 +269,14 @@ function uploadLeaseDocuments(documentType, file_data) {
     form_data.append("document_type", documentType);
 
     if (file_data === undefined) {
-        showToast("Error: Please upload file");
+        showToast(" Please upload file");
         return;
     }
 
     const fileSize = file_data.size;
     const fileMb = fileSize / 1024 ** 2;
     if (fileMb >= 5) {
-        showToast("Error: Please upload files less than 5mb");
+        showToast(" Please upload files less than 5mb");
         return;
     }
 
@@ -492,14 +492,14 @@ function uploadIncomeDocuments(documentType, file_data) {
     form_data.append("document_type", documentType);
 
     if (file_data === undefined) {
-        showToast("Error: Please upload file")
+        showToast(" Please upload file")
         return;
     }
 
     const fileSize =file_data.size;
     const fileMb = fileSize / 1024 ** 2;
     if (fileMb >= 5) {
-        showToast("Error: Please upload files less than 5mb");
+        showToast(" Please upload files less than 5mb");
         return;
     }
 

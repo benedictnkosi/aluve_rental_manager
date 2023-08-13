@@ -54,7 +54,7 @@ class CommunicationController extends AbstractController
         $toEmail = "payments@hotelrunner.co.za";
         $recipientName = "Ben";
         $message = "test email";
-        $link = "https://rentals.hotelrunner.co.za/landlord";
+        $link =  "https://" . $_SERVER['HTTP_HOST'] . "/landlord";
         $linkText = $subject;
         $template = "generic";
         $response = $communicationApi->sendEmail($toEmail, $recipientName, $subject, $message, $link, $linkText, $template);

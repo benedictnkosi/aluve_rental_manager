@@ -160,7 +160,7 @@ class UnitApi extends AbstractController
             $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $guid));
             if ($unit == null) {
                 return array(
-                    'result_message' => "Error: Unit not found",
+                    'result_message' => " Unit not found",
                     'result_code' => 1
                 );
             }
@@ -200,7 +200,7 @@ class UnitApi extends AbstractController
                 $existingUnit = $this->em->getRepository(Units::class)->findOneBy(array('name' => $name, 'property' => $property->getId()));
                 if($existingUnit !== null){
                     return array(
-                        'result_message' => "Error: Unit with the same name already exists",
+                        'result_message' => " Unit with the same name already exists",
                         'result_code' => 1
                     );
                 }
@@ -209,7 +209,7 @@ class UnitApi extends AbstractController
                 $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $guid));
                 if($unit == null){
                     return array(
-                        'result_message' => "Error: Unit not found",
+                        'result_message' => " Unit not found",
                         'result_code' => 1
                     );
                 }
@@ -281,7 +281,7 @@ class UnitApi extends AbstractController
             $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' =>  $guid));
             if($unit == null){
                 return array(
-                    'result_message' => "Error: Unit not found",
+                    'result_message' => " Unit not found",
                     'result_code' => 1
                 );
             }

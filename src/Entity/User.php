@@ -173,4 +173,53 @@ class User  implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this;
     }
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=50, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="guid", type="string", length=36, nullable=false)
+     */
+    private $guid;
+
+    /**
+     * @return string
+     */
+    public function getGuid(): string
+    {
+        return $this->guid;
+    }
+
+    /**
+     * @param string $guid
+     */
+    public function setGuid(string $guid): void
+    {
+        $this->guid = $guid;
+    }
+
+
+
 }

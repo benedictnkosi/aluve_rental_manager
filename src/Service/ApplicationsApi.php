@@ -143,7 +143,7 @@ class ApplicationsApi extends AbstractController
             $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $request->get("unit_id")));
             if ($unit == null) {
                 return array(
-                    'result_message' => "Error: Unit not found",
+                    'result_message' => " Unit not found",
                     'result_code' => 1
                 );
             }
@@ -151,7 +151,7 @@ class ApplicationsApi extends AbstractController
             //validate minimum salary
             if (intval($request->get("application_salary")) < intval($unit->getMinGrossSalary())) {
                 return array(
-                    'result_message' => "Error: Your combined salary is below the minimum required",
+                    'result_message' => " Your combined salary is below the minimum required",
                     'result_code' => 1
                 );
             }

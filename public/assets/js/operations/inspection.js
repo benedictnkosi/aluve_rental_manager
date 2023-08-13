@@ -9,12 +9,7 @@ $(document).ready(function () {
     initializeImgUploader();
 });
 
-let getURLParameter= (name) =>{
-    const queryString = window.location.search;
-    console.log(queryString);
-    const urlParams = new URLSearchParams(queryString);
-    return urlParams.get(name);
-}
+
 
 function initializeImgUploader() {
     var imgWrap = "";
@@ -76,20 +71,19 @@ function initializeImgUploader() {
 
 function uploadInspectionImage(file_data) {
     let url = "/api/inspection/upload/image/";
-    const uid = getURLParameter("guid");
     const form_data = new FormData();
     form_data.append("file", file_data);
     form_data.append("inspection_guid", sessionStorage.getItem("inspection_guid"));
 
     if (file_data === undefined) {
-        showToast("Error: Please upload file")
+        showToast(" Please upload file")
         return;
     }
 
     const fileSize =file_data.size;
     const fileMb = fileSize / 1024 ** 2;
     if (fileMb >= 10) {
-        showToast("Error: Please upload files less than 10mb");
+        showToast(" Please upload files less than 10mb");
         return;
     }
 

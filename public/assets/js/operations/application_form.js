@@ -66,19 +66,13 @@ $(document).ready(function () {
             $('#text-message').removeClass("display-none");
             $('#supporting-docs-div').addClass("display-none");
         }else{
-            showToast("Error: Please upload all supporting documents");
+            showToast(" Please upload all supporting documents");
         }
     });
 
     getUnit();
 });
 
-let getURLParameter= (name) =>{
-    const queryString = window.location.search;
-    console.log(queryString);
-    const urlParams = new URLSearchParams(queryString);
-    return urlParams.get(name);
-}
 
 let getUnit = () => {
     const queryString = window.location.search;
@@ -182,14 +176,14 @@ function uploadSupportingDocuments(documentType, file_data) {
     form_data.append("document_type", documentType);
 
     if (file_data === undefined) {
-        showToast("Error: Please upload file")
+        showToast(" Please upload file")
         return;
     }
 
     const fileSize =file_data.size;
     const fileMb = fileSize / 1024 ** 2;
     if (fileMb >= 5) {
-        showToast("Error: Please upload files less than 5mb");
+        showToast(" Please upload files less than 5mb");
         return;
     }
 

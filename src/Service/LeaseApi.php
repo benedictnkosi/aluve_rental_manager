@@ -420,7 +420,7 @@ class LeaseApi extends AbstractController
                 $unit = $this->em->getRepository(Units::class)->findOneBy(array('guid' => $unitId));
                 if ($unit == null) {
                     return array(
-                        'result_message' => "Error: Unit not found",
+                        'result_message' => " Unit not found",
                         'result_code' => 1
                     );
                 }

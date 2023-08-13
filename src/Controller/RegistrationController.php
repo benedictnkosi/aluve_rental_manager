@@ -26,13 +26,13 @@ class RegistrationController extends AbstractController
                 'error' => "",
             ]);
         }
-        $logger->info("Starting Method: " . __METHOD__);
 
+        $logger->info("This is a post register user" );
         try {
             if (strlen($request->get("_password")) < 1 || strlen($request->get("_username")) < 1) {
 
                 $response = array(
-                    "result_message" =>"Error: Username and password is mandatory",
+                    "result_message" =>" Username and password is mandatory",
                     "result_code" => 1
                 );
                 return new JsonResponse($response , 200, array());
@@ -42,7 +42,7 @@ class RegistrationController extends AbstractController
 
             if (!preg_match($pattern, $request->get("_username"))) {
                 $response = array(
-                    "result_message" =>"Error: Username must be a valid email address",
+                    "result_message" =>" Username must be a valid email address",
                     "result_code" => 1
                 );
                 return new JsonResponse($response , 200, array());
@@ -51,7 +51,7 @@ class RegistrationController extends AbstractController
 
             if (strcmp($request->get("_password"), $request->get("_confirm_password")) !== 0) {
                 $response = array(
-                    "result_message" =>"Error: Passwords are not the same",
+                    "result_message" =>" Passwords are not the same",
                     "result_code" => 1
                 );
                 return new JsonResponse($response , 200, array());
@@ -62,11 +62,13 @@ class RegistrationController extends AbstractController
             $user = $entityManager->getRepository(User::class)->findOneBy(array('email' => $request->get("_username")));
             if($user !== null){
                 $response = array(
-                    "result_message" =>"Error: Email is already registered",
+                    "result_message" =>" Email is already registered",
                     "result_code" => 1
                 );
                 return new JsonResponse($response , 200, array());
             }
+
+            $logger->info("all validations passed" );
             $user = new User();
 
             $user->setPassword(
@@ -77,24 +79,28 @@ class RegistrationController extends AbstractController
             );
 
             $user->setEmail($request->get("_username"));
+            $user->setName($request->get("_name"));
+            $user->setGuid($this->generateGuid());
             if(strcmp($request->get("_user_type"), "Tenant")==0){
                 $user->setRoles(["ROLE_TENANT"]);
             }else if(strcmp($request->get("_user_type"), "Landlord")==0){
                 $user->setRoles(["ROLE_LANDLORD"]);
             }else{
                 $response = array(
-                    "result_message" =>"Error: User type is not recognised",
+                    "result_message" =>" User type is not recognised",
                     "result_code" => 1
                 );
                 return new JsonResponse($response , 200, array());
             }
+
+            $logger->info("persist user" );
             try {
                 $entityManager->persist($user);
                 $entityManager->flush();
             } catch (Exception $exception) {
                 $logger->error($exception->getTraceAsString());
                 $response = array(
-                    "result_message" =>"Error: Registration failed",
+                    "result_message" =>" Registration failed",
                     "result_code" => 1
                 );
                 return new JsonResponse($response , 200, array());
@@ -107,7 +113,7 @@ class RegistrationController extends AbstractController
 
             $message = "Welcome to Aluve App. We hope you enjoy your experience with us.";
             $subject = "Aluve App - New Registration";
-            $link = "https://rentals.hotelrunner.co.za/login";
+            $link =  "https://" . $_SERVER['HTTP_HOST'] . "/login";
             $linkText = "LOGIN";
             $template = "generic";
             $communicationApi->sendEmail($request->get("_username"), "",$subject , $message, $link, $linkText, $template);
@@ -115,10 +121,19 @@ class RegistrationController extends AbstractController
         } catch (\Exception $exception) {
             $logger->info($exception->getMessage());
             $response = array(
-                "result_message" =>"Error: Registration failed",
+                "result_message" =>" Registration failed",
                 "result_code" => 1
             );
             return new JsonResponse($response , 200, array());
         }
+    }
+
+    function generateGuid(): string
+    {
+        if (function_exists('com_create_guid') === true) {
+            return trim(com_create_guid(), '{}');
+        }
+
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
 }

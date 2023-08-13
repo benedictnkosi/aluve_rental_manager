@@ -44,7 +44,7 @@ class TenantApi extends AbstractController
             $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('guid' => $guid));
             if ($tenant == null) {
                 return array(
-                    'result_message' => "Error: Tenant not found",
+                    'result_message' => " Tenant not found",
                     'result_code' => 1
                 );
             }
@@ -52,7 +52,7 @@ class TenantApi extends AbstractController
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('tenant' => $tenant->getId(), 'status' => 'active'));
             if ($lease == null) {
                 return array(
-                    'result_message' => "Error: Lease not found",
+                    'result_message' => " Lease not found",
                     'result_code' => 1
                 );
             }
@@ -74,7 +74,7 @@ class TenantApi extends AbstractController
             $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('guid' => $guid));
             if ($tenant == null) {
                 return array(
-                    'result_message' => "Error: Tenant not found",
+                    'result_message' => " Tenant not found",
                     'result_code' => 1
                 );
             }
@@ -97,7 +97,7 @@ class TenantApi extends AbstractController
             $tenant = $this->em->getRepository(Tenant::class)->findOneBy(array('idNumber' => $id, 'phone'=>$phone));
             if ($tenant == null) {
                 return array(
-                    'result_message' => "Error: Tenant not found",
+                    'result_message' => " Tenant not found",
                     'result_code' => 1
                 );
             }
@@ -132,7 +132,7 @@ class TenantApi extends AbstractController
             $application = $this->em->getRepository(Application::class)->findOneBy(array('uid' => $applicationGuid));
             if ($application == null) {
                 return array(
-                    'result_message' => "Error: Application not found",
+                    'result_message' => " Application not found",
                     'result_code' => 1
                 );
             }

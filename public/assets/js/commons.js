@@ -157,3 +157,11 @@ let getTransactions = (leaseGuid, userRole) => {
         error: function (xhr) {},
     });
 };
+
+
+let getURLParameter= (name) =>{
+    const queryString = window.location.search;
+    console.log(queryString);
+    const urlParams = new URLSearchParams(queryString);
+    return urlParams.get(name);
+}

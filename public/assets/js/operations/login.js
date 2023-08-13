@@ -23,6 +23,18 @@ $(document).ready(function () {
     event.preventDefault();
   });
 
+  $("#reset-form").validate({
+    // Specify validation rules
+    rules: {},
+    submitHandler: function () {
+      resetPassword();
+    },
+  });
+
+  $("#reset-form").submit(function (event) {
+    event.preventDefault();
+  });
+
 
   $(".user-type").click(function (event) {
     $("#drop-user-type-selected").html(event.target.innerText);
@@ -45,7 +57,7 @@ let authenticateUser = () => {
     dataType: "script",
     success: function (response) {
       if (response.includes("_username")) {
-        showToast("Error. Login Failed");
+        showToast("Login Failed");
       } else {
         //check if tenant or landlord logged in
         let url = "/no_auth/me";
@@ -72,11 +84,12 @@ let registerUser = () => {
 
   const selectedType = $("#drop-user-type-selected").html();
   if(selectedType.includes("User Type")){
-    showToast("Error: Please select user type");
+    showToast(" Please select user type");
     return;
   }
 
   let data = {
+    _name: $("#name").val(),
     _username: $("#email").val(),
     _password: $("#password").val(),
     _confirm_password: $("#_confirm_password").val(),
@@ -90,18 +103,40 @@ let registerUser = () => {
     type: "POST",
     data: data,
     success: function (response) {
-      $(".spinner-border").hide();
-      $(".overlay").hide();
-      $('#success-reg-div').removeClass('display-none');
-      $('#register-form').addClass('display-none');
-      showToast(response.result_message);
+      if(response.result_code === 0){
+        $('#success-reg-div').removeClass('display-none');
+        $('#register-form').addClass('display-none');
+      }else{
+        showToast(response.result_message);
+      }
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      $(".spinner-border").hide();
-      $(".overlay").hide();
       showToast(errorThrown);
     },
   });
 };
 
 
+
+
+let resetPassword = () => {
+  let data = {
+    _username: $("#email").val(),
+  };
+
+  let url = "/reset/password";
+
+  $.ajax({
+    url: url,
+    type: "POST",
+    data: data,
+    success: function (response) {
+      $('#success-reg-div').removeClass('display-none');
+      $('#register-form').addClass('display-none');
+      showToast(response.result_message);
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      showToast(errorThrown);
+    },
+  });
+};
