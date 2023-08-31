@@ -12,18 +12,21 @@ body{
     border-radius: 0 !important;
     background-color: #45AAB1 !important;
     color: #EEEEEE !important;
+    margin-bottom: 1em;
 }
 
 .transparent-green-button {
     background-color: transparent !important;
     border: 1px solid #45AAB1 !important;
     color: #45AAB1 !important;
+    margin-bottom: 1em;
   }
 
   .transparent-white-button {
     background-color: transparent !important;
     border: 1px solid #EEEEEE !important;
     color: #EEEEEE !important;
+      margin-bottom: 1em;
   }
 
   
@@ -31,6 +34,7 @@ body{
     background-color: transparent !important;
     border: 1px solid #df6363 !important;
     color: #df6363 !important;
+    margin-bottom: 1em;
   }
 
 
@@ -38,11 +42,12 @@ body{
     border-radius: 0 !important;
     background-color: #EEEEEE !important;
     color: #45AAB1 !important;
+    margin-bottom: 1em;
 }
 
 .container{
     width: 100%;
-    margin: auto;
+    margin: auto auto 2em;
     padding-right: 0 !important;
     padding-left: 0 !important;
 }
@@ -312,11 +317,9 @@ i{
 .no-results-container {
     align-items: center;
     justify-content: center;
+    margin: auto auto 2em;
 }
 
-.dropdown-menu{
-    width:100% !important;
-}
 
 .navbar-toggler:focus {
     text-decoration: none;

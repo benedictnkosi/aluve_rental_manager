@@ -84,7 +84,7 @@ class LeaseController extends AbstractController
     }
 
     /**
-     * @Route("api/lease/raise/latefee")
+     * @Route("no_auth/lease/raise/latefee")
      */
     public function raiseLateFee(Request $request,  LoggerInterface $logger, LeaseApi $leaseApi): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -97,7 +97,7 @@ class LeaseController extends AbstractController
     }
 
     /**
-     * @Route("api/lease/raise/monthlyRent")
+     * @Route("no_auth/lease/raise/monthlyRent")
      */
     public function raiseMonthlyRent(Request $request,  LoggerInterface $logger, LeaseApi $leaseApi): Response{
         $logger->info("Starting Method: " . __METHOD__);
@@ -119,7 +119,7 @@ class LeaseController extends AbstractController
             return new JsonResponse("Method Not Allowed" , 405, array());
         }
 
-        $response = $tenantApi->createTenant($request->get('tenantName'), $request->get('phone'), $request->get('email'),$request->get('id_document_type'),  $request->get('application_id_number'), $request->get('salary'), $request->get('occupation'),$request->get('adult_count'),$request->get('child_count'));
+        $response = $tenantApi->createTenant($request->get('tenantName'), $request->get('phone'), $request->get('email'),$request->get('id_document_type'),  $request->get('application_id_number'), $request->get('salary'), $request->get('occupation'),$request->get('adult_count'),$request->get('child_count'), $request->get('car'));
         if($response["result_code"] == 1){
             return new JsonResponse($response , 200, array());
         }

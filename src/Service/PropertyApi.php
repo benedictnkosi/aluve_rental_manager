@@ -298,7 +298,7 @@ class PropertyApi extends AbstractController
         }
     }
 
-    public function createProperty($name, $address, $propertyGuid): array
+    public function createProperty($name, $parkingBays, $units, $address, $propertyGuid): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         $responseArray = array();
@@ -335,6 +335,8 @@ class PropertyApi extends AbstractController
             $guid = $this->generateGuid();
             $property->setGuid($guid);
             $property->setBankAccount(0);
+            $property->setParkingBays($parkingBays);
+            $property->setUnits($units);
             $this->em->persist($property);
             $this->em->flush($property);
 

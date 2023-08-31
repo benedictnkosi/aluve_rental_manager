@@ -157,7 +157,7 @@ class ApplicationsApi extends AbstractController
             }
 
             $tenantApi = new TenantApi($this->em, $this->logger);
-            $response = $tenantApi->createTenant($request->get("application_name"), $request->get("application_phone"), $request->get("application_email"), $request->get("id_document_type"), $request->get("application_id_number"), $request->get("application_salary"), $request->get("application_occupation"), $request->get("adult_count"), $request->get("child_count"));
+            $response = $tenantApi->createTenant($request->get("application_name"), $request->get("application_phone"), $request->get("application_email"), $request->get("id_document_type"), $request->get("application_id_number"), $request->get("application_salary"), $request->get("application_occupation"), $request->get("adult_count"), $request->get("child_count"), $request->get("car"));
             if ($response["result_code"] == 1) {
                 return $response;
             }
@@ -172,6 +172,8 @@ class ApplicationsApi extends AbstractController
             $application->setUid($guid);
             $application->setStatus("new");
             $application->setProperty($unit->getProperty());
+            $application->setParkingBays($request->get("parking_bays"));
+
             $this->em->persist($application);
             $this->em->flush($application);
 

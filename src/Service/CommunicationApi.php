@@ -109,7 +109,7 @@ class CommunicationApi extends AbstractController
     {
         return "MIME-Version: 1.0" . "\r\n" .
             "Content-type: text/html; charset=iso-8859-1" . "\r\n" .
-            "From: " . EMAIL_FROM . "\r\n";
+            "From: " . getenv("EMAIL_FROM") . "\r\n";
     }
 
     function generate_email_body($templateName, $Parameters): array|bool|string

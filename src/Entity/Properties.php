@@ -359,5 +359,51 @@ class Properties
         $this->bankAccount = $bankAccount;
     }
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="parking_bays", type="integer", nullable=false)
+     */
+    private $parkingBays;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="units", type="integer", nullable=false)
+     */
+    private $units;
+
+    /**
+     * @return int
+     */
+    public function getParkingBays(): int
+    {
+        return $this->parkingBays;
+    }
+
+    /**
+     * @param int $parkingBays
+     */
+    public function setParkingBays(int $parkingBays): void
+    {
+        $this->parkingBays = $parkingBays;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUnits(): int
+    {
+        return $this->units;
+    }
+
+    /**
+     * @param int $units
+     */
+    public function setUnits(int $units): void
+    {
+        $this->units = $units;
+    }
+
 
 }

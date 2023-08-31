@@ -1,7 +1,7 @@
 .application-container{
     display: flex;
     width: 100%;
-    margin: auto;
+    margin: auto auto 2em;
     flex-wrap: wrap;
     justify-content: center;
     flex-direction: column;
@@ -12,12 +12,9 @@
 .unit-details-card{
     background: #45AAB1;
     /* max-width: 480px; */
-    margin-top: 1em;
-    margin-left:1em;
-    margin-right:1em;
+    margin: 1em;
     color: #EEEEEE !important;
     border-radius: 10px;
-    
     min-width: 200px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     

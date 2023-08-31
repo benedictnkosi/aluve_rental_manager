@@ -29,10 +29,14 @@ $(document).ready(function () {
 
 let createProperty = () =>{
     const name = $("#property-name").val().trim();
+    const parking_bays = $("#property-parking").val().trim();
+    const units = $("#property-units").val().trim();
     const address = $("#property-address").val().trim();
     let url = "/api/properties/create";
     const data = {
         name: name,
+        parking_bays: parking_bays,
+        units: units,
         address: address,
         id: sessionStorage.getItem("property-id")
     };
@@ -100,8 +104,8 @@ let getAllProperties = () => {
                         '        <div class="property-details">\n' +
                         '            <p>' + property.property.name + '</p>\n' +
                         '            <p>' + property.property.address + '</p></a>\n' +
-                        '            <div><i class="fa-solid fa-bed"></i> 2\n' +
-                        '                <i class="fa-solid fa-car"></i> 1\n' +
+                        '            <div><i class="fa-solid fa-house"></i> ' + property.property.units + '\n' +
+                        '                <i class="fa-solid fa-car"></i> ' + property.property.parking_bays + '\n' +
                         '                <button type="button" class="btn btn-info transparent-white-button w-100 mt-2 d-block" data-bs-toggle="modal" data-bs-target="#newPropertyModal" data-bs-action="update" property-id="' + property.property.guid + '" property-name="' + property.property.name + '" property-address="' + property.property.address + '">Update\n' +
                         '        </button>\n' +
                         '            </div>\n' +

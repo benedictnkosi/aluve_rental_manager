@@ -148,7 +148,7 @@ class PropertyController extends AbstractController
             $propertyGuid = $request->get('id');
         }
 
-        $response = $propertyApi->createProperty($request->get('name'), $request->get('address'), $propertyGuid);
+        $response = $propertyApi->createProperty($request->get('name'), $request->get('parking_bays'), $request->get('units'), $request->get('address'), $propertyGuid);
         return new JsonResponse($response , 200, array());
     }
 

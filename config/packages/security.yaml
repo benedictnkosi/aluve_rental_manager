@@ -41,6 +41,7 @@ security:
         - { path: ^/tenant, roles: ROLE_USER }
         - { path: ^/api, roles: ROLE_USER }
         - { path: ^/, roles: PUBLIC_ACCESS }
+        - { path: ^/no_auth, roles: PUBLIC_ACCESS }
         
 
 when@test:

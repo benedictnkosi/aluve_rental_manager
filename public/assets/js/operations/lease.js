@@ -203,6 +203,7 @@ let createLease = () => {
   const occupancy = $("#lease-occupation").val().trim();
   const adultCount = $("#adult_count").val().trim();
   const childCount = $("#child_count").val().trim();
+  const carDetails = $("#lease-car").val().trim();
 
   let url = "/api/lease/landlord/create";
   const data = {
@@ -220,6 +221,7 @@ let createLease = () => {
     occupation: occupancy,
     adult_count: adultCount,
     child_count: childCount,
+    car: carDetails
   };
 
   $.ajax({
@@ -405,6 +407,7 @@ let populateLeaseDetails = (leaseGuid) => {
       $("#payment-rules").val(lease.payment_rules);
       $("#lease-occupation").val(lease.occupation);
       $("#lease-salary").val(lease.salary);
+      $("#lease-car").val(lease.car);
       $("#application_id_number").val(lease.id_number);
       $("#drop-id-doc-type-selected").html(lease.id_document_type);
 

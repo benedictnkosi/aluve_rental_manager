@@ -134,6 +134,7 @@ let submitApplication = () => {
     const adultCount = $("#adult_count").val().trim();
     const childCount = $("#child_count").val().trim();
     const occupancy = $("#application_occupation").val().trim();
+    const parkingBays = $("#parking_bays").val().trim();
 
     const unitId = getURLParameter("id");
 
@@ -148,7 +149,8 @@ let submitApplication = () => {
         application_occupation: occupancy,
         adult_count: adultCount,
         child_count: childCount,
-        id_document_type: sessionStorage.getItem("document-type")
+        id_document_type: sessionStorage.getItem("document-type"),
+        parking_bays: parkingBays
     };
 
     $.ajax({

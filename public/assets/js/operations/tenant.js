@@ -358,6 +358,8 @@ let openApplicationDetails = (applicaitonGuid) => {
             $("#applicant_children").html(data.application.tenant.children);
             $("#applicant_id_number").html(data.application.tenant.id_number);
             $("#applicant_occupation").html(data.application.tenant.occupation);
+            $("#parking_bays").html(data.application.parking_bays);
+
 
             data.documents.forEach(function (document) {
                 html +=

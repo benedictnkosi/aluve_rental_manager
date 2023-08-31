@@ -342,5 +342,28 @@ class Tenant
         $this->guid = $guid;
     }
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="car", type="string", length=50, nullable=true)
+     */
+    private $car;
+
+    /**
+     * @return string|null
+     */
+    public function getCar(): ?string
+    {
+        return $this->car;
+    }
+
+    /**
+     * @param string|null $car
+     */
+    public function setCar(?string $car): void
+    {
+        $this->car = $car;
+    }
+
 
 }

@@ -63,6 +63,7 @@ let openApplicationDetails = (applicaitonGuid) => {
             $('#applicant_children').html(data.application.tenant.children);
             $('#applicant_id_number').html(data.application.tenant.id_number);
             $('#applicant_occupation').html(data.application.tenant.occupation);
+            $("#application_parking_bays").html(data.application.parking_bays);
 
             data.documents.forEach(function (document) {
                 html += '<p><a class="dropdown-item" target="_blank"  style="color: #000 !important;" href="/api/document/' + document.name + '"><i class="fa-solid fa-file-pdf red-icon me-3"></i><small>'+document.document_type.name+'</small></a></p>\n';

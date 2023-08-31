@@ -151,7 +151,7 @@ class TenantApi extends AbstractController
         }
     }
 
-    public function createTenant($name, $phone, $email, $idDocType, $idNumber, $salary, $occupation, $adults, $children): array
+    public function createTenant($name, $phone, $email, $idDocType, $idNumber, $salary, $occupation, $adults, $children,$car = null): array
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
         try {
@@ -253,6 +253,7 @@ class TenantApi extends AbstractController
             $tenant->setOccupation($occupation);
             $tenant->setStatus("new");
             $tenant->setGuid($this->generateGuid());
+            $tenant->setCar($car);
 
             $this->em->persist($tenant);
             $this->em->flush($tenant);

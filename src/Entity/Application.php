@@ -207,5 +207,28 @@ class Application
         $this->unit = $unit;
     }
 
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="parking_bays", type="integer", nullable=true)
+     */
+    private $parkingBays;
+
+    /**
+     * @return int|null
+     */
+    public function getParkingBays(): ?int
+    {
+        return $this->parkingBays;
+    }
+
+    /**
+     * @param int|null $parkingBays
+     */
+    public function setParkingBays(?int $parkingBays): void
+    {
+        $this->parkingBays = $parkingBays;
+    }
+
 
 }

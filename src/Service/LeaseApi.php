@@ -316,6 +316,7 @@ class LeaseApi extends AbstractController
                 'lease_id' => $lease->getId(),
                 'lease_guid' => $lease->getGuid(),
                 'salary' => $tenant->getSalary(),
+                'car' => $tenant->getCar(),
                 'occupation' => $tenant->getOccupation(),
                 'due' => number_format(intval($due["result_message"]), 2, '.', ''),
                 'statement_date' => $now->format("Y-M-d"),
