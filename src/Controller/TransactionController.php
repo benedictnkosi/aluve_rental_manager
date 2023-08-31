@@ -120,7 +120,7 @@ class TransactionController extends AbstractController
     }
 
     /**
-     * @Route("api/transactions/import")
+     * @Route("no_auth/transactions/import")
      * @throws ConnectionException
      */
     public function importTransactions(TransactionApi $transactionApi, LoggerInterface $logger, Imap $imap): Response
