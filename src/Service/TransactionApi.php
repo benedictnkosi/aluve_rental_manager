@@ -259,7 +259,7 @@ class TransactionApi extends AbstractController
                 return 0;
             }
 
-            $leases = $this->em->getRepository(Leases::class)->findBy(array('status' => "active"));
+            $leases = $this->em->getRepository(Leases::class)->findBy(array('status' => "active", 'property'=> $property->getId()));
             $totalDue = 0;
             foreach ($leases as $lease) {
                 $response = $this->getBalanceDue($lease->getId());
