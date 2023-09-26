@@ -48,7 +48,7 @@ class TransactionApi extends AbstractController
         try {
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseId));
             if ($lease == null) {
-                $this->logger->debug("Lease not found");
+                $this->logger->debug("Lease not found " . $leaseId);
                 return array(
                     'result_message' => "Lease not found",
                     'result_code' => 1

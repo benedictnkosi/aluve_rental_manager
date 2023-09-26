@@ -779,7 +779,7 @@ class LeaseApi extends AbstractController
             foreach ($leases as $lease) {
                 $rent = $lease->getUnit()->getRent();
 
-                $this->transactionApi->addTransaction($lease->getId(), $rent, $now->format("F Y") . " Rent", $now->format("Y-m-d"));
+                $this->transactionApi->addTransaction($lease->getGuid(), $rent, $now->format("F Y") . " Rent", $now->format("Y-m-d"));
 
                 //send sms to applicant
                 $smsApi = new SMSApi($this->em, $this->logger);
