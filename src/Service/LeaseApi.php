@@ -789,7 +789,7 @@ class LeaseApi extends AbstractController
 
                 if ($isSMSSent) {
                     $responseArray[] = array(
-                        'result_message' => "Successfully added monthly rent",
+                        'result_message' => "Successfully added monthly rent to " . $lease->getTenant()->getName(),
                         'result_code' => 0
                     );
                 } else {

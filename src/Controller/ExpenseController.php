@@ -135,6 +135,7 @@ class ExpenseController extends AbstractController
         if (!$request->isMethod('get')) {
             return new JsonResponse("Method Not Allowed", 405, array());
         }
+        $logger->debug("db name2: " . getenv('app.database_name'));
         $response = $expenseApi->getExpensesByAccount($request->get("property_id"), $request->get("number_od_days"));
         return new JsonResponse($response, 200, array());
     }

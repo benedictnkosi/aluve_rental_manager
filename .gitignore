@@ -10,6 +10,7 @@
 /vendor/
 /src/app/
 /files/
+DatabaseApi.php
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###

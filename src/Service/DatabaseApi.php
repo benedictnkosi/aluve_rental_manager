@@ -25,8 +25,7 @@ class DatabaseApi extends AbstractController
     {
         $this->logger->debug("Starting Method: " . __METHOD__);
 
-        $this->logger->debug("db name: " . getenv("AZURE_MYSQL_DBNAME"));
-        $conn = new mysqli (getenv("AZURE_MYSQL_HOST"), getenv("AZURE_MYSQL_USERNAME"), getenv("AZURE_MYSQL_PASSWORD"), getenv("AZURE_MYSQL_DBNAME"));
+        $conn = new mysqli ("localhost", "root", "4IHPB33N35WC77KU$", "hoteloav_property_manager");
         // Check connection
         if ($conn->connect_error) {
             $this->logger->debug("failed to connect to the database");
