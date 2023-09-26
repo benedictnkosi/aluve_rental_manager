@@ -131,6 +131,8 @@ class TransactionApi extends AbstractController
                 'result_code' => 0
             );
 
+            $this->logger->info("Successfully added transaction");
+
         } catch (Exception $ex) {
             $this->logger->error("Error " . print_r($responseArray, true));
             return array(
