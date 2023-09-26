@@ -48,6 +48,7 @@ class TransactionApi extends AbstractController
         try {
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $leaseId));
             if ($lease == null) {
+                $this->logger->debug("Lease not found");
                 return array(
                     'result_message' => "Lease not found",
                     'result_code' => 1
@@ -56,6 +57,7 @@ class TransactionApi extends AbstractController
 
             if (strlen($amount) < 1 || !is_numeric($amount) || strlen($amount) > 10) {
                 $this->logger->debug("Amount " . $amount);
+                $this->logger->debug("Amount is invalid");
                 return array(
                     'result_message' => "Amount is invalid",
                     'result_code' => 1
@@ -63,6 +65,7 @@ class TransactionApi extends AbstractController
             }
 
             if (strlen($description) < 1 || strlen($description) > 100) {
+                $this->logger->debug("Description length is invalid");
                 return array(
                     'result_message' => "Description length is invalid",
                     'result_code' => 1
@@ -70,6 +73,7 @@ class TransactionApi extends AbstractController
             }
 
             if (!DateTime::createFromFormat('Y-m-d', $transactionDate)) {
+                $this->logger->debug("Transaction date is not valid");
                 return array(
                     'result_code' => 1,
                     'result_message' => "Transaction date is not valid",
@@ -80,6 +84,7 @@ class TransactionApi extends AbstractController
             if($emailID > 0){
                 $transaction = $this->em->getRepository(Transaction::class)->findOneBy(array('emailId' => $emailID));
                 if($transaction !== null){
+                    $this->logger->debug("Transaction already added");
                     return array(
                         'result_message' => "Transaction already added",
                         'result_code' => 0
