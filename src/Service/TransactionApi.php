@@ -154,7 +154,7 @@ class TransactionApi extends AbstractController
         try {
             $lease = $this->em->getRepository(Leases::class)->findOneBy(array('guid' => $guid));
 
-            $transactions = $this->em->getRepository(Transaction::class)->findBy(array('lease' => $lease), array('date' => 'DESC'));
+            $transactions = $this->em->getRepository(Transaction::class)->findBy(array('lease' => $lease), array('date' => 'ASC'));
             if (sizeof($transactions) < 1) {
                 return array(
                     'result_message' => "0",
@@ -164,7 +164,10 @@ class TransactionApi extends AbstractController
             $balance = 0;
             $isLoggedIn = $this->getUser() !== null;
             foreach ($transactions as $transaction) {
-                $balance = $balance + intval($transaction->getAmount());
+                $this->logger->info("balance is  " . $balance);
+                $this->logger->info("amount is  " . $transaction->getAmount());
+                $balance = $balance + $transaction->getAmount();
+                $this->logger->info("new balance is  " .$balance);
                 $responseArray[] = array(
                     'description' => $transaction->getDescription(),
                     'date' => $transaction->getDate()->format("Y-m-d"),
