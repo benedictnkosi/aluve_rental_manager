@@ -110,7 +110,7 @@ class PropertyController extends AbstractController
      * @Route("api/property/update")
      */
     public function updateProperty(Request $request,  LoggerInterface $logger, PropertyApi $propertyApi): Response{
-        $logger->info("Starting Method fail: " . __METHOD__);
+        $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('put')) {
             return new JsonResponse("Method Not Allowed here" , 405, array());
         }
@@ -123,7 +123,7 @@ class PropertyController extends AbstractController
      * @Route("api/bank_account/update")
      */
     public function updatePropertyBank(Request $request,  LoggerInterface $logger, PropertyApi $propertyApi): Response{
-        $logger->info("Starting Method fail: " . __METHOD__);
+        $logger->info("Starting Method: " . __METHOD__);
         if (!$request->isMethod('put')) {
             return new JsonResponse("Method Not Allowed here" , 405, array());
         }

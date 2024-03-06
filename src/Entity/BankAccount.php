@@ -36,9 +36,9 @@ class BankAccount
     private $accountType;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="account_number", type="integer", nullable=false)
+     * @ORM\Column(name="account_number", type="string", length=20, nullable=false)
      */
     private $accountNumber;
 
@@ -59,7 +59,7 @@ class BankAccount
     /**
      * @var string
      *
-     * @ORM\Column(name="guid", type="string", nullable=false)
+     * @ORM\Column(name="guid", type="string", length=36, nullable=false)
      */
     private $guid;
 
@@ -112,17 +112,17 @@ class BankAccount
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getAccountNumber(): int
+    public function getAccountNumber(): string
     {
         return $this->accountNumber;
     }
 
     /**
-     * @param int $accountNumber
+     * @param string $accountNumber
      */
-    public function setAccountNumber(int $accountNumber): void
+    public function setAccountNumber(string $accountNumber): void
     {
         $this->accountNumber = $accountNumber;
     }
@@ -174,4 +174,6 @@ class BankAccount
     {
         $this->guid = $guid;
     }
+
+
 }
